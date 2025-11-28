@@ -101,6 +101,15 @@ erDiagram
         varchar comment
     }
 
+    Tag {
+        int id PK
+        int memberId FK
+        int tag
+        date assignedDate
+        date validFrom
+        date validTo
+    }
+
     %% Relationships
     MemberType ||--o{ Member : "has"
     Member ||--o{ MembershipPayments : "has"
@@ -108,6 +117,7 @@ erDiagram
     Member ||--o{ Motorcycle : "owns"
     Member ||--o{ Training : "participates"
     Member ||--o{ Comment : "has"
+    Member ||--o{ Tag : "has"
     PaymentType ||--o{ MembershipPayments : "categorizes"
     Level ||--o{ TrainingSession : "defines"
     TrainingSession ||--o{ Training : "contains"
@@ -180,6 +190,12 @@ Stores comments/notes about members.
 - **Foreign Keys**: `memberId` → `Member.id`
 - **Fields**: `creationTime`, `editTime`, `comment`
 
+#### Tag
+Stores tags associated with members with validity periods.
+- **Primary Key**: `id`
+- **Foreign Keys**: `memberId` → `Member.id`
+- **Fields**: `tag` (tag identifier/number), `assignedDate` (when tag was assigned), `validFrom`, `validTo` (validity period)
+
 ### Relationships
 
 1. **Member ↔ MemberType**: Many-to-One
@@ -206,19 +222,23 @@ Stores comments/notes about members.
    - Each member can have multiple comments
    - Each comment belongs to one member
 
-7. **PaymentType ↔ MembershipPayments**: One-to-Many
+7. **Member ↔ Tag**: One-to-Many
+   - Each member can have multiple tags
+   - Each tag belongs to one member
+
+8. **PaymentType ↔ MembershipPayments**: One-to-Many
    - Each payment type can categorize multiple payments
    - Each payment has one payment type
 
-8. **Level ↔ TrainingSession**: One-to-Many
+9. **Level ↔ TrainingSession**: One-to-Many
    - Each level can have multiple training sessions
    - Each training session has one level
 
-9. **TrainingSession ↔ Training**: One-to-Many
-   - Each training session can have multiple training records (participants)
-   - Each training record belongs to one training session
+10. **TrainingSession ↔ Training**: One-to-Many
+    - Each training session can have multiple training records (participants)
+    - Each training record belongs to one training session
 
-10. **Motorcycle ↔ Training**: One-to-Many
+11. **Motorcycle ↔ Training**: One-to-Many
     - Each motorcycle can be used in multiple training sessions
     - Each training record references one motorcycle
 

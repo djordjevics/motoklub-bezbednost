@@ -114,6 +114,17 @@
         {"name": "editTime", "type": "datetime"},
         {"name": "comment", "type": "varchar"}
       ]
+    },
+    {
+      "name": "Tag",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "memberId", "type": "int", "foreignKey": {"table": "Member", "field": "id"}},
+        {"name": "tag", "type": "int"},
+        {"name": "assignedDate", "type": "date"},
+        {"name": "validFrom", "type": "date"},
+        {"name": "validTo", "type": "date"}
+      ]
     }
   ]
 }

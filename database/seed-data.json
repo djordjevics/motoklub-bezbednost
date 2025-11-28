@@ -1,0 +1,67 @@
+{
+  "MemberType": [
+    {
+      "id": 1,
+      "prefix": 1,
+      "typeName": "Uprava",
+      "color": "#00BCD4",
+      "paidMembership": true
+    },
+    {
+      "id": 2,
+      "prefix": 2,
+      "typeName": "Aktivni - pridruženi članovi (redovni)",
+      "color": "#4CAF50",
+      "paidMembership": true
+    },
+    {
+      "id": 3,
+      "prefix": 3,
+      "typeName": "Deca i prijatelji kluba",
+      "color": "#FFEB3B",
+      "paidMembership": false
+    },
+    {
+      "id": 4,
+      "prefix": 4,
+      "typeName": "Počasni članovi i 65+",
+      "color": "#9C27B0",
+      "paidMembership": false
+    }
+  ],
+  "PaymentType": [
+    {
+      "id": 1,
+      "type": "Keš",
+      "description": "Gotovinsko plaćanje"
+    },
+    {
+      "id": 2,
+      "type": "EBanking",
+      "description": "Plaćanje elektronskim bankarstvom"
+    },
+    {
+      "id": 3,
+      "type": "Faktura",
+      "description": "Plaćanje preko fakture"
+    }
+  ],
+  "Level": [
+    {
+      "id": 1,
+      "name": "Osnovni",
+      "note": "Osnovni nivo treninga"
+    },
+    {
+      "id": 2,
+      "name": "Napredni",
+      "note": "Napredni nivo treninga"
+    },
+    {
+      "id": 3,
+      "name": "OffRoad",
+      "note": "Offroad vožnja"
+    }
+  ]
+}
+

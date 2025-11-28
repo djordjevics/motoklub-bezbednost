@@ -1,0 +1,120 @@
+{
+  "tables": [
+    {
+      "name": "Member",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "name", "type": "varchar"},
+        {"name": "surname", "type": "varchar"},
+        {"name": "jmbg", "type": "varchar"},
+        {"name": "dateOfBirth", "type": "date"},
+        {"name": "workplace", "type": "varchar"},
+        {"name": "mobilePhone", "type": "varchar"},
+        {"name": "emergencyContact", "type": "varchar"},
+        {"name": "emergencyContactPhone", "type": "varchar"},
+        {"name": "registeredOn", "type": "date"},
+        {"name": "memberType", "type": "int", "foreignKey": {"table": "MemberType", "field": "id"}},
+        {"name": "note", "type": "varchar"}
+      ]
+    },
+    {
+      "name": "MemberType",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "prefix", "type": "int"},
+        {"name": "typeName", "type": "varchar"},
+        {"name": "color", "type": "varchar"},
+        {"name": "paidMembership", "type": "bool"}
+      ]
+    },
+    {
+      "name": "MembershipPayments",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "memberId", "type": "int", "foreignKey": {"table": "Member", "field": "id"}},
+        {"name": "amount", "type": "int"},
+        {"name": "paymentDate", "type": "date"},
+        {"name": "paymentForYear", "type": "int"},
+        {"name": "paymentType", "type": "int", "foreignKey": {"table": "PaymentType", "field": "id"}},
+        {"name": "note", "type": "varchar"}
+      ]
+    },
+    {
+      "name": "PaymentType",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "type", "type": "varchar"},
+        {"name": "description", "type": "varchar"}
+      ]
+    },
+    {
+      "name": "Equipment",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "memberId", "type": "int", "foreignKey": {"table": "Member", "field": "id"}},
+        {"name": "pants", "type": "bool"},
+        {"name": "jacket", "type": "bool"},
+        {"name": "vest", "type": "bool"},
+        {"name": "workShirt", "type": "bool"},
+        {"name": "formalShirt", "type": "bool"},
+        {"name": "note", "type": "varchar"}
+      ]
+    },
+    {
+      "name": "Motorcycle",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "memberId", "type": "int", "foreignKey": {"table": "Member", "field": "id"}},
+        {"name": "brandName", "type": "varchar"},
+        {"name": "commercialName", "type": "varchar"},
+        {"name": "modelName", "type": "varchar"},
+        {"name": "engineDisplacment", "type": "int"},
+        {"name": "enginePower", "type": "int"},
+        {"name": "color", "type": "varchar"}
+      ]
+    },
+    {
+      "name": "TrainingSession",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "theoryDate", "type": "date"},
+        {"name": "polygonDate", "type": "date"},
+        {"name": "city", "type": "varchar"},
+        {"name": "levelId", "type": "int", "foreignKey": {"table": "Level", "field": "id"}},
+        {"name": "price", "type": "int"},
+        {"name": "instructors", "type": "varchar"},
+        {"name": "note", "type": "varchar"}
+      ]
+    },
+    {
+      "name": "Level",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "name", "type": "varchar"},
+        {"name": "note", "type": "varchar"}
+      ]
+    },
+    {
+      "name": "Training",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "memberId", "type": "int", "foreignKey": {"table": "Member", "field": "id"}},
+        {"name": "motorcycleId", "type": "int", "foreignKey": {"table": "Motorcycle", "field": "id"}},
+        {"name": "trainingSessionId", "type": "int", "foreignKey": {"table": "TrainingSession", "field": "id"}},
+        {"name": "isCertificateIssued", "type": "bool"},
+        {"name": "note", "type": "varchar"}
+      ]
+    },
+    {
+      "name": "Comment",
+      "fields": [
+        {"name": "id", "type": "int", "primaryKey": true},
+        {"name": "memberId", "type": "int", "foreignKey": {"table": "Member", "field": "id"}},
+        {"name": "creationTime", "type": "datetime"},
+        {"name": "editTime", "type": "datetime"},
+        {"name": "comment", "type": "varchar"}
+      ]
+    }
+  ]
+}
+

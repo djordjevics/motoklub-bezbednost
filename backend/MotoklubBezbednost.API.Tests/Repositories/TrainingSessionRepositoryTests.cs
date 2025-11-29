@@ -32,7 +32,7 @@ public class TrainingSessionRepositoryTests : IDisposable
 
         var session = new TrainingSession
         {
-            LevelId = level.Id,
+            Level = level,
             City = "Belgrade",
             TheoryDate = DateTime.Now,
             Price = 5000
@@ -57,7 +57,7 @@ public class TrainingSessionRepositoryTests : IDisposable
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
         await _repository.AddAsync(session);
 
         // Act
@@ -73,9 +73,9 @@ public class TrainingSessionRepositoryTests : IDisposable
     {
         // Arrange
         var member = new Member { Name = "John", Surname = "Doe" };
-        var motorcycle = new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         var level = new Level { Name = "Beginner" };
-        var session = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
 
         _context.Members.Add(member);
         _context.Motorcycles.Add(motorcycle);
@@ -83,7 +83,7 @@ public class TrainingSessionRepositoryTests : IDisposable
         _context.TrainingSessions.Add(session);
         await _context.SaveChangesAsync();
 
-        var training = new Training { MemberId = member.Id, MotorcycleId = motorcycle.Id, TrainingSessionId = session.Id };
+        var training = new Training { Member = member, Motorcycle = motorcycle, TrainingSession = session };
         _context.Trainings.Add(training);
         await _context.SaveChangesAsync();
 
@@ -106,8 +106,8 @@ public class TrainingSessionRepositoryTests : IDisposable
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session1 = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
-        var session2 = new TrainingSession { LevelId = level.Id, City = "Novi Sad", TheoryDate = DateTime.Now.AddDays(1) };
+        var session1 = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session2 = new TrainingSession { Level = level, City = "Novi Sad", TheoryDate = DateTime.Now.AddDays(1) };
         await _repository.AddAsync(session1);
         await _repository.AddAsync(session2);
 
@@ -127,8 +127,8 @@ public class TrainingSessionRepositoryTests : IDisposable
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session1 = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
-        var session2 = new TrainingSession { LevelId = level.Id, City = "Novi Sad", TheoryDate = DateTime.Now.AddDays(1) };
+        var session1 = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session2 = new TrainingSession { Level = level, City = "Novi Sad", TheoryDate = DateTime.Now.AddDays(1) };
         await _repository.AddAsync(session1);
         await _repository.AddAsync(session2);
 
@@ -148,7 +148,7 @@ public class TrainingSessionRepositoryTests : IDisposable
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
         await _repository.AddAsync(session);
         session.City = "Novi Sad";
 
@@ -168,7 +168,7 @@ public class TrainingSessionRepositoryTests : IDisposable
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
         await _repository.AddAsync(session);
 
         // Act

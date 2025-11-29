@@ -23,10 +23,12 @@ public class MotorcyclesControllerTests
     public async Task GetMotorcycles_ShouldReturnOkResultWithMotorcycles()
     {
         // Arrange
+        var member1 = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var member2 = new Member { Id = 2, Name = "Jane", Surname = "Smith" };
         var motorcycles = new List<Motorcycle>
         {
-            new Motorcycle { Id = 1, MemberId = 1, BrandName = "Honda", ModelName = "CBR600" },
-            new Motorcycle { Id = 2, MemberId = 2, BrandName = "Yamaha", ModelName = "R1" }
+            new Motorcycle { Id = 1, Member = member1, BrandName = "Honda", ModelName = "CBR600" },
+            new Motorcycle { Id = 2, Member = member2, BrandName = "Yamaha", ModelName = "R1" }
         };
 
         _mockService.Setup(s => s.GetAllMotorcyclesAsync())
@@ -46,7 +48,8 @@ public class MotorcyclesControllerTests
     {
         // Arrange
         var motorcycleId = 1;
-        var motorcycle = new Motorcycle { Id = motorcycleId, MemberId = 1, BrandName = "Honda", ModelName = "CBR600" };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var motorcycle = new Motorcycle { Id = motorcycleId, Member = member, BrandName = "Honda", ModelName = "CBR600" };
 
         _mockService.Setup(s => s.GetMotorcycleByIdAsync(motorcycleId))
             .ReturnsAsync(motorcycle);
@@ -80,9 +83,10 @@ public class MotorcyclesControllerTests
     {
         // Arrange
         var memberId = 1;
+        var member = new Member { Id = memberId, Name = "John", Surname = "Doe" };
         var motorcycles = new List<Motorcycle>
         {
-            new Motorcycle { Id = 1, MemberId = memberId, BrandName = "Honda", ModelName = "CBR600" }
+            new Motorcycle { Id = 1, Member = member, BrandName = "Honda", ModelName = "CBR600" }
         };
 
         _mockService.Setup(s => s.GetMotorcyclesByMemberIdAsync(memberId))
@@ -101,8 +105,9 @@ public class MotorcyclesControllerTests
     public async Task CreateMotorcycle_ShouldReturnCreatedAtAction()
     {
         // Arrange
-        var motorcycle = new Motorcycle { MemberId = 1, BrandName = "Honda", ModelName = "CBR600" };
-        var createdMotorcycle = new Motorcycle { Id = 1, MemberId = 1, BrandName = "Honda", ModelName = "CBR600" };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
+        var createdMotorcycle = new Motorcycle { Id = 1, Member = member, BrandName = "Honda", ModelName = "CBR600" };
 
         _mockService.Setup(s => s.CreateMotorcycleAsync(motorcycle))
             .ReturnsAsync(createdMotorcycle);
@@ -122,7 +127,8 @@ public class MotorcyclesControllerTests
     {
         // Arrange
         var motorcycleId = 1;
-        var motorcycle = new Motorcycle { Id = motorcycleId, MemberId = 1, BrandName = "Honda", ModelName = "CBR600 Updated" };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var motorcycle = new Motorcycle { Id = motorcycleId, Member = member, BrandName = "Honda", ModelName = "CBR600 Updated" };
 
         _mockService.Setup(s => s.UpdateMotorcycleAsync(motorcycle))
             .Returns(Task.CompletedTask);
@@ -139,7 +145,8 @@ public class MotorcyclesControllerTests
     {
         // Arrange
         var motorcycleId = 1;
-        var motorcycle = new Motorcycle { Id = 2, MemberId = 1, BrandName = "Honda", ModelName = "CBR600" };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var motorcycle = new Motorcycle { Id = 2, Member = member, BrandName = "Honda", ModelName = "CBR600" };
 
         // Act
         var result = await _controller.UpdateMotorcycle(motorcycleId, motorcycle);

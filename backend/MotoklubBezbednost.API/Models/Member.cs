@@ -41,13 +41,10 @@ public class Member
 
     public DateTime? RegisteredOn { get; set; }
 
-    public int? MemberTypeId { get; set; }
-
     [StringLength(1000)]
     public string? Note { get; set; }
 
     // Navigation properties
-    [ForeignKey("MemberTypeId")]
     public MemberType? MemberType { get; set; }
 
     public ICollection<Motorcycle> Motorcycles { get; set; } = new List<Motorcycle>();

@@ -23,10 +23,12 @@ public class EquipmentControllerTests
     public async Task GetEquipment_ShouldReturnOkResultWithEquipment()
     {
         // Arrange
+        var member1 = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var member2 = new Member { Id = 2, Name = "Jane", Surname = "Smith" };
         var equipment = new List<Equipment>
         {
-            new Equipment { Id = 1, MemberId = 1, Pants = true, Jacket = true },
-            new Equipment { Id = 2, MemberId = 2, Pants = true, Jacket = false }
+            new Equipment { Id = 1, Member = member1, Pants = true, Jacket = true },
+            new Equipment { Id = 2, Member = member2, Pants = true, Jacket = false }
         };
 
         _mockService.Setup(s => s.GetAllEquipmentAsync())
@@ -46,7 +48,8 @@ public class EquipmentControllerTests
     {
         // Arrange
         var equipmentId = 1;
-        var equipment = new Equipment { Id = equipmentId, MemberId = 1, Pants = true, Jacket = true };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var equipment = new Equipment { Id = equipmentId, Member = member, Pants = true, Jacket = true };
 
         _mockService.Setup(s => s.GetEquipmentByIdAsync(equipmentId))
             .ReturnsAsync(equipment);
@@ -80,9 +83,10 @@ public class EquipmentControllerTests
     {
         // Arrange
         var memberId = 1;
+        var member = new Member { Id = memberId, Name = "John", Surname = "Doe" };
         var equipment = new List<Equipment>
         {
-            new Equipment { Id = 1, MemberId = memberId, Pants = true, Jacket = true }
+            new Equipment { Id = 1, Member = member, Pants = true, Jacket = true }
         };
 
         _mockService.Setup(s => s.GetEquipmentByMemberIdAsync(memberId))
@@ -101,8 +105,9 @@ public class EquipmentControllerTests
     public async Task CreateEquipment_ShouldReturnCreatedAtAction()
     {
         // Arrange
-        var equipment = new Equipment { MemberId = 1, Pants = true, Jacket = true };
-        var createdEquipment = new Equipment { Id = 1, MemberId = 1, Pants = true, Jacket = true };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var equipment = new Equipment { Member = member, Pants = true, Jacket = true };
+        var createdEquipment = new Equipment { Id = 1, Member = member, Pants = true, Jacket = true };
 
         _mockService.Setup(s => s.CreateEquipmentAsync(equipment))
             .ReturnsAsync(createdEquipment);
@@ -122,7 +127,8 @@ public class EquipmentControllerTests
     {
         // Arrange
         var equipmentId = 1;
-        var equipment = new Equipment { Id = equipmentId, MemberId = 1, Pants = false, Jacket = true };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var equipment = new Equipment { Id = equipmentId, Member = member, Pants = false, Jacket = true };
 
         _mockService.Setup(s => s.UpdateEquipmentAsync(equipment))
             .Returns(Task.CompletedTask);
@@ -139,7 +145,8 @@ public class EquipmentControllerTests
     {
         // Arrange
         var equipmentId = 1;
-        var equipment = new Equipment { Id = 2, MemberId = 1, Pants = true, Jacket = true };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var equipment = new Equipment { Id = 2, Member = member, Pants = true, Jacket = true };
 
         // Act
         var result = await _controller.UpdateEquipment(equipmentId, equipment);

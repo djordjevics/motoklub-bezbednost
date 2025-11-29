@@ -80,9 +80,12 @@ public class TrainingsControllerTests
     {
         // Arrange
         var memberId = 1;
+        var member = new Member { Id = memberId, Name = "John", Surname = "Doe" };
+        var motorcycle = new Motorcycle { Id = 1, Member = member, BrandName = "Honda", ModelName = "CBR600" };
+        var session = new TrainingSession { Id = 1, City = "Belgrade", TheoryDate = DateTime.Now };
         var trainings = new List<Training>
         {
-            new Training { Id = 1, MemberId = memberId, MotorcycleId = 1, TrainingSessionId = 1 }
+            new Training { Id = 1, Member = member, Motorcycle = motorcycle, TrainingSession = session }
         };
 
         _mockService.Setup(s => s.GetTrainingsByMemberIdAsync(memberId))
@@ -121,8 +124,11 @@ public class TrainingsControllerTests
     public async Task CreateTraining_ShouldReturnCreatedAtAction()
     {
         // Arrange
-        var training = new Training { MemberId = 1, MotorcycleId = 1, TrainingSessionId = 1 };
-        var createdTraining = new Training { Id = 1, MemberId = 1, MotorcycleId = 1, TrainingSessionId = 1 };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var motorcycle = new Motorcycle { Id = 1, Member = member, BrandName = "Honda", ModelName = "CBR600" };
+        var session = new TrainingSession { Id = 1, City = "Belgrade", TheoryDate = DateTime.Now };
+        var training = new Training { Member = member, Motorcycle = motorcycle, TrainingSession = session };
+        var createdTraining = new Training { Id = 1, Member = member, Motorcycle = motorcycle, TrainingSession = session };
 
         _mockService.Setup(s => s.CreateTrainingAsync(training))
             .ReturnsAsync(createdTraining);
@@ -142,7 +148,10 @@ public class TrainingsControllerTests
     {
         // Arrange
         var trainingId = 1;
-        var training = new Training { Id = trainingId, MemberId = 1, MotorcycleId = 1, TrainingSessionId = 1 };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var motorcycle = new Motorcycle { Id = 1, Member = member, BrandName = "Honda", ModelName = "CBR600" };
+        var session = new TrainingSession { Id = 1, City = "Belgrade", TheoryDate = DateTime.Now };
+        var training = new Training { Id = trainingId, Member = member, Motorcycle = motorcycle, TrainingSession = session };
 
         _mockService.Setup(s => s.GetTrainingByIdAsync(trainingId))
             .ReturnsAsync(training);

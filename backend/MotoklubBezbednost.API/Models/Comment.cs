@@ -7,9 +7,6 @@ public class Comment
 {
     public int Id { get; set; }
 
-    [Required]
-    public int MemberId { get; set; }
-
     public DateTime? CreationTime { get; set; }
 
     public DateTime? EditTime { get; set; }
@@ -18,7 +15,7 @@ public class Comment
     public string? CommentText { get; set; }
 
     // Navigation property
-    [ForeignKey("MemberId")]
+    [Required]
     public Member Member { get; set; } = null!;
 }
 

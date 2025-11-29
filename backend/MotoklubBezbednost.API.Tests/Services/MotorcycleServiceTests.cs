@@ -22,10 +22,12 @@ public class MotorcycleServiceTests
     public async Task GetAllMotorcyclesAsync_ShouldReturnAllMotorcycles()
     {
         // Arrange
+        var member1 = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var member2 = new Member { Id = 2, Name = "Jane", Surname = "Smith" };
         var expectedMotorcycles = new List<Motorcycle>
         {
-            new Motorcycle { Id = 1, MemberId = 1, BrandName = "Honda", ModelName = "CBR600" },
-            new Motorcycle { Id = 2, MemberId = 2, BrandName = "Yamaha", ModelName = "R1" }
+            new Motorcycle { Id = 1, Member = member1, BrandName = "Honda", ModelName = "CBR600" },
+            new Motorcycle { Id = 2, Member = member2, BrandName = "Yamaha", ModelName = "R1" }
         };
 
         _mockRepository.Setup(r => r.GetAllWithMemberAsync())
@@ -46,7 +48,8 @@ public class MotorcycleServiceTests
     {
         // Arrange
         var motorcycleId = 1;
-        var expectedMotorcycle = new Motorcycle { Id = motorcycleId, MemberId = 1, BrandName = "Honda", ModelName = "CBR600" };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var expectedMotorcycle = new Motorcycle { Id = motorcycleId, Member = member, BrandName = "Honda", ModelName = "CBR600" };
 
         _mockRepository.Setup(r => r.GetByIdAsync(motorcycleId))
             .ReturnsAsync(expectedMotorcycle);
@@ -81,9 +84,10 @@ public class MotorcycleServiceTests
     {
         // Arrange
         var memberId = 1;
+        var member = new Member { Id = memberId, Name = "John", Surname = "Doe" };
         var expectedMotorcycles = new List<Motorcycle>
         {
-            new Motorcycle { Id = 1, MemberId = memberId, BrandName = "Honda", ModelName = "CBR600" }
+            new Motorcycle { Id = 1, Member = member, BrandName = "Honda", ModelName = "CBR600" }
         };
 
         _mockRepository.Setup(r => r.GetByMemberIdAsync(memberId))
@@ -103,8 +107,9 @@ public class MotorcycleServiceTests
     public async Task CreateMotorcycleAsync_ShouldAddAndReturnMotorcycle()
     {
         // Arrange
-        var newMotorcycle = new Motorcycle { MemberId = 1, BrandName = "Honda", ModelName = "CBR600" };
-        var createdMotorcycle = new Motorcycle { Id = 1, MemberId = 1, BrandName = "Honda", ModelName = "CBR600" };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var newMotorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
+        var createdMotorcycle = new Motorcycle { Id = 1, Member = member, BrandName = "Honda", ModelName = "CBR600" };
 
         _mockRepository.Setup(r => r.AddAsync(newMotorcycle))
             .ReturnsAsync(createdMotorcycle);
@@ -123,7 +128,8 @@ public class MotorcycleServiceTests
     public async Task UpdateMotorcycleAsync_ShouldUpdateMotorcycle()
     {
         // Arrange
-        var motorcycle = new Motorcycle { Id = 1, MemberId = 1, BrandName = "Honda", ModelName = "CBR600 Updated" };
+        var member = new Member { Id = 1, Name = "John", Surname = "Doe" };
+        var motorcycle = new Motorcycle { Id = 1, Member = member, BrandName = "Honda", ModelName = "CBR600 Updated" };
 
         _mockRepository.Setup(r => r.UpdateAsync(motorcycle))
             .Returns(Task.CompletedTask);

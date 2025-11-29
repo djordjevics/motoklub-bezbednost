@@ -7,9 +7,6 @@ public class Equipment
 {
     public int Id { get; set; }
 
-    [Required]
-    public int MemberId { get; set; }
-
     public bool Pants { get; set; }
 
     public bool Jacket { get; set; }
@@ -24,7 +21,7 @@ public class Equipment
     public string? Note { get; set; }
 
     // Navigation property
-    [ForeignKey("MemberId")]
+    [Required]
     public Member Member { get; set; } = null!;
 }
 

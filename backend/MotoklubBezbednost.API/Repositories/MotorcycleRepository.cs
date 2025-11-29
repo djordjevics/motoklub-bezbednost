@@ -13,7 +13,8 @@ public class MotorcycleRepository : Repository<Motorcycle>, IMotorcycleRepositor
     public async Task<IEnumerable<Motorcycle>> GetByMemberIdAsync(int memberId)
     {
         return await _dbSet
-            .Where(m => m.MemberId == memberId)
+            .Include(m => m.Member)
+            .Where(m => EF.Property<int>(m, "MemberId") == memberId)
             .ToListAsync();
     }
 

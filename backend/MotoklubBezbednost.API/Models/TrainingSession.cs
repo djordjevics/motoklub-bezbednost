@@ -14,8 +14,6 @@ public class TrainingSession
     [StringLength(100)]
     public string? City { get; set; }
 
-    public int? LevelId { get; set; }
-
     public int? Price { get; set; }
 
     [StringLength(500)]
@@ -25,7 +23,6 @@ public class TrainingSession
     public string? Note { get; set; }
 
     // Navigation properties
-    [ForeignKey("LevelId")]
     public Level? Level { get; set; }
 
     public ICollection<Training> Trainings { get; set; } = new List<Training>();

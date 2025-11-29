@@ -27,9 +27,9 @@ public class TrainingRepositoryTests : IDisposable
     {
         // Arrange
         var member = new Member { Name = "John", Surname = "Doe" };
-        var motorcycle = new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         var level = new Level { Name = "Beginner" };
-        var session = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
 
         _context.Members.Add(member);
         _context.Motorcycles.Add(motorcycle);
@@ -39,9 +39,9 @@ public class TrainingRepositoryTests : IDisposable
 
         var training = new Training
         {
-            MemberId = member.Id,
-            MotorcycleId = motorcycle.Id,
-            TrainingSessionId = session.Id,
+            Member = member,
+            Motorcycle = motorcycle,
+            TrainingSession = session,
             IsCertificateIssued = false
         };
 
@@ -60,9 +60,9 @@ public class TrainingRepositoryTests : IDisposable
     {
         // Arrange
         var member = new Member { Name = "John", Surname = "Doe" };
-        var motorcycle = new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         var level = new Level { Name = "Beginner" };
-        var session = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
 
         _context.Members.Add(member);
         _context.Motorcycles.Add(motorcycle);
@@ -70,7 +70,7 @@ public class TrainingRepositoryTests : IDisposable
         _context.TrainingSessions.Add(session);
         await _context.SaveChangesAsync();
 
-        var training = new Training { MemberId = member.Id, MotorcycleId = motorcycle.Id, TrainingSessionId = session.Id };
+        var training = new Training { Member = member, Motorcycle = motorcycle, TrainingSession = session };
         await _repository.AddAsync(training);
 
         // Act
@@ -78,7 +78,7 @@ public class TrainingRepositoryTests : IDisposable
 
         // Assert
         result.Should().NotBeNull();
-        result!.MemberId.Should().Be(member.Id);
+        result!.Member.Id.Should().Be(member.Id);
     }
 
     [Fact]
@@ -86,9 +86,9 @@ public class TrainingRepositoryTests : IDisposable
     {
         // Arrange
         var member = new Member { Name = "John", Surname = "Doe" };
-        var motorcycle = new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         var level = new Level { Name = "Beginner" };
-        var session = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
 
         _context.Members.Add(member);
         _context.Motorcycles.Add(motorcycle);
@@ -96,7 +96,7 @@ public class TrainingRepositoryTests : IDisposable
         _context.TrainingSessions.Add(session);
         await _context.SaveChangesAsync();
 
-        var training = new Training { MemberId = member.Id, MotorcycleId = motorcycle.Id, TrainingSessionId = session.Id };
+        var training = new Training { Member = member, Motorcycle = motorcycle, TrainingSession = session };
         await _repository.AddAsync(training);
 
         // Act
@@ -116,10 +116,10 @@ public class TrainingRepositoryTests : IDisposable
         // Arrange
         var member1 = new Member { Name = "John", Surname = "Doe" };
         var member2 = new Member { Name = "Jane", Surname = "Smith" };
-        var motorcycle1 = new Motorcycle { MemberId = member1.Id, BrandName = "Honda", ModelName = "CBR600" };
-        var motorcycle2 = new Motorcycle { MemberId = member2.Id, BrandName = "Yamaha", ModelName = "R1" };
+        var motorcycle1 = new Motorcycle { Member = member1, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle2 = new Motorcycle { Member = member2, BrandName = "Yamaha", ModelName = "R1" };
         var level = new Level { Name = "Beginner" };
-        var session = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
 
         _context.Members.AddRange(member1, member2);
         _context.Motorcycles.AddRange(motorcycle1, motorcycle2);
@@ -127,16 +127,16 @@ public class TrainingRepositoryTests : IDisposable
         _context.TrainingSessions.Add(session);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Training { MemberId = member1.Id, MotorcycleId = motorcycle1.Id, TrainingSessionId = session.Id });
-        await _repository.AddAsync(new Training { MemberId = member1.Id, MotorcycleId = motorcycle1.Id, TrainingSessionId = session.Id });
-        await _repository.AddAsync(new Training { MemberId = member2.Id, MotorcycleId = motorcycle2.Id, TrainingSessionId = session.Id });
+        await _repository.AddAsync(new Training { Member = member1, Motorcycle = motorcycle1, TrainingSession = session });
+        await _repository.AddAsync(new Training { Member = member1, Motorcycle = motorcycle1, TrainingSession = session });
+        await _repository.AddAsync(new Training { Member = member2, Motorcycle = motorcycle2, TrainingSession = session });
 
         // Act
         var result = await _repository.GetByMemberIdAsync(member1.Id);
 
         // Assert
         result.Should().HaveCount(2);
-        result.All(t => t.MemberId == member1.Id).Should().BeTrue();
+        result.All(t => t.Member.Id == member1.Id).Should().BeTrue();
     }
 
     [Fact]
@@ -144,9 +144,9 @@ public class TrainingRepositoryTests : IDisposable
     {
         // Arrange
         var member = new Member { Name = "John", Surname = "Doe" };
-        var motorcycle = new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         var level = new Level { Name = "Beginner" };
-        var session = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
 
         _context.Members.Add(member);
         _context.Motorcycles.Add(motorcycle);
@@ -154,7 +154,7 @@ public class TrainingRepositoryTests : IDisposable
         _context.TrainingSessions.Add(session);
         await _context.SaveChangesAsync();
 
-        var training = new Training { MemberId = member.Id, MotorcycleId = motorcycle.Id, TrainingSessionId = session.Id, IsCertificateIssued = false };
+        var training = new Training { Member = member, Motorcycle = motorcycle, TrainingSession = session, IsCertificateIssued = false };
         await _repository.AddAsync(training);
         training.IsCertificateIssued = true;
 
@@ -171,9 +171,9 @@ public class TrainingRepositoryTests : IDisposable
     {
         // Arrange
         var member = new Member { Name = "John", Surname = "Doe" };
-        var motorcycle = new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         var level = new Level { Name = "Beginner" };
-        var session = new TrainingSession { LevelId = level.Id, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
 
         _context.Members.Add(member);
         _context.Motorcycles.Add(motorcycle);
@@ -181,7 +181,7 @@ public class TrainingRepositoryTests : IDisposable
         _context.TrainingSessions.Add(session);
         await _context.SaveChangesAsync();
 
-        var training = new Training { MemberId = member.Id, MotorcycleId = motorcycle.Id, TrainingSessionId = session.Id };
+        var training = new Training { Member = member, Motorcycle = motorcycle, TrainingSession = session };
         await _repository.AddAsync(training);
 
         // Act

@@ -13,7 +13,8 @@ public class EquipmentRepository : Repository<Equipment>, IEquipmentRepository
     public async Task<Equipment?> GetByMemberIdAsync(int memberId)
     {
         return await _dbSet
-            .FirstOrDefaultAsync(e => e.MemberId == memberId);
+            .Include(e => e.Member)
+            .FirstOrDefaultAsync(e => EF.Property<int>(e, "MemberId") == memberId);
     }
 
     public async Task<IEnumerable<Equipment>> GetAllWithMemberAsync()

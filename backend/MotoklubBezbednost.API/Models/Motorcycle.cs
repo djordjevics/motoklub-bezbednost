@@ -7,9 +7,6 @@ public class Motorcycle
 {
     public int Id { get; set; }
 
-    [Required]
-    public int MemberId { get; set; }
-
     [StringLength(100)]
     public string? BrandName { get; set; }
 
@@ -27,7 +24,7 @@ public class Motorcycle
     public string? Color { get; set; }
 
     // Navigation properties
-    [ForeignKey("MemberId")]
+    [Required]
     public Member Member { get; set; } = null!;
 
     public ICollection<Training> Trainings { get; set; } = new List<Training>();

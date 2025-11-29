@@ -32,7 +32,7 @@ public class EquipmentRepositoryTests : IDisposable
 
         var equipment = new Equipment
         {
-            MemberId = member.Id,
+            Member = member,
             Pants = true,
             Jacket = true,
             Vest = false,
@@ -60,7 +60,7 @@ public class EquipmentRepositoryTests : IDisposable
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var equipment = new Equipment { MemberId = member.Id, Pants = true, Jacket = true };
+        var equipment = new Equipment { Member = member, Pants = true, Jacket = true };
         await _repository.AddAsync(equipment);
 
         // Act
@@ -92,8 +92,8 @@ public class EquipmentRepositoryTests : IDisposable
         _context.Members.AddRange(member1, member2);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Equipment { MemberId = member1.Id, Pants = true, Jacket = true });
-        await _repository.AddAsync(new Equipment { MemberId = member2.Id, Pants = true, Jacket = false });
+        await _repository.AddAsync(new Equipment { Member = member1, Pants = true, Jacket = true });
+        await _repository.AddAsync(new Equipment { Member = member2, Pants = true, Jacket = false });
 
         // Act
         var result = await _repository.GetAllAsync();
@@ -110,7 +110,7 @@ public class EquipmentRepositoryTests : IDisposable
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Equipment { MemberId = member.Id, Pants = true, Jacket = true });
+        await _repository.AddAsync(new Equipment { Member = member, Pants = true, Jacket = true });
 
         // Act
         var result = await _repository.GetAllWithMemberAsync();
@@ -129,7 +129,7 @@ public class EquipmentRepositoryTests : IDisposable
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var equipment = new Equipment { MemberId = member.Id, Pants = true, Jacket = true };
+        var equipment = new Equipment { Member = member, Pants = true, Jacket = true };
         await _repository.AddAsync(equipment);
 
         // Act
@@ -137,7 +137,7 @@ public class EquipmentRepositoryTests : IDisposable
 
         // Assert
         result.Should().NotBeNull();
-        result!.MemberId.Should().Be(member.Id);
+        result!.Member.Id.Should().Be(member.Id);
         result.Pants.Should().BeTrue();
     }
 
@@ -164,7 +164,7 @@ public class EquipmentRepositoryTests : IDisposable
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var equipment = new Equipment { MemberId = member.Id, Pants = true, Jacket = true };
+        var equipment = new Equipment { Member = member, Pants = true, Jacket = true };
         await _repository.AddAsync(equipment);
         equipment.Pants = false;
 
@@ -184,7 +184,7 @@ public class EquipmentRepositoryTests : IDisposable
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var equipment = new Equipment { MemberId = member.Id, Pants = true, Jacket = true };
+        var equipment = new Equipment { Member = member, Pants = true, Jacket = true };
         await _repository.AddAsync(equipment);
 
         // Act

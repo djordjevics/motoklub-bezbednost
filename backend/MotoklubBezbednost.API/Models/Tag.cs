@@ -7,9 +7,6 @@ public class Tag
 {
     public int Id { get; set; }
 
-    [Required]
-    public int MemberId { get; set; }
-
     public int? TagNumber { get; set; }
 
     public DateTime? AssignedDate { get; set; }
@@ -19,7 +16,7 @@ public class Tag
     public DateTime? ValidTo { get; set; }
 
     // Navigation property
-    [ForeignKey("MemberId")]
+    [Required]
     public Member Member { get; set; } = null!;
 }
 

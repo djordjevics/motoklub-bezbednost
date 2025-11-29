@@ -32,7 +32,7 @@ public class MotorcycleRepositoryTests : IDisposable
 
         var motorcycle = new Motorcycle
         {
-            MemberId = member.Id,
+            Member = member,
             BrandName = "Honda",
             ModelName = "CBR600",
             EngineDisplacment = 600
@@ -57,7 +57,7 @@ public class MotorcycleRepositoryTests : IDisposable
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var motorcycle = new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         await _repository.AddAsync(motorcycle);
 
         // Act
@@ -88,8 +88,8 @@ public class MotorcycleRepositoryTests : IDisposable
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" });
-        await _repository.AddAsync(new Motorcycle { MemberId = member.Id, BrandName = "Yamaha", ModelName = "R1" });
+        await _repository.AddAsync(new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" });
+        await _repository.AddAsync(new Motorcycle { Member = member, BrandName = "Yamaha", ModelName = "R1" });
 
         // Act
         var result = await _repository.GetAllAsync();
@@ -106,7 +106,7 @@ public class MotorcycleRepositoryTests : IDisposable
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" });
+        await _repository.AddAsync(new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" });
 
         // Act
         var result = await _repository.GetAllWithMemberAsync();
@@ -126,16 +126,16 @@ public class MotorcycleRepositoryTests : IDisposable
         _context.Members.AddRange(member1, member2);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Motorcycle { MemberId = member1.Id, BrandName = "Honda", ModelName = "CBR600" });
-        await _repository.AddAsync(new Motorcycle { MemberId = member1.Id, BrandName = "Yamaha", ModelName = "R1" });
-        await _repository.AddAsync(new Motorcycle { MemberId = member2.Id, BrandName = "Kawasaki", ModelName = "Ninja" });
+        await _repository.AddAsync(new Motorcycle { Member = member1, BrandName = "Honda", ModelName = "CBR600" });
+        await _repository.AddAsync(new Motorcycle { Member = member1, BrandName = "Yamaha", ModelName = "R1" });
+        await _repository.AddAsync(new Motorcycle { Member = member2, BrandName = "Kawasaki", ModelName = "Ninja" });
 
         // Act
         var result = await _repository.GetByMemberIdAsync(member1.Id);
 
         // Assert
         result.Should().HaveCount(2);
-        result.All(m => m.MemberId == member1.Id).Should().BeTrue();
+        result.All(m => m.Member.Id == member1.Id).Should().BeTrue();
     }
 
     [Fact]
@@ -146,7 +146,7 @@ public class MotorcycleRepositoryTests : IDisposable
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var motorcycle = new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         await _repository.AddAsync(motorcycle);
         motorcycle.ModelName = "CBR600 Updated";
 
@@ -166,7 +166,7 @@ public class MotorcycleRepositoryTests : IDisposable
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var motorcycle = new Motorcycle { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         await _repository.AddAsync(motorcycle);
 
         // Act

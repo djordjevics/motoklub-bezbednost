@@ -37,7 +37,7 @@ public class MembersController : ControllerBase
     public async Task<ActionResult<Member>> CreateMember([FromBody] Member member)
     {
         var createdMember = await _memberService.CreateMemberAsync(member);
-        return CreatedAtAction(nameof(GetMember), new { id = createdMember.Id }, createdMember });
+        return CreatedAtAction(nameof(GetMember), new { id = createdMember.Id }, createdMember);
     }
 
     [HttpPut("{id}")]

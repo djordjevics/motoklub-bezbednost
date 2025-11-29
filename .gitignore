@@ -1,0 +1,154 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options directory
+.vs/
+.vscode/
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Build results
+*_i.c
+*_i.h
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+project.assets.json
+project.nuget.cache
+*.dgspec.json
+*.nuget.g.props
+*.nuget.g.targets
+artifacts/
+*.nupkg
+*.snupkg
+**/packages/*
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Node.js / npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Frontend build outputs
+dist/
+dist-ssr/
+build/
+*.local
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+appsettings.Production.json
+appsettings.Local.json
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+
+# Test results
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE - Visual Studio
+*.swp
+*.swo
+*~
+
+# Rider
+.idea/
+*.iml
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# AWS / Cloud
+.aws-sam/
+samconfig.toml
+
+# Logs
+logs/
+*.log
+

@@ -34,7 +34,7 @@ public class ApplicationDbContext : DbContext
             entity.HasIndex(e => e.Email);
             entity.HasOne(e => e.MemberType)
                   .WithMany(mt => mt.Members)
-                  .HasForeignKey(e => e.MemberTypeId)
+                  .HasForeignKey("MemberTypeId")
                   .OnDelete(DeleteBehavior.SetNull);
         });
 
@@ -50,11 +50,11 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.HasOne(e => e.Member)
                   .WithMany(m => m.MembershipPayments)
-                  .HasForeignKey(e => e.MemberId)
+                  .HasForeignKey("MemberId")
                   .OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(e => e.PaymentType)
                   .WithMany(pt => pt.MembershipPayments)
-                  .HasForeignKey(e => e.PaymentTypeId)
+                  .HasForeignKey("PaymentTypeId")
                   .OnDelete(DeleteBehavior.SetNull);
         });
 
@@ -70,7 +70,7 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.HasOne(e => e.Member)
                   .WithMany(m => m.Motorcycles)
-                  .HasForeignKey(e => e.MemberId)
+                  .HasForeignKey("MemberId")
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -80,7 +80,7 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.HasOne(e => e.Member)
                   .WithOne(m => m.Equipment)
-                  .HasForeignKey<Equipment>(e => e.MemberId)
+                  .HasForeignKey<Equipment>("MemberId")
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -90,7 +90,7 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.HasOne(e => e.Level)
                   .WithMany(l => l.TrainingSessions)
-                  .HasForeignKey(e => e.LevelId)
+                  .HasForeignKey("LevelId")
                   .OnDelete(DeleteBehavior.SetNull);
         });
 
@@ -106,15 +106,15 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.HasOne(e => e.Member)
                   .WithMany(m => m.Trainings)
-                  .HasForeignKey(e => e.MemberId)
+                  .HasForeignKey("MemberId")
                   .OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(e => e.Motorcycle)
                   .WithMany(m => m.Trainings)
-                  .HasForeignKey(e => e.MotorcycleId)
+                  .HasForeignKey("MotorcycleId")
                   .OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(e => e.TrainingSession)
                   .WithMany(ts => ts.Trainings)
-                  .HasForeignKey(e => e.TrainingSessionId)
+                  .HasForeignKey("TrainingSessionId")
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -124,7 +124,7 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.HasOne(e => e.Member)
                   .WithMany(m => m.Comments)
-                  .HasForeignKey(e => e.MemberId)
+                  .HasForeignKey("MemberId")
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -134,7 +134,7 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.HasOne(e => e.Member)
                   .WithMany(m => m.Tags)
-                  .HasForeignKey(e => e.MemberId)
+                  .HasForeignKey("MemberId")
                   .OnDelete(DeleteBehavior.Cascade);
         });
     }

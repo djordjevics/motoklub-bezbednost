@@ -16,7 +16,7 @@ public class TrainingRepository : Repository<Training>, ITrainingRepository
             .Include(t => t.TrainingSession)
                 .ThenInclude(ts => ts.Level)
             .Include(t => t.Motorcycle)
-            .Where(t => t.MemberId == memberId)
+            .Where(t => EF.Property<int>(t, "MemberId") == memberId)
             .OrderByDescending(t => t.TrainingSession.TheoryDate ?? t.TrainingSession.PolygonDate ?? DateTime.MinValue)
             .ToListAsync();
     }

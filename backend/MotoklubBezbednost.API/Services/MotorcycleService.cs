@@ -1,60 +1,45 @@
-using Microsoft.EntityFrameworkCore;
-using MotoklubBezbednost.API.Data;
 using MotoklubBezbednost.API.Models;
+using MotoklubBezbednost.API.Repositories;
 
 namespace MotoklubBezbednost.API.Services;
 
 public class MotorcycleService : IMotorcycleService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IMotorcycleRepository _motorcycleRepository;
 
-    public MotorcycleService(ApplicationDbContext context)
+    public MotorcycleService(IMotorcycleRepository motorcycleRepository)
     {
-        _context = context;
+        _motorcycleRepository = motorcycleRepository;
     }
 
     public async Task<IEnumerable<Motorcycle>> GetAllMotorcyclesAsync()
     {
-        return await _context.Motorcycles
-            .Include(m => m.Member)
-            .ToListAsync();
+        return await _motorcycleRepository.GetAllWithMemberAsync();
     }
 
     public async Task<Motorcycle?> GetMotorcycleByIdAsync(int id)
     {
-        return await _context.Motorcycles
-            .Include(m => m.Member)
-            .FirstOrDefaultAsync(m => m.Id == id);
+        return await _motorcycleRepository.GetByIdAsync(id);
     }
 
     public async Task<IEnumerable<Motorcycle>> GetMotorcyclesByMemberIdAsync(int memberId)
     {
-        return await _context.Motorcycles
-            .Where(m => m.MemberId == memberId)
-            .ToListAsync();
+        return await _motorcycleRepository.GetByMemberIdAsync(memberId);
     }
 
     public async Task<Motorcycle> CreateMotorcycleAsync(Motorcycle motorcycle)
     {
-        _context.Motorcycles.Add(motorcycle);
-        await _context.SaveChangesAsync();
-        return motorcycle;
+        return await _motorcycleRepository.AddAsync(motorcycle);
     }
 
     public async Task UpdateMotorcycleAsync(Motorcycle motorcycle)
     {
-        _context.Motorcycles.Update(motorcycle);
-        await _context.SaveChangesAsync();
+        await _motorcycleRepository.UpdateAsync(motorcycle);
     }
 
     public async Task DeleteMotorcycleAsync(int id)
     {
-        var motorcycle = await _context.Motorcycles.FindAsync(id);
-        if (motorcycle != null)
-        {
-            _context.Motorcycles.Remove(motorcycle);
-            await _context.SaveChangesAsync();
-        }
+        await _motorcycleRepository.DeleteAsync(id);
     }
 }
 

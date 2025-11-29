@@ -1,5 +1,6 @@
 using MotoklubBezbednost.API.Data;
 using MotoklubBezbednost.API.Services;
+using MotoklubBezbednost.API.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -43,6 +44,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+
+// Register repositories
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IMotorcycleRepository, MotorcycleRepository>();
+builder.Services.AddScoped<ITrainingRepository, TrainingRepository>();
+builder.Services.AddScoped<ITrainingSessionRepository, TrainingSessionRepository>();
+builder.Services.AddScoped<IEquipmentRepository, EquipmentRepository>();
 
 // Register services
 builder.Services.AddScoped<IMemberService, MemberService>();

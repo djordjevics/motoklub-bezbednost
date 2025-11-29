@@ -1,60 +1,46 @@
-using Microsoft.EntityFrameworkCore;
-using MotoklubBezbednost.API.Data;
 using MotoklubBezbednost.API.Models;
+using MotoklubBezbednost.API.Repositories;
 
 namespace MotoklubBezbednost.API.Services;
 
 public class EquipmentService : IEquipmentService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IEquipmentRepository _equipmentRepository;
 
-    public EquipmentService(ApplicationDbContext context)
+    public EquipmentService(IEquipmentRepository equipmentRepository)
     {
-        _context = context;
+        _equipmentRepository = equipmentRepository;
     }
 
     public async Task<IEnumerable<Equipment>> GetAllEquipmentAsync()
     {
-        return await _context.Equipment
-            .Include(e => e.Member)
-            .ToListAsync();
+        return await _equipmentRepository.GetAllWithMemberAsync();
     }
 
     public async Task<Equipment?> GetEquipmentByIdAsync(int id)
     {
-        return await _context.Equipment
-            .Include(e => e.Member)
-            .FirstOrDefaultAsync(e => e.Id == id);
+        return await _equipmentRepository.GetByIdAsync(id);
     }
 
     public async Task<IEnumerable<Equipment>> GetEquipmentByMemberIdAsync(int memberId)
     {
-        return await _context.Equipment
-            .Where(e => e.MemberId == memberId)
-            .ToListAsync();
+        var equipment = await _equipmentRepository.GetByMemberIdAsync(memberId);
+        return equipment != null ? new[] { equipment } : Enumerable.Empty<Equipment>();
     }
 
     public async Task<Equipment> CreateEquipmentAsync(Equipment equipment)
     {
-        _context.Equipment.Add(equipment);
-        await _context.SaveChangesAsync();
-        return equipment;
+        return await _equipmentRepository.AddAsync(equipment);
     }
 
     public async Task UpdateEquipmentAsync(Equipment equipment)
     {
-        _context.Equipment.Update(equipment);
-        await _context.SaveChangesAsync();
+        await _equipmentRepository.UpdateAsync(equipment);
     }
 
     public async Task DeleteEquipmentAsync(int id)
     {
-        var equipment = await _context.Equipment.FindAsync(id);
-        if (equipment != null)
-        {
-            _context.Equipment.Remove(equipment);
-            await _context.SaveChangesAsync();
-        }
+        await _equipmentRepository.DeleteAsync(id);
     }
 }
 

@@ -1,73 +1,45 @@
-using Microsoft.EntityFrameworkCore;
-using MotoklubBezbednost.API.Data;
 using MotoklubBezbednost.API.Models;
+using MotoklubBezbednost.API.Repositories;
 
 namespace MotoklubBezbednost.API.Services;
 
 public class MemberService : IMemberService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IMemberRepository _memberRepository;
 
-    public MemberService(ApplicationDbContext context)
+    public MemberService(IMemberRepository memberRepository)
     {
-        _context = context;
+        _memberRepository = memberRepository;
     }
 
     public async Task<IEnumerable<Member>> GetAllMembersAsync()
     {
-        return await _context.Members
-            .Include(m => m.Motorcycles)
-            .Include(m => m.Equipment)
-            .Include(m => m.Trainings)
-            .Include(m => m.MemberType)
-            .ToListAsync();
+        return await _memberRepository.GetAllWithDetailsAsync();
     }
 
     public async Task<Member?> GetMemberByIdAsync(int id)
     {
-        return await _context.Members
-            .Include(m => m.Motorcycles)
-            .Include(m => m.Equipment)
-            .Include(m => m.Trainings)
-                .ThenInclude(t => t.TrainingSession)
-            .Include(m => m.MemberType)
-            .Include(m => m.MembershipPayments)
-            .Include(m => m.Comments)
-            .Include(m => m.Tags)
-            .FirstOrDefaultAsync(m => m.Id == id);
+        return await _memberRepository.GetByIdWithDetailsAsync(id);
     }
 
     public async Task<Member> CreateMemberAsync(Member member)
     {
-        _context.Members.Add(member);
-        await _context.SaveChangesAsync();
-        return member;
+        return await _memberRepository.AddAsync(member);
     }
 
     public async Task UpdateMemberAsync(Member member)
     {
-        _context.Members.Update(member);
-        await _context.SaveChangesAsync();
+        await _memberRepository.UpdateAsync(member);
     }
 
     public async Task DeleteMemberAsync(int id)
     {
-        var member = await _context.Members.FindAsync(id);
-        if (member != null)
-        {
-            _context.Members.Remove(member);
-            await _context.SaveChangesAsync();
-        }
+        await _memberRepository.DeleteAsync(id);
     }
 
     public async Task<IEnumerable<Member>> SearchMembersAsync(string query)
     {
-        var searchTerm = query.ToLower();
-        return await _context.Members
-            .Where(m => m.Name.ToLower().Contains(searchTerm) ||
-                       m.Surname.ToLower().Contains(searchTerm) ||
-                       (m.Email != null && m.Email.ToLower().Contains(searchTerm)))
-            .ToListAsync();
+        return await _memberRepository.SearchAsync(query);
     }
 }
 

@@ -1,0 +1,153 @@
+using Microsoft.EntityFrameworkCore;
+using Xunit;
+using FluentAssertions;
+using MotoklubBezbednost.API.Data;
+using MotoklubBezbednost.API.Models;
+using MotoklubBezbednost.API.Repositories;
+
+namespace MotoklubBezbednost.API.Tests.Repositories;
+
+public class MemberRepositoryTests : IDisposable
+{
+    private readonly ApplicationDbContext _context;
+    private readonly MemberRepository _repository;
+
+    public MemberRepositoryTests()
+    {
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        _context = new ApplicationDbContext(options);
+        _repository = new MemberRepository(_context);
+    }
+
+    [Fact]
+    public async Task AddAsync_ShouldAddMemberToDatabase()
+    {
+        // Arrange
+        var member = new Member
+        {
+            Name = "John",
+            Surname = "Doe",
+            Email = "john.doe@example.com"
+        };
+
+        // Act
+        var result = await _repository.AddAsync(member);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Id.Should().BeGreaterThan(0);
+        var memberInDb = await _context.Members.FindAsync(result.Id);
+        memberInDb.Should().NotBeNull();
+        memberInDb!.Name.Should().Be("John");
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_WhenMemberExists_ShouldReturnMember()
+    {
+        // Arrange
+        var member = new Member { Name = "John", Surname = "Doe" };
+        await _repository.AddAsync(member);
+
+        // Act
+        var result = await _repository.GetByIdAsync(member.Id);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Name.Should().Be("John");
+        result.Surname.Should().Be("Doe");
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_WhenMemberDoesNotExist_ShouldReturnNull()
+    {
+        // Act
+        var result = await _repository.GetByIdAsync(999);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ShouldReturnAllMembers()
+    {
+        // Arrange
+        await _repository.AddAsync(new Member { Name = "John", Surname = "Doe" });
+        await _repository.AddAsync(new Member { Name = "Jane", Surname = "Smith" });
+
+        // Act
+        var result = await _repository.GetAllAsync();
+
+        // Assert
+        result.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldUpdateMember()
+    {
+        // Arrange
+        var member = new Member { Name = "John", Surname = "Doe" };
+        await _repository.AddAsync(member);
+        member.Surname = "Doe Updated";
+
+        // Act
+        await _repository.UpdateAsync(member);
+
+        // Assert
+        var updatedMember = await _repository.GetByIdAsync(member.Id);
+        updatedMember!.Surname.Should().Be("Doe Updated");
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldRemoveMember()
+    {
+        // Arrange
+        var member = new Member { Name = "John", Surname = "Doe" };
+        await _repository.AddAsync(member);
+
+        // Act
+        await _repository.DeleteAsync(member.Id);
+
+        // Assert
+        var deletedMember = await _repository.GetByIdAsync(member.Id);
+        deletedMember.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task SearchAsync_ShouldReturnMatchingMembers()
+    {
+        // Arrange
+        await _repository.AddAsync(new Member { Name = "John", Surname = "Doe", Email = "john@example.com" });
+        await _repository.AddAsync(new Member { Name = "Jane", Surname = "Smith", Email = "jane@example.com" });
+
+        // Act
+        var result = await _repository.SearchAsync("John");
+
+        // Assert
+        result.Should().HaveCount(1);
+        result.First().Name.Should().Be("John");
+    }
+
+    [Fact]
+    public async Task SearchAsync_ShouldSearchByEmail()
+    {
+        // Arrange
+        await _repository.AddAsync(new Member { Name = "John", Surname = "Doe", Email = "john@example.com" });
+        await _repository.AddAsync(new Member { Name = "Jane", Surname = "Smith", Email = "jane@example.com" });
+
+        // Act
+        var result = await _repository.SearchAsync("john@example.com");
+
+        // Assert
+        result.Should().HaveCount(1);
+        result.First().Email.Should().Be("john@example.com");
+    }
+
+    public void Dispose()
+    {
+        _context.Dispose();
+    }
+}
+

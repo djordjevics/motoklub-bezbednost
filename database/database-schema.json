@@ -70,7 +70,8 @@
         {"name": "modelName", "type": "varchar"},
         {"name": "engineDisplacment", "type": "int"},
         {"name": "enginePower", "type": "int"},
-        {"name": "color", "type": "varchar"}
+        {"name": "color", "type": "varchar"},
+        {"name": "registerPlate", "type": "varchar"}
       ]
     },
     {

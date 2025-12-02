@@ -23,6 +23,9 @@ public class Motorcycle
     [StringLength(50)]
     public string? Color { get; set; }
 
+    [StringLength(20)]
+    public string? RegisterPlate { get; set; }
+
     // Navigation properties
     [Required]
     public Member Member { get; set; } = null!;

@@ -65,6 +65,7 @@ erDiagram
         int engineDisplacment
         int enginePower
         varchar color
+        varchar registerPlate
     }
 
     TrainingSession {

@@ -1,5 +1,5 @@
 import { AppBar as MuiAppBar, Toolbar, Typography, IconButton, Box } from '@mui/material'
-import { signOut } from 'aws-amplify/auth'
+import { signOut } from '@aws-amplify/auth'
 import { useNavigate } from 'react-router-dom'
 import LogoutIcon from '@mui/icons-material/Logout'
 

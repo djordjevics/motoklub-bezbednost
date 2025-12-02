@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth'
+import { getCurrentUser, fetchAuthSession } from '@aws-amplify/auth'
 import API_BASE_URL from '../config/apiConfig'
 
 const apiClient = axios.create({

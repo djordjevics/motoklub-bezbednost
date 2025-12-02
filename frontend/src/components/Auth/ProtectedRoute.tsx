@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import { getCurrentUser } from 'aws-amplify/auth'
+import { getCurrentUser } from '@aws-amplify/auth'
 import { Box, CircularProgress } from '@mui/material'
 
 interface ProtectedRouteProps {

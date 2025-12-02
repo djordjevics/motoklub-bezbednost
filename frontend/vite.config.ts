@@ -12,6 +12,21 @@ export default defineConfig({
         changeOrigin: true,
       }
     }
-  }
+  },
+  optimizeDeps: {
+    include: ['aws-amplify', '@aws-amplify/auth'],
+    esbuildOptions: {
+      target: 'es2020',
+    },
+  },
+  resolve: {
+    alias: {
+      './runtimeConfig': './runtimeConfig.browser',
+      'aws-amplify/auth': '@aws-amplify/auth',
+    },
+  },
+  define: {
+    global: 'globalThis',
+  },
 })
 

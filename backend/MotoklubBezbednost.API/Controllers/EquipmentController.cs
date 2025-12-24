@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using MotoklubBezbednost.Data.Models;
-using MotoklubBezbednost.Business.Services;
+using MediatR;
+using MotoklubBezbednost.API.Requests;
+using MotoklubBezbednost.Business.Dtos;
+using MotoklubBezbednost.Business.Mappings;
+using MotoklubBezbednost.Business.Cqrs.Equipment.Commands;
+using MotoklubBezbednost.Business.Cqrs.Equipment.Queries;
 
 namespace MotoklubBezbednost.API.Controllers;
 
@@ -10,58 +14,67 @@ namespace MotoklubBezbednost.API.Controllers;
 [Authorize]
 public class EquipmentController : ControllerBase
 {
-    private readonly IEquipmentService _equipmentService;
+    private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public EquipmentController(IEquipmentService equipmentService)
+    public EquipmentController(IMediator mediator, IMapper mapper)
     {
-        _equipmentService = equipmentService;
+        _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Equipment>>> GetEquipment()
+    public async Task<ActionResult<IEnumerable<EquipmentDto>>> GetEquipment([FromQuery] GetAllEquipmentRequest request)
     {
-        var equipment = await _equipmentService.GetAllEquipmentAsync();
+        var query = _mapper.Map<GetAllEquipmentRequest, GetAllEquipmentQuery>(request);
+        var equipment = await _mediator.Send(query);
         return Ok(equipment);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Equipment>> GetEquipment(int id)
+    public async Task<ActionResult<EquipmentDto>> GetEquipment([FromRoute] GetEquipmentByIdRequest request)
     {
-        var equipment = await _equipmentService.GetEquipmentByIdAsync(id);
+        var query = _mapper.Map<GetEquipmentByIdRequest, GetEquipmentByIdQuery>(request);
+        var equipment = await _mediator.Send(query);
         if (equipment == null)
             return NotFound();
         return Ok(equipment);
     }
 
     [HttpGet("member/{memberId}")]
-    public async Task<ActionResult<IEnumerable<Equipment>>> GetEquipmentByMember(int memberId)
+    public async Task<ActionResult<IEnumerable<EquipmentDto>>> GetEquipmentByMember([FromRoute] GetEquipmentByMemberRequest request)
     {
-        var equipment = await _equipmentService.GetEquipmentByMemberIdAsync(memberId);
+        var query = _mapper.Map<GetEquipmentByMemberRequest, GetEquipmentByMemberQuery>(request);
+        var equipment = await _mediator.Send(query);
         return Ok(equipment);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Equipment>> CreateEquipment([FromBody] Equipment equipment)
+    public async Task<ActionResult<EquipmentDto>> CreateEquipment([FromBody] CreateEquipmentRequest request)
     {
-        var createdEquipment = await _equipmentService.CreateEquipmentAsync(equipment);
+        var cmd = _mapper.Map<CreateEquipmentRequest, CreateEquipmentCommand>(request);
+        var createdEquipment = await _mediator.Send(cmd);
         return CreatedAtAction(nameof(GetEquipment), new { id = createdEquipment.Id }, createdEquipment);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEquipment(int id, [FromBody] Equipment equipment)
+    public async Task<IActionResult> UpdateEquipment([FromRoute] int id, [FromBody] UpdateEquipmentRequest request)
     {
-        if (id != equipment.Id)
+        if (id != request.Id)
             return BadRequest();
-        
-        await _equipmentService.UpdateEquipmentAsync(equipment);
+
+        var cmd = _mapper.Map<UpdateEquipmentRequest, UpdateEquipmentCommand>(request);
+        var updated = await _mediator.Send(cmd);
+        if (updated is null)
+            return NotFound();
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteEquipment(int id)
+    public async Task<IActionResult> DeleteEquipment([FromRoute] DeleteEquipmentRequest request)
     {
-        await _equipmentService.DeleteEquipmentAsync(id);
+        var cmd = _mapper.Map<DeleteEquipmentRequest, DeleteEquipmentCommand>(request);
+        await _mediator.Send(cmd);
         return NoContent();
     }
 }
-

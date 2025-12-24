@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MotoklubBezbednost.Data.Models;
 
-public class MemberTypeDb
+public class MemberTypeDb : DbModel
 {
-    public int Id { get; set; }
-
     public int? Prefix { get; set; }
 
     [StringLength(100)]

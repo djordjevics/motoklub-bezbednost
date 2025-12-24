@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MotoklubBezbednost.Data.Models;
 
-public class PaymentTypeDb
+public class PaymentTypeDb : DbModel
 {
-    public int Id { get; set; }
-
     [StringLength(100)]
     public string? Type { get; set; }
 

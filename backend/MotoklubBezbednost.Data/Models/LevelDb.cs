@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MotoklubBezbednost.Data.Models;
 
-public class LevelDb
+public class LevelDb : DbModel
 {
-    public int Id { get; set; }
-
     [StringLength(100)]
     public string? Name { get; set; }
 

@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MotoklubBezbednost.Data.Models;
 
-public class TrainingDb
+public class TrainingDb : DbModel
 {
-    public int Id { get; set; }
-
     public bool IsCertificateIssued { get; set; }
 
     [StringLength(1000)]

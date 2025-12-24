@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MotoklubBezbednost.Data.Models;
 
-public class MembershipPaymentDb
+public class MembershipPaymentDb : DbModel
 {
-    public int Id { get; set; }
-
     public int? Amount { get; set; }
 
     public DateTime? PaymentDate { get; set; }

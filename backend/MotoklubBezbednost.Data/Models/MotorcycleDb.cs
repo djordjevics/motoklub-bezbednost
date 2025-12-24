@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MotoklubBezbednost.Data.Models;
 
-public class MotorcycleDb
+public class MotorcycleDb : DbModel
 {
-    public int Id { get; set; }
-
     [StringLength(100)]
     public string? BrandName { get; set; }
 

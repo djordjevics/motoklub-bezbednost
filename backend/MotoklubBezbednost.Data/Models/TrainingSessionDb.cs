@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MotoklubBezbednost.Data.Models;
 
-public class TrainingSessionDb
+public class TrainingSessionDb : DbModel
 {
-    public int Id { get; set; }
-
     public DateTime? TheoryDate { get; set; }
 
     public DateTime? PolygonDate { get; set; }

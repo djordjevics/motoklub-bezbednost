@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MotoklubBezbednost.Data.Models;
 
-public class CommentDb
+public class CommentDb : DbModel
 {
-    public int Id { get; set; }
-
     public DateTime? CreationTime { get; set; }
 
     public DateTime? EditTime { get; set; }

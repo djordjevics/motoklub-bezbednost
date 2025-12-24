@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MotoklubBezbednost.Data.Models;
 
-public class TagDb
+public class TagDb : DbModel
 {
-    public int Id { get; set; }
-
     public int? TagNumber { get; set; }
 
     public DateTime? AssignedDate { get; set; }

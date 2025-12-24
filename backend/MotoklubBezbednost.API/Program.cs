@@ -1,6 +1,6 @@
-using MotoklubBezbednost.API.Data;
-using MotoklubBezbednost.API.Services;
-using MotoklubBezbednost.API.Repositories;
+using MotoklubBezbednost.Data;
+using MotoklubBezbednost.Data.Repositories;
+using MotoklubBezbednost.Business.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using MotoklubBezbednost.API.Models;
-using MotoklubBezbednost.API.Services;
+using MotoklubBezbednost.Data.Models;
+using MotoklubBezbednost.Business.Services;
 
 namespace MotoklubBezbednost.API.Controllers;
 

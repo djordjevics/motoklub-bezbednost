@@ -19,5 +19,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MotoklubBezbednost.Business\MotoklubBezbednost.Business.csproj" />
+    <ProjectReference Include="..\MotoklubBezbednost.Data\MotoklubBezbednost.Data.csproj" />
+  </ItemGroup>
+
 </Project>
 

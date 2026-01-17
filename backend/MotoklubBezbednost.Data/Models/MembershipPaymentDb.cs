@@ -14,11 +14,16 @@ public class MembershipPaymentDb : DbModel
     [StringLength(1000)]
     public string? Note { get; set; }
 
-    // Navigation properties
+    // Foreign keys
     [Required]
-    public MemberDb Member { get; set; } = null!;
+    public int MemberId { get; set; }
 
-    public PaymentTypeDb? PaymentType { get; set; }
+    public int? PaymentTypeId { get; set; }
+
+    // Navigation properties
+    public virtual MemberDb Member { get; set; } = null!;
+
+    public virtual PaymentTypeDb? PaymentType { get; set; }
 }
 
 

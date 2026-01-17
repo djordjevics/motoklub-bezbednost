@@ -16,7 +16,6 @@ public sealed class CreateMemberCommand : IRequest<MemberDto>
     public string Email { get; init; } = null!;
     public string Address { get; init; } = null!;
     public string? Note { get; init; }
-    public DateTime CreationTimestamp { get; init; }
 }
 
 

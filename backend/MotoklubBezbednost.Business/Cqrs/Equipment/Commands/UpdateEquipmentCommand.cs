@@ -12,7 +12,6 @@ public sealed class UpdateEquipmentCommand : IRequest<EquipmentDto?>
     public bool WorkShirt { get; init; }
     public bool FormalShirt { get; init; }
     public string? Note { get; init; }
-    public DateTime LastModificationTimestamp { get; init; }
 }
 
 

@@ -18,6 +18,10 @@ public class EquipmentDto
 
     [StringLength(1000)]
     public string? Note { get; set; }
+
+    public DateTime CreationTimestamp { get; set; }
+
+    public DateTime? LastModificationTimestamp { get; set; }
 }
 
 

@@ -24,11 +24,14 @@ public class MotorcycleDb : DbModel
     [StringLength(20)]
     public string? RegisterPlate { get; set; }
 
-    // Navigation properties
+    // Foreign keys
     [Required]
-    public MemberDb Member { get; set; } = null!;
+    public int MemberId { get; set; }
 
-    public ICollection<TrainingDb> Trainings { get; set; } = new List<TrainingDb>();
+    // Navigation properties
+    public virtual MemberDb Member { get; set; } = null!;
+
+    public virtual ICollection<TrainingDb> Trainings { get; set; } = new List<TrainingDb>();
 }
 
 

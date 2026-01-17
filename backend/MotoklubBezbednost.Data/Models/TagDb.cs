@@ -13,9 +13,12 @@ public class TagDb : DbModel
 
     public DateTime? ValidTo { get; set; }
 
-    // Navigation property
+    // Foreign keys
     [Required]
-    public MemberDb Member { get; set; } = null!;
+    public int MemberId { get; set; }
+
+    // Navigation properties
+    public virtual MemberDb Member { get; set; } = null!;
 }
 
 

@@ -9,12 +9,12 @@ namespace MotoklubBezbednost.Business.Cqrs.Trainings.Handlers;
 public sealed class UpdateTrainingSessionCommandHandler : IRequestHandler<UpdateTrainingSessionCommand, TrainingSessionDto?>
 {
     private readonly ITrainingSessionRepository _trainingSessionRepository;
-    private readonly ITwoWayDbMapper<TrainingSessionDb, TrainingSessionDto> _trainingSessionMapper;
+    private readonly IMapper _mapper;
 
-    public UpdateTrainingSessionCommandHandler(ITrainingSessionRepository trainingSessionRepository, ITwoWayDbMapper<TrainingSessionDb, TrainingSessionDto> trainingSessionMapper)
+    public UpdateTrainingSessionCommandHandler(ITrainingSessionRepository trainingSessionRepository, IMapper mapper)
     {
         _trainingSessionRepository = trainingSessionRepository;
-        _trainingSessionMapper = trainingSessionMapper;
+        _mapper = mapper;
     }
 
     public async Task<TrainingSessionDto?> Handle(UpdateTrainingSessionCommand request, CancellationToken cancellationToken)
@@ -25,18 +25,9 @@ public sealed class UpdateTrainingSessionCommandHandler : IRequestHandler<Update
             return null;
         }
 
-        if (request.TheoryDate is not null) existing.TheoryDate = request.TheoryDate;
-        if (request.PolygonDate is not null) existing.PolygonDate = request.PolygonDate;
-        if (request.City is not null) existing.City = request.City;
-        if (request.Price is not null) existing.Price = request.Price;
-        if (request.Instructors is not null) existing.Instructors = request.Instructors;
-        if (request.Note is not null) existing.Note = request.Note;
-        if (request.LevelId is not null) existing.LevelId = request.LevelId.Value;
-
-        existing.LastModificationTimestamp = request.LastModificationTimestamp;
-
+        request.ApplyTo(existing);
         await _trainingSessionRepository.UpdateAsync(existing);
-        return _trainingSessionMapper.ToDto(existing);
+        return _mapper.Map<Data.Models.TrainingSessionDb, TrainingSessionDto>(existing);
     }
 }
 

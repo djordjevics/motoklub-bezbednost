@@ -42,15 +42,18 @@ public class MemberDb : DbModel
     [StringLength(1000)]
     public string? Note { get; set; }
 
-    // Navigation properties
-    public MemberTypeDb? MemberType { get; set; }
+    // Foreign keys
+    public int? MemberTypeId { get; set; }
 
-    public ICollection<MotorcycleDb> Motorcycles { get; set; } = new List<MotorcycleDb>();
-    public EquipmentDb? Equipment { get; set; }
-    public ICollection<TrainingDb> Trainings { get; set; } = new List<TrainingDb>();
-    public ICollection<MembershipPaymentDb> MembershipPayments { get; set; } = new List<MembershipPaymentDb>();
-    public ICollection<CommentDb> Comments { get; set; } = new List<CommentDb>();
-    public ICollection<TagDb> Tags { get; set; } = new List<TagDb>();
+    // Navigation properties
+    public virtual MemberTypeDb? MemberType { get; set; }
+
+    public virtual ICollection<MotorcycleDb> Motorcycles { get; set; } = new List<MotorcycleDb>();
+    public virtual EquipmentDb? Equipment { get; set; }
+    public virtual ICollection<TrainingDb> Trainings { get; set; } = new List<TrainingDb>();
+    public virtual ICollection<MembershipPaymentDb> MembershipPayments { get; set; } = new List<MembershipPaymentDb>();
+    public virtual ICollection<CommentDb> Comments { get; set; } = new List<CommentDb>();
+    public virtual ICollection<TagDb> Tags { get; set; } = new List<TagDb>();
 }
 
 

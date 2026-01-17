@@ -8,16 +8,9 @@ namespace MotoklubBezbednost.Business.Mappings;
 /// <summary>
 /// Concrete mapper for MemberDb &lt;-&gt; MemberDto following the generic mapper interfaces.
 /// </summary>
-public class MemberMapper : ITwoWayDbMapper<MemberDb, MemberDto>
+public class MemberMapper : ITwoWayMapper<MemberDb, MemberDto>
 {
-    // IOneWayMapper<MemberDb, MemberDto>.Map
-    public MemberDto Map(MemberDb source) => ToDto(source);
-
-    // IOneWayMapper<MemberDto, MemberDb>.Map
-    public MemberDb Map(MemberDto source) => ToEntity(source, null);
-
-    // IDbToDtoMapper<MemberDb, MemberDto>
-    public MemberDto ToDto(MemberDb entity)
+    public MemberDto Map(MemberDb entity)
     {
         return new MemberDto
         {
@@ -33,6 +26,8 @@ public class MemberMapper : ITwoWayDbMapper<MemberDb, MemberDto>
             Email = entity.Email,
             Address = entity.Address,
             RegisteredOn = entity.RegisteredOn,
+            CreationTimestamp = entity.CreationTimestamp,
+            LastModificationTimestamp = entity.LastModificationTimestamp,
             Note = entity.Note,
             MemberType = entity.MemberType != null ? new MemberTypeDto
             {
@@ -51,7 +46,9 @@ public class MemberMapper : ITwoWayDbMapper<MemberDb, MemberDto>
                 EngineDisplacment = m.EngineDisplacment,
                 EnginePower = m.EnginePower,
                 Color = m.Color,
-                RegisterPlate = m.RegisterPlate
+                RegisterPlate = m.RegisterPlate,
+                CreationTimestamp = m.CreationTimestamp,
+                LastModificationTimestamp = m.LastModificationTimestamp
             }).ToList() ?? new List<MotorcycleDto>(),
             Equipment = entity.Equipment != null ? new EquipmentDto
             {
@@ -61,13 +58,17 @@ public class MemberMapper : ITwoWayDbMapper<MemberDb, MemberDto>
                 Vest = entity.Equipment.Vest,
                 WorkShirt = entity.Equipment.WorkShirt,
                 FormalShirt = entity.Equipment.FormalShirt,
-                Note = entity.Equipment.Note
+                Note = entity.Equipment.Note,
+                CreationTimestamp = entity.Equipment.CreationTimestamp,
+                LastModificationTimestamp = entity.Equipment.LastModificationTimestamp
             } : null,
             Trainings = entity.Trainings?.Select(t => new TrainingDto
             {
                 Id = t.Id,
                 IsCertificateIssued = t.IsCertificateIssued,
-                Note = t.Note
+                Note = t.Note,
+                CreationTimestamp = t.CreationTimestamp,
+                LastModificationTimestamp = t.LastModificationTimestamp
             }).ToList() ?? new List<TrainingDto>(),
             MembershipPayments = entity.MembershipPayments?.Select(mp => new MembershipPaymentDto
             {
@@ -101,28 +102,22 @@ public class MemberMapper : ITwoWayDbMapper<MemberDb, MemberDto>
         };
     }
 
-    public IEnumerable<MemberDto> ToDto(IEnumerable<MemberDb> entities) => entities.Select(ToDto);
-
-    // ITwoWayDbMapper<MemberDb, MemberDto>
-    public MemberDb ToEntity(MemberDto dto, MemberDb? existing = null)
+    public MemberDb Map(MemberDto dto)
     {
-        var entity = existing ?? new MemberDb();
-
-        entity.Name = dto.Name;
-        entity.Surname = dto.Surname;
-        entity.Jmbg = dto.Jmbg;
-        entity.DateOfBirth = dto.DateOfBirth;
-        entity.Workplace = dto.Workplace;
-        entity.MobilePhone = dto.MobilePhone;
-        entity.EmergencyContact = dto.EmergencyContact;
-        entity.EmergencyContactPhone = dto.EmergencyContactPhone;
-        entity.Email = dto.Email;
-        entity.Address = dto.Address;
-        entity.RegisteredOn = dto.RegisteredOn;
-        entity.Note = dto.Note;
-
-        return entity;
+        return new MemberDb
+        {
+            Name = dto.Name,
+            Surname = dto.Surname,
+            Jmbg = dto.Jmbg,
+            DateOfBirth = dto.DateOfBirth,
+            Workplace = dto.Workplace,
+            MobilePhone = dto.MobilePhone,
+            EmergencyContact = dto.EmergencyContact,
+            EmergencyContactPhone = dto.EmergencyContactPhone,
+            Email = dto.Email,
+            Address = dto.Address,
+            RegisteredOn = dto.RegisteredOn,
+            Note = dto.Note
+        };
     }
 }
-
-

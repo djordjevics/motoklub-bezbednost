@@ -20,10 +20,13 @@ public class TrainingSessionDb : DbModel
     [StringLength(1000)]
     public string? Note { get; set; }
 
-    // Navigation properties
-    public LevelDb? Level { get; set; }
+    // Foreign keys
+    public int? LevelId { get; set; }
 
-    public ICollection<TrainingDb> Trainings { get; set; } = new List<TrainingDb>();
+    // Navigation properties
+    public virtual LevelDb? Level { get; set; }
+
+    public virtual ICollection<TrainingDb> Trainings { get; set; } = new List<TrainingDb>();
 }
 
 

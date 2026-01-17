@@ -10,19 +10,18 @@ namespace MotoklubBezbednost.Business.Cqrs.Motorcycles.Handlers;
 public sealed class GetAllMotorcyclesQueryHandler : IRequestHandler<GetAllMotorcyclesQuery, IEnumerable<MotorcycleDto>>
 {
     private readonly IMotorcycleRepository _motorcycleRepository;
+    private readonly IMapper _mapper;
 
-    private readonly ITwoWayDbMapper<MotorcycleDb, MotorcycleDto> _motorcycleMapper;
-
-    public GetAllMotorcyclesQueryHandler(IMotorcycleRepository motorcycleRepository, ITwoWayDbMapper<MotorcycleDb, MotorcycleDto> motorcycleMapper)
+    public GetAllMotorcyclesQueryHandler(IMotorcycleRepository motorcycleRepository, IMapper mapper)
     {
         _motorcycleRepository = motorcycleRepository;
-        _motorcycleMapper = motorcycleMapper;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<MotorcycleDto>> Handle(GetAllMotorcyclesQuery request, CancellationToken cancellationToken)
     {
         var entities = await _motorcycleRepository.GetAllWithMemberAsync();
-        return _motorcycleMapper.ToDto(entities);
+        return entities.Select(e => _mapper.Map<MotorcycleDb, MotorcycleDto>(e));
     }
 }
 

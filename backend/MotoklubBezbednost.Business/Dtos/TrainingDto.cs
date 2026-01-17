@@ -11,6 +11,10 @@ public class TrainingDto
     [StringLength(1000)]
     public string? Note { get; set; }
 
+    public DateTime CreationTimestamp { get; set; }
+
+    public DateTime? LastModificationTimestamp { get; set; }
+
     public MemberDto? Member { get; set; }
 
     public MotorcycleDto? Motorcycle { get; set; }

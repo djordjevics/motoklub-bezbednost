@@ -11,7 +11,7 @@ public class PaymentTypeDb : DbModel
     public string? Description { get; set; }
 
     // Navigation properties
-    public ICollection<MembershipPaymentDb> MembershipPayments { get; set; } = new List<MembershipPaymentDb>();
+    public virtual ICollection<MembershipPaymentDb> MembershipPayments { get; set; } = new List<MembershipPaymentDb>();
 }
 
 

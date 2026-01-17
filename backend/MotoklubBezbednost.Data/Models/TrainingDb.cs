@@ -10,15 +10,22 @@ public class TrainingDb : DbModel
     [StringLength(1000)]
     public string? Note { get; set; }
 
+    // Foreign keys
+    [Required]
+    public int MemberId { get; set; }
+
+    [Required]
+    public int MotorcycleId { get; set; }
+
+    [Required]
+    public int TrainingSessionId { get; set; }
+
     // Navigation properties
-    [Required]
-    public MemberDb Member { get; set; } = null!;
+    public virtual MemberDb Member { get; set; } = null!;
 
-    [Required]
-    public MotorcycleDb Motorcycle { get; set; } = null!;
+    public virtual MotorcycleDb Motorcycle { get; set; } = null!;
 
-    [Required]
-    public TrainingSessionDb TrainingSession { get; set; } = null!;
+    public virtual TrainingSessionDb TrainingSession { get; set; } = null!;
 }
 
 

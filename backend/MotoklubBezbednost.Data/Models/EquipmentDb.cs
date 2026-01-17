@@ -18,9 +18,12 @@ public class EquipmentDb : DbModel
     [StringLength(1000)]
     public string? Note { get; set; }
 
-    // Navigation property
+    // Foreign keys
     [Required]
-    public MemberDb Member { get; set; } = null!;
+    public int MemberId { get; set; }
+
+    // Navigation properties
+    public virtual MemberDb Member { get; set; } = null!;
 }
 
 

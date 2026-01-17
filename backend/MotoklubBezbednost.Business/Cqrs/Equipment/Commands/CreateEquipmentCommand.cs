@@ -11,7 +11,7 @@ public sealed class CreateEquipmentCommand : IRequest<EquipmentDto>
     public bool WorkShirt { get; init; }
     public bool FormalShirt { get; init; }
     public string? Note { get; init; }
-    public DateTime CreationTimestamp { get; init; }
+    public int MemberId { get; init; }
 }
 
 

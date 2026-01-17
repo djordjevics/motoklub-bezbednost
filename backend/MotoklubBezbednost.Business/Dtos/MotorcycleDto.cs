@@ -24,6 +24,10 @@ public class MotorcycleDto
 
     [StringLength(20)]
     public string? RegisterPlate { get; set; }
+
+    public DateTime CreationTimestamp { get; set; }
+
+    public DateTime? LastModificationTimestamp { get; set; }
 }
 
 

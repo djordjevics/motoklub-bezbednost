@@ -10,19 +10,18 @@ namespace MotoklubBezbednost.Business.Cqrs.Trainings.Handlers;
 public sealed class GetTrainingsByMemberQueryHandler : IRequestHandler<GetTrainingsByMemberQuery, IEnumerable<TrainingDto>>
 {
     private readonly ITrainingRepository _trainingRepository;
+    private readonly IMapper _mapper;
 
-    private readonly ITwoWayDbMapper<TrainingDb, TrainingDto> _trainingMapper;
-
-    public GetTrainingsByMemberQueryHandler(ITrainingRepository trainingRepository, ITwoWayDbMapper<TrainingDb, TrainingDto> trainingMapper)
+    public GetTrainingsByMemberQueryHandler(ITrainingRepository trainingRepository, IMapper mapper)
     {
         _trainingRepository = trainingRepository;
-        _trainingMapper = trainingMapper;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<TrainingDto>> Handle(GetTrainingsByMemberQuery request, CancellationToken cancellationToken)
     {
         var entities = await _trainingRepository.GetByMemberIdAsync(request.MemberId);
-        return _trainingMapper.ToDto(entities);
+        return entities.Select(e => _mapper.Map<TrainingDb, TrainingDto>(e));
     }
 }
 

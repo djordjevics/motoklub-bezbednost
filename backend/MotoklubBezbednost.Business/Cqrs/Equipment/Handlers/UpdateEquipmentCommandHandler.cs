@@ -2,7 +2,6 @@ using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Equipment.Commands;
 using MotoklubBezbednost.Business.Dtos;
 using MotoklubBezbednost.Business.Mappings;
-using MotoklubBezbednost.Data.Models;
 using MotoklubBezbednost.Data.Repositories;
 
 namespace MotoklubBezbednost.Business.Cqrs.Equipment.Handlers;
@@ -10,13 +9,12 @@ namespace MotoklubBezbednost.Business.Cqrs.Equipment.Handlers;
 public sealed class UpdateEquipmentCommandHandler : IRequestHandler<UpdateEquipmentCommand, EquipmentDto?>
 {
     private readonly IEquipmentRepository _equipmentRepository;
+    private readonly IMapper _mapper;
 
-    private readonly ITwoWayDbMapper<EquipmentDb, EquipmentDto> _equipmentMapper;
-
-    public UpdateEquipmentCommandHandler(IEquipmentRepository equipmentRepository, ITwoWayDbMapper<EquipmentDb, EquipmentDto> equipmentMapper)
+    public UpdateEquipmentCommandHandler(IEquipmentRepository equipmentRepository, IMapper mapper)
     {
         _equipmentRepository = equipmentRepository;
-        _equipmentMapper = equipmentMapper;
+        _mapper = mapper;
     }
 
     public async Task<EquipmentDto?> Handle(UpdateEquipmentCommand request, CancellationToken cancellationToken)
@@ -27,22 +25,9 @@ public sealed class UpdateEquipmentCommandHandler : IRequestHandler<UpdateEquipm
             return null;
         }
 
-        var dto = new EquipmentDto
-        {
-            Id = request.Id,
-            Pants = request.Pants,
-            Jacket = request.Jacket,
-            Vest = request.Vest,
-            WorkShirt = request.WorkShirt,
-            FormalShirt = request.FormalShirt,
-            Note = request.Note
-        };
-
-        _equipmentMapper.ToEntity(dto, existing);
-        existing.LastModificationTimestamp = request.LastModificationTimestamp;
-
+        request.ApplyTo(existing);
         await _equipmentRepository.UpdateAsync(existing);
-        return _equipmentMapper.ToDto(existing);
+        return _mapper.Map<Data.Models.EquipmentDb, EquipmentDto>(existing);
     }
 }
 

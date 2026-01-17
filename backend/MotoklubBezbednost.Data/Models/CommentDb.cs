@@ -12,9 +12,12 @@ public class CommentDb : DbModel
     [StringLength(2000)]
     public string? CommentText { get; set; }
 
-    // Navigation property
+    // Foreign keys
     [Required]
-    public MemberDb Member { get; set; } = null!;
+    public int MemberId { get; set; }
+
+    // Navigation properties
+    public virtual MemberDb Member { get; set; } = null!;
 }
 
 

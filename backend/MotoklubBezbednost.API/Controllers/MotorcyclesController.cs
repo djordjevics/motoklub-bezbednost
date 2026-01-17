@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using MediatR;
-using MotoklubBezbednost.API.Requests;
 using MotoklubBezbednost.Business.Dtos;
-using MotoklubBezbednost.Business.Mappings;
 using MotoklubBezbednost.Business.Cqrs.Motorcycles.Commands;
 using MotoklubBezbednost.Business.Cqrs.Motorcycles.Queries;
+using MotoklubBezbednost.API.Requests;
+using MotoklubBezbednost.API.Mappers;
 
 namespace MotoklubBezbednost.API.Controllers;
 
@@ -15,26 +15,24 @@ namespace MotoklubBezbednost.API.Controllers;
 public class MotorcyclesController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IMapper _mapper;
 
-    public MotorcyclesController(IMediator mediator, IMapper mapper)
+    public MotorcyclesController(IMediator mediator)
     {
         _mediator = mediator;
-        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MotorcycleDto>>> GetMotorcycles([FromQuery] GetAllMotorcyclesRequest request)
+    public async Task<ActionResult<IEnumerable<MotorcycleDto>>> GetMotorcycles()
     {
-        var query = _mapper.Map<GetAllMotorcyclesRequest, GetAllMotorcyclesQuery>(request);
-        var motorcycles = await _mediator.Send(query);
+        var motorcycles = await _mediator.Send(new GetAllMotorcyclesQuery());
         return Ok(motorcycles);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<MotorcycleDto>> GetMotorcycle([FromRoute] GetMotorcycleByIdRequest request)
+    public async Task<ActionResult<MotorcycleDto>> GetMotorcycle(int id)
     {
-        var query = _mapper.Map<GetMotorcycleByIdRequest, GetMotorcycleByIdQuery>(request);
+        var request = new GetMotorcycleByIdRequest { Id = id };
+        var query = request.ToQuery();
         var motorcycle = await _mediator.Send(query);
         if (motorcycle == null)
             return NotFound();
@@ -42,9 +40,10 @@ public class MotorcyclesController : ControllerBase
     }
 
     [HttpGet("member/{memberId}")]
-    public async Task<ActionResult<IEnumerable<MotorcycleDto>>> GetMotorcyclesByMember([FromRoute] GetMotorcyclesByMemberRequest request)
+    public async Task<ActionResult<IEnumerable<MotorcycleDto>>> GetMotorcyclesByMember(int memberId)
     {
-        var query = _mapper.Map<GetMotorcyclesByMemberRequest, GetMotorcyclesByMemberQuery>(request);
+        var request = new GetMotorcyclesByMemberRequest { MemberId = memberId };
+        var query = request.ToQuery();
         var motorcycles = await _mediator.Send(query);
         return Ok(motorcycles);
     }
@@ -52,29 +51,26 @@ public class MotorcyclesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<MotorcycleDto>> CreateMotorcycle([FromBody] CreateMotorcycleRequest request)
     {
-        var cmd = _mapper.Map<CreateMotorcycleRequest, CreateMotorcycleCommand>(request);
-        var createdMotorcycle = await _mediator.Send(cmd);
+        var command = request.ToCommand();
+        var createdMotorcycle = await _mediator.Send(command);
         return CreatedAtAction(nameof(GetMotorcycle), new { id = createdMotorcycle.Id }, createdMotorcycle);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateMotorcycle([FromRoute] int id, [FromBody] UpdateMotorcycleRequest request)
+    public async Task<IActionResult> UpdateMotorcycle(int id, [FromBody] UpdateMotorcycleRequest request)
     {
-        if (id != request.Id)
-            return BadRequest();
-
-        var cmd = _mapper.Map<UpdateMotorcycleRequest, UpdateMotorcycleCommand>(request);
-        var updated = await _mediator.Send(cmd);
+        request.Id = id;
+        var command = request.ToCommand();
+        var updated = await _mediator.Send(command);
         if (updated is null)
             return NotFound();
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteMotorcycle([FromRoute] DeleteMotorcycleRequest request)
+    public async Task<IActionResult> DeleteMotorcycle(int id)
     {
-        var cmd = _mapper.Map<DeleteMotorcycleRequest, DeleteMotorcycleCommand>(request);
-        await _mediator.Send(cmd);
+        await _mediator.Send(new DeleteMotorcycleCommand { Id = id });
         return NoContent();
     }
 }

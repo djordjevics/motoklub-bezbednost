@@ -10,18 +10,18 @@ namespace MotoklubBezbednost.Business.Cqrs.Members.Handlers;
 public sealed class SearchMembersQueryHandler : IRequestHandler<SearchMembersQuery, IEnumerable<MemberDto>>
 {
     private readonly IMemberRepository _memberRepository;
-    private readonly ITwoWayDbMapper<MemberDb, MemberDto> _memberMapper;
+    private readonly IMapper _mapper;
 
-    public SearchMembersQueryHandler(IMemberRepository memberRepository, ITwoWayDbMapper<MemberDb, MemberDto> memberMapper)
+    public SearchMembersQueryHandler(IMemberRepository memberRepository, IMapper mapper)
     {
         _memberRepository = memberRepository;
-        _memberMapper = memberMapper;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<MemberDto>> Handle(SearchMembersQuery request, CancellationToken cancellationToken)
     {
         var entities = await _memberRepository.SearchAsync(request.Query);
-        return _memberMapper.ToDto(entities);
+        return entities.Select(e => _mapper.Map<MemberDb, MemberDto>(e));
     }
 }
 

@@ -15,7 +15,7 @@ public class MemberTypeDb : DbModel
     public bool PaidMembership { get; set; }
 
     // Navigation properties
-    public ICollection<MemberDb> Members { get; set; } = new List<MemberDb>();
+    public virtual ICollection<MemberDb> Members { get; set; } = new List<MemberDb>();
 }
 
 

@@ -11,7 +11,7 @@ public class LevelDb : DbModel
     public string? Note { get; set; }
 
     // Navigation properties
-    public ICollection<TrainingSessionDb> TrainingSessions { get; set; } = new List<TrainingSessionDb>();
+    public virtual ICollection<TrainingSessionDb> TrainingSessions { get; set; } = new List<TrainingSessionDb>();
 }
 
 

@@ -1,20 +1,11 @@
-using System.Collections.Generic;
-using System.Linq;
 using MotoklubBezbednost.Business.Dtos;
 using MotoklubBezbednost.Data.Models;
 
 namespace MotoklubBezbednost.Business.Mappings;
 
-public sealed class TrainingSessionMapper : ITwoWayDbMapper<TrainingSessionDb, TrainingSessionDto>
+public sealed class TrainingSessionMapper : ITwoWayMapper<TrainingSessionDb, TrainingSessionDto>
 {
-    // IOneWayMapper<TrainingSessionDb, TrainingSessionDto>.Map
-    public TrainingSessionDto Map(TrainingSessionDb source) => ToDto(source);
-
-    // IOneWayMapper<TrainingSessionDto, TrainingSessionDb>.Map
-    public TrainingSessionDb Map(TrainingSessionDto source) => ToEntity(source, null);
-
-    // IDbToDtoMapper<TrainingSessionDb, TrainingSessionDto>
-    public TrainingSessionDto ToDto(TrainingSessionDb entity)
+    public TrainingSessionDto Map(TrainingSessionDb entity)
     {
         return new TrainingSessionDto
         {
@@ -25,6 +16,8 @@ public sealed class TrainingSessionMapper : ITwoWayDbMapper<TrainingSessionDb, T
             Price = entity.Price,
             Instructors = entity.Instructors,
             Note = entity.Note,
+            CreationTimestamp = entity.CreationTimestamp,
+            LastModificationTimestamp = entity.LastModificationTimestamp,
             Level = entity.Level != null ? new LevelDto
             {
                 Id = entity.Level.Id,
@@ -34,31 +27,17 @@ public sealed class TrainingSessionMapper : ITwoWayDbMapper<TrainingSessionDb, T
         };
     }
 
-    public IEnumerable<TrainingSessionDto> ToDto(IEnumerable<TrainingSessionDb> entities) => entities.Select(ToDto);
-
-    // ITwoWayDbMapper<TrainingSessionDb, TrainingSessionDto>
-    public TrainingSessionDb ToEntity(TrainingSessionDto dto, TrainingSessionDb? existing = null)
+    public TrainingSessionDb Map(TrainingSessionDto dto)
     {
-        if (existing is null)
+        return new TrainingSessionDb
         {
-            return new TrainingSessionDb
-            {
-                TheoryDate = dto.TheoryDate,
-                PolygonDate = dto.PolygonDate,
-                City = dto.City,
-                Price = dto.Price,
-                Instructors = dto.Instructors,
-                Note = dto.Note
-            };
-        }
-
-        existing.TheoryDate = dto.TheoryDate;
-        existing.PolygonDate = dto.PolygonDate;
-        existing.City = dto.City;
-        existing.Price = dto.Price;
-        existing.Instructors = dto.Instructors;
-        existing.Note = dto.Note;
-        return existing;
+            TheoryDate = dto.TheoryDate,
+            PolygonDate = dto.PolygonDate,
+            City = dto.City,
+            Price = dto.Price,
+            Instructors = dto.Instructors,
+            Note = dto.Note
+        };
     }
 }
 

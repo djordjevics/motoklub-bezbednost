@@ -14,7 +14,6 @@ public sealed class UpdateMotorcycleCommand : IRequest<MotorcycleDto?>
     public string? Color { get; init; }
     public string? RegisterPlate { get; init; }
     public int? MemberId { get; init; }
-    public DateTime LastModificationTimestamp { get; init; }
 }
 
 

@@ -10,7 +10,6 @@ public sealed class CreateTrainingCommand : IRequest<TrainingDto>
     public int MemberId { get; init; }
     public int MotorcycleId { get; init; }
     public int TrainingSessionId { get; init; }
-    public DateTime CreationTimestamp { get; init; }
 }
 
 

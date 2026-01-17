@@ -10,19 +10,18 @@ namespace MotoklubBezbednost.Business.Cqrs.Equipment.Handlers;
 public sealed class GetEquipmentByMemberQueryHandler : IRequestHandler<GetEquipmentByMemberQuery, IEnumerable<EquipmentDto>>
 {
     private readonly IEquipmentRepository _equipmentRepository;
+    private readonly IMapper _mapper;
 
-    private readonly ITwoWayDbMapper<EquipmentDb, EquipmentDto> _equipmentMapper;
-
-    public GetEquipmentByMemberQueryHandler(IEquipmentRepository equipmentRepository, ITwoWayDbMapper<EquipmentDb, EquipmentDto> equipmentMapper)
+    public GetEquipmentByMemberQueryHandler(IEquipmentRepository equipmentRepository, IMapper mapper)
     {
         _equipmentRepository = equipmentRepository;
-        _equipmentMapper = equipmentMapper;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<EquipmentDto>> Handle(GetEquipmentByMemberQuery request, CancellationToken cancellationToken)
     {
         var entity = await _equipmentRepository.GetByMemberIdAsync(request.MemberId);
-        return entity != null ? new[] { _equipmentMapper.ToDto(entity) } : Array.Empty<EquipmentDto>();
+        return entity != null ? new[] { _mapper.Map<EquipmentDb, EquipmentDto>(entity) } : Array.Empty<EquipmentDto>();
     }
 }
 

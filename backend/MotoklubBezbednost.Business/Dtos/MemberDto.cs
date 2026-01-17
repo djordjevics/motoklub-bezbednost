@@ -40,6 +40,10 @@ public class MemberDto
 
     public DateTime? RegisteredOn { get; set; }
 
+    public DateTime CreationTimestamp { get; set; }
+
+    public DateTime? LastModificationTimestamp { get; set; }
+
     [StringLength(1000)]
     public string? Note { get; set; }
 

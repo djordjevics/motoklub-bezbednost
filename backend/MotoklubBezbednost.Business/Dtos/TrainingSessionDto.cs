@@ -22,6 +22,10 @@ public class TrainingSessionDto
     public string? Note { get; set; }
 
     public LevelDto? Level { get; set; }
+
+    public DateTime CreationTimestamp { get; set; }
+
+    public DateTime? LastModificationTimestamp { get; set; }
 }
 
 

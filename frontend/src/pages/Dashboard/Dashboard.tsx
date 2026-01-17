@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
         Dashboard
       </Typography>
       <Grid container spacing={3} sx={{ mt: 2 }}>

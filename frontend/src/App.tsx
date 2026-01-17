@@ -7,8 +7,6 @@ import MembersPage from './pages/Members/MembersPage'
 import MotorcyclesPage from './pages/Motorcycles/MotorcyclesPage'
 import TrainingsPage from './pages/Trainings/TrainingsPage'
 import EquipmentPage from './pages/Equipment/EquipmentPage'
-import LoginPage from './pages/Auth/LoginPage'
-import ProtectedRoute from './components/Auth/ProtectedRoute'
 
 const theme = createTheme({
   palette: {
@@ -27,15 +25,7 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
+          <Route path="/" element={<Layout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="members" element={<MembersPage />} />

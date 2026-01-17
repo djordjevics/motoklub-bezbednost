@@ -2,6 +2,7 @@ using MediatR;
 using MotoklubBezbednost.Data;
 using MotoklubBezbednost.Data.Repositories;
 using MotoklubBezbednost.API.Extensions;
+using MotoklubBezbednost.Business.Cqrs.Members.Queries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -17,8 +18,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// MediatR (CQRS)
-builder.Services.AddMediatR(typeof(IMemberRepository).Assembly);
+// MediatR (CQRS) - register handlers from Business assembly
+builder.Services.AddMediatR(typeof(GetAllMembersQuery).Assembly);
 
 // CORS
 builder.Services.AddCors(options =>
@@ -68,7 +69,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in production
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();

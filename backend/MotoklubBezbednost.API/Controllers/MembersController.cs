@@ -11,7 +11,6 @@ namespace MotoklubBezbednost.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class MembersController : ControllerBase
 {
     private readonly IMediator _mediator;

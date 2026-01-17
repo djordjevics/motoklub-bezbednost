@@ -13,7 +13,10 @@ const LoginPage = () => {
           alignItems: 'center',
         }}
       >
-        <Typography component="h1" variant="h4" gutterBottom>
+        <Typography component="h1" variant="h2" gutterBottom sx={{ fontWeight: 'bold', mb: 4 }}>
+          Hello Motorcycle
+        </Typography>
+        <Typography component="h2" variant="h5" gutterBottom sx={{ mb: 3 }}>
           Motoklub Bezbednost
         </Typography>
         <Authenticator />

@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using MotoklubBezbednost.API.Models;
-using MotoklubBezbednost.API.Services;
+using MediatR;
+using MotoklubBezbednost.Business.Dtos;
+using MotoklubBezbednost.Business.Cqrs.Members.Commands;
+using MotoklubBezbednost.Business.Cqrs.Members.Queries;
+using MotoklubBezbednost.API.Requests;
+using MotoklubBezbednost.API.Mappers;
 
 namespace MotoklubBezbednost.API.Controllers;
 
@@ -10,57 +14,66 @@ namespace MotoklubBezbednost.API.Controllers;
 [Authorize]
 public class MembersController : ControllerBase
 {
-    private readonly IMemberService _memberService;
+    private readonly IMediator _mediator;
 
-    public MembersController(IMemberService memberService)
+    public MembersController(IMediator mediator)
     {
-        _memberService = memberService;
+        _mediator = mediator;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetMembers()
     {
-        var members = await _memberService.GetAllMembersAsync();
+        var members = await _mediator.Send(new GetAllMembersQuery());
         return Ok(members);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Member>> GetMember(int id)
+    public async Task<ActionResult<MemberDto>> GetMember(int id)
     {
-        var member = await _memberService.GetMemberByIdAsync(id);
+        var request = new GetMemberByIdRequest { Id = id };
+        var query = request.ToQuery();
+        var member = await _mediator.Send(query);
         if (member == null)
             return NotFound();
         return Ok(member);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Member>> CreateMember([FromBody] Member member)
+    public async Task<ActionResult<MemberDto>> CreateMember([FromBody] CreateMemberRequest request)
     {
-        var createdMember = await _memberService.CreateMemberAsync(member);
+        var command = request.ToCommand();
+        var createdMember = await _mediator.Send(command);
         return CreatedAtAction(nameof(GetMember), new { id = createdMember.Id }, createdMember);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateMember(int id, [FromBody] Member member)
+    public async Task<IActionResult> UpdateMember(int id, [FromBody] UpdateMemberRequest request)
     {
-        if (id != member.Id)
-            return BadRequest();
-        
-        await _memberService.UpdateMemberAsync(member);
+        request.Id = id;
+        var command = request.ToCommand();
+        var updated = await _mediator.Send(command);
+        if (updated is null)
+        {
+            return NotFound();
+        }
+
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteMember(int id)
     {
-        await _memberService.DeleteMemberAsync(id);
+        await _mediator.Send(new DeleteMemberCommand { Id = id });
         return NoContent();
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<IEnumerable<Member>>> SearchMembers([FromQuery] string query)
+    public async Task<ActionResult<IEnumerable<MemberDto>>> SearchMembers([FromQuery] string query)
     {
-        var members = await _memberService.SearchMembersAsync(query);
+        var request = new SearchMembersRequest { Query = query };
+        var searchQuery = request.ToQuery();
+        var members = await _mediator.Send(searchQuery);
         return Ok(members);
     }
 }

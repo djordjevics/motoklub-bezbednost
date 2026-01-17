@@ -1,6 +1,7 @@
-using MotoklubBezbednost.API.Data;
-using MotoklubBezbednost.API.Services;
-using MotoklubBezbednost.API.Repositories;
+using MediatR;
+using MotoklubBezbednost.Data;
+using MotoklubBezbednost.Data.Repositories;
+using MotoklubBezbednost.API.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,9 @@ builder.Services.AddSwaggerGen();
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// MediatR (CQRS)
+builder.Services.AddMediatR(typeof(IMemberRepository).Assembly);
 
 // CORS
 builder.Services.AddCors(options =>
@@ -52,11 +56,8 @@ builder.Services.AddScoped<ITrainingRepository, TrainingRepository>();
 builder.Services.AddScoped<ITrainingSessionRepository, TrainingSessionRepository>();
 builder.Services.AddScoped<IEquipmentRepository, EquipmentRepository>();
 
-// Register services
-builder.Services.AddScoped<IMemberService, MemberService>();
-builder.Services.AddScoped<IMotorcycleService, MotorcycleService>();
-builder.Services.AddScoped<ITrainingService, TrainingService>();
-builder.Services.AddScoped<IEquipmentService, EquipmentService>();
+// Register mappers
+builder.Services.AddMappers();
 
 var app = builder.Build();
 

@@ -152,3 +152,5 @@ samconfig.toml
 logs/
 *.log
 
+# Project-specific
+PR_DESCRIPTION.md

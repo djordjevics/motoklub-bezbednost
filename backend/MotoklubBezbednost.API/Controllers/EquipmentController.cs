@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using MotoklubBezbednost.API.Models;
-using MotoklubBezbednost.API.Services;
+using MediatR;
+using MotoklubBezbednost.Business.Dtos;
+using MotoklubBezbednost.Business.Cqrs.Equipment.Commands;
+using MotoklubBezbednost.Business.Cqrs.Equipment.Queries;
+using MotoklubBezbednost.API.Requests;
+using MotoklubBezbednost.API.Mappers;
 
 namespace MotoklubBezbednost.API.Controllers;
 
@@ -10,58 +14,63 @@ namespace MotoklubBezbednost.API.Controllers;
 [Authorize]
 public class EquipmentController : ControllerBase
 {
-    private readonly IEquipmentService _equipmentService;
+    private readonly IMediator _mediator;
 
-    public EquipmentController(IEquipmentService equipmentService)
+    public EquipmentController(IMediator mediator)
     {
-        _equipmentService = equipmentService;
+        _mediator = mediator;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Equipment>>> GetEquipment()
+    public async Task<ActionResult<IEnumerable<EquipmentDto>>> GetEquipment()
     {
-        var equipment = await _equipmentService.GetAllEquipmentAsync();
+        var equipment = await _mediator.Send(new GetAllEquipmentQuery());
         return Ok(equipment);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Equipment>> GetEquipment(int id)
+    public async Task<ActionResult<EquipmentDto>> GetEquipment(int id)
     {
-        var equipment = await _equipmentService.GetEquipmentByIdAsync(id);
+        var request = new GetEquipmentByIdRequest { Id = id };
+        var query = request.ToQuery();
+        var equipment = await _mediator.Send(query);
         if (equipment == null)
             return NotFound();
         return Ok(equipment);
     }
 
     [HttpGet("member/{memberId}")]
-    public async Task<ActionResult<IEnumerable<Equipment>>> GetEquipmentByMember(int memberId)
+    public async Task<ActionResult<IEnumerable<EquipmentDto>>> GetEquipmentByMember(int memberId)
     {
-        var equipment = await _equipmentService.GetEquipmentByMemberIdAsync(memberId);
+        var request = new GetEquipmentByMemberRequest { MemberId = memberId };
+        var query = request.ToQuery();
+        var equipment = await _mediator.Send(query);
         return Ok(equipment);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Equipment>> CreateEquipment([FromBody] Equipment equipment)
+    public async Task<ActionResult<EquipmentDto>> CreateEquipment([FromBody] CreateEquipmentRequest request)
     {
-        var createdEquipment = await _equipmentService.CreateEquipmentAsync(equipment);
+        var command = request.ToCommand();
+        var createdEquipment = await _mediator.Send(command);
         return CreatedAtAction(nameof(GetEquipment), new { id = createdEquipment.Id }, createdEquipment);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEquipment(int id, [FromBody] Equipment equipment)
+    public async Task<IActionResult> UpdateEquipment(int id, [FromBody] UpdateEquipmentRequest request)
     {
-        if (id != equipment.Id)
-            return BadRequest();
-        
-        await _equipmentService.UpdateEquipmentAsync(equipment);
+        request.Id = id;
+        var command = request.ToCommand();
+        var updated = await _mediator.Send(command);
+        if (updated is null)
+            return NotFound();
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEquipment(int id)
     {
-        await _equipmentService.DeleteEquipmentAsync(id);
+        await _mediator.Send(new DeleteEquipmentCommand { Id = id });
         return NoContent();
     }
 }
-

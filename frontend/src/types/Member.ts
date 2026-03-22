@@ -2,7 +2,7 @@ import { MemberType } from './MemberType'
 import { MembershipPayment } from './MembershipPayment'
 import { Comment } from './Comment'
 import { Tag } from './Tag'
-import { Training } from './Training'
+import type { Training } from './Training'
 
 export interface Member {
   id: number

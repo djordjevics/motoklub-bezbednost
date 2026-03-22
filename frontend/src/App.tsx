@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Layout from './components/Layout/Layout'
+import ProtectedRoute from './components/Auth/ProtectedRoute'
+import LoginPage from './pages/Auth/LoginPage'
 import Dashboard from './pages/Dashboard/Dashboard'
 import MembersPage from './pages/Members/MembersPage'
 import MotorcyclesPage from './pages/Motorcycles/MotorcyclesPage'
@@ -25,7 +27,15 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="members" element={<MembersPage />} />

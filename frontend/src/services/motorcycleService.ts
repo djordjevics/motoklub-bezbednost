@@ -1,5 +1,5 @@
 import apiClient from './apiClient'
-import { Motorcycle } from '../types/Motorcycle'
+import type { Motorcycle } from '../types/Member'
 
 export const motorcycleService = {
   getAll: async (): Promise<Motorcycle[]> => {

@@ -1,7 +1,7 @@
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Trainings.Queries;
 using MotoklubBezbednost.Business.Dtos;
-using MotoklubBezbednost.Business.Mappings;
+using AutoMapper;
 using MotoklubBezbednost.Data.Models;
 using MotoklubBezbednost.Data.Repositories;
 
@@ -21,7 +21,7 @@ public sealed class GetTrainingSessionByIdQueryHandler : IRequestHandler<GetTrai
     public async Task<TrainingSessionDto?> Handle(GetTrainingSessionByIdQuery request, CancellationToken cancellationToken)
     {
         var entity = await _trainingSessionRepository.GetByIdWithDetailsAsync(request.Id);
-        return entity is null ? null : _mapper.Map<TrainingSessionDb, TrainingSessionDto>(entity);
+        return entity is null ? null : _mapper.Map<TrainingSessionDto>(entity);
     }
 }
 

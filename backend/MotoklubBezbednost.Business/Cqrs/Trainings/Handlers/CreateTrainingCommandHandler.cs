@@ -1,7 +1,8 @@
+using AutoMapper;
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Trainings.Commands;
 using MotoklubBezbednost.Business.Dtos;
-using MotoklubBezbednost.Business.Mappings;
+using MotoklubBezbednost.Data.Models;
 using MotoklubBezbednost.Data.Repositories;
 
 namespace MotoklubBezbednost.Business.Cqrs.Trainings.Handlers;
@@ -19,9 +20,9 @@ public sealed class CreateTrainingCommandHandler : IRequestHandler<CreateTrainin
 
     public async Task<TrainingDto> Handle(CreateTrainingCommand request, CancellationToken cancellationToken)
     {
-        var entity = request.ToDbModel();
+        var entity = _mapper.Map<TrainingDb>(request);
         var created = await _trainingRepository.AddAsync(entity);
-        return _mapper.Map<Data.Models.TrainingDb, TrainingDto>(created);
+        return _mapper.Map<TrainingDto>(created);
     }
 }
 

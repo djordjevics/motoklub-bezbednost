@@ -1,7 +1,7 @@
+using AutoMapper;
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Motorcycles.Commands;
 using MotoklubBezbednost.Business.Dtos;
-using MotoklubBezbednost.Business.Mappings;
 using MotoklubBezbednost.Data.Repositories;
 
 namespace MotoklubBezbednost.Business.Cqrs.Motorcycles.Handlers;
@@ -25,10 +25,10 @@ public sealed class UpdateMotorcycleCommandHandler : IRequestHandler<UpdateMotor
             return null;
         }
 
-        request.ApplyTo(existing);
+        _mapper.Map(request, existing);
         if (request.MemberId is not null) existing.MemberId = request.MemberId.Value;
         await _motorcycleRepository.UpdateAsync(existing);
-        return _mapper.Map<Data.Models.MotorcycleDb, MotorcycleDto>(existing);
+        return _mapper.Map<MotorcycleDto>(existing);
     }
 }
 

@@ -10,7 +10,7 @@ alwaysApply: false
 
 | Concern | Location |
 |---------|----------|
-| Request models | `backend/MotoklubBezbednost.API/Requests/` |
+| Request models | `backend/MotoklubBezbednost.API/Models/Requests/` |
 | Validators | `backend/MotoklubBezbednost.API/Validation/` (when introduced) |
 | Controllers | `backend/MotoklubBezbednost.API/Controllers/` |
 | Tests | `backend/MotoklubBezbednost.API.Tests/` (e.g. `RequestValidators/`) |

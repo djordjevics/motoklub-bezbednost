@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 using MediatR;
-using MotoklubBezbednost.Business.Dtos;
+using Microsoft.AspNetCore.Mvc;
+using MotoklubBezbednost.API.Models.Requests;
+using MotoklubBezbednost.API.Models.Responses;
 using MotoklubBezbednost.Business.Cqrs.Equipment.Commands;
 using MotoklubBezbednost.Business.Cqrs.Equipment.Queries;
-using MotoklubBezbednost.API.Requests;
-using MotoklubBezbednost.API.Mappers;
 
 namespace MotoklubBezbednost.API.Controllers;
 
@@ -14,52 +13,52 @@ namespace MotoklubBezbednost.API.Controllers;
 public class EquipmentController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public EquipmentController(IMediator mediator)
+    public EquipmentController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<EquipmentDto>>> GetEquipment()
+    public async Task<ActionResult<IEnumerable<EquipmentResponse>>> GetEquipment()
     {
         var equipment = await _mediator.Send(new GetAllEquipmentQuery());
-        return Ok(equipment);
+        return Ok(_mapper.Map<IEnumerable<EquipmentResponse>>(equipment));
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<EquipmentDto>> GetEquipment(int id)
+    public async Task<ActionResult<EquipmentResponse>> GetEquipment(int id)
     {
-        var request = new GetEquipmentByIdRequest { Id = id };
-        var query = request.ToQuery();
+        var query = _mapper.Map<GetEquipmentByIdQuery>(new GetEquipmentByIdRequest { Id = id });
         var equipment = await _mediator.Send(query);
         if (equipment == null)
             return NotFound();
-        return Ok(equipment);
+        return Ok(_mapper.Map<EquipmentResponse>(equipment));
     }
 
     [HttpGet("member/{memberId}")]
-    public async Task<ActionResult<IEnumerable<EquipmentDto>>> GetEquipmentByMember(int memberId)
+    public async Task<ActionResult<IEnumerable<EquipmentResponse>>> GetEquipmentByMember(int memberId)
     {
-        var request = new GetEquipmentByMemberRequest { MemberId = memberId };
-        var query = request.ToQuery();
+        var query = _mapper.Map<GetEquipmentByMemberQuery>(new GetEquipmentByMemberRequest { MemberId = memberId });
         var equipment = await _mediator.Send(query);
-        return Ok(equipment);
+        return Ok(_mapper.Map<IEnumerable<EquipmentResponse>>(equipment));
     }
 
     [HttpPost]
-    public async Task<ActionResult<EquipmentDto>> CreateEquipment([FromBody] CreateEquipmentRequest request)
+    public async Task<ActionResult<EquipmentResponse>> CreateEquipment([FromBody] CreateEquipmentRequest request)
     {
-        var command = request.ToCommand();
+        var command = _mapper.Map<CreateEquipmentCommand>(request);
         var createdEquipment = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetEquipment), new { id = createdEquipment.Id }, createdEquipment);
+        return CreatedAtAction(nameof(GetEquipment), new { id = createdEquipment.Id }, _mapper.Map<EquipmentResponse>(createdEquipment));
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateEquipment(int id, [FromBody] UpdateEquipmentRequest request)
     {
         request.Id = id;
-        var command = request.ToCommand();
+        var command = _mapper.Map<UpdateEquipmentCommand>(request);
         var updated = await _mediator.Send(command);
         if (updated is null)
             return NotFound();

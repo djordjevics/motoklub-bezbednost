@@ -1,7 +1,7 @@
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Members.Queries;
 using MotoklubBezbednost.Business.Dtos;
-using MotoklubBezbednost.Business.Mappings;
+using AutoMapper;
 using MotoklubBezbednost.Data.Models;
 using MotoklubBezbednost.Data.Repositories;
 
@@ -21,7 +21,7 @@ public sealed class SearchMembersQueryHandler : IRequestHandler<SearchMembersQue
     public async Task<IEnumerable<MemberDto>> Handle(SearchMembersQuery request, CancellationToken cancellationToken)
     {
         var entities = await _memberRepository.SearchAsync(request.Query);
-        return entities.Select(e => _mapper.Map<MemberDb, MemberDto>(e));
+        return entities.Select(e => _mapper.Map<MemberDto>(e));
     }
 }
 

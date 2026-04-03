@@ -1,0 +1,47 @@
+---
+description: When and how to add ADRs under docs/adr; accepted records are immutable—supersede with a new ADR
+globs: docs/adr/**/*.md, backend/**/*.cs, frontend/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Architecture Decision Records (ADRs)
+
+**Intent:** [Architecture Decision Records (Martin Fowler)](https://martinfowler.com/bliki/ArchitectureDecisionRecord.html) — short, one decision per file, stored as Markdown in-repo.
+
+## Location and naming
+
+- **Path:** `docs/adr/`
+- **Files:** `NNNN-short-title-in-kebab-case.md` with a **monotonic** serial (`0001`, `0002`, …). Never reuse a number.
+
+## Status
+
+| Status | Meaning |
+|--------|--------|
+| **Proposed** | Under discussion; may change. |
+| **Accepted** | Adopted; treat the decision text as **frozen**. |
+| **Superseded** | Replaced; must link to the **new** ADR. |
+
+**Do not** rewrite an **Accepted** ADR to change the decision—add a new ADR that **supersedes** it and update the old file’s status.
+
+## When to add an ADR
+
+Add the next numbered ADR for **lasting** architectural choices, for example:
+
+- Stack changes, major libraries, auth model.
+- Layer boundaries, module ownership, public API shape.
+- Data store, integration, or security-relevant design.
+- Reversing a prior accepted decision (**always** via supersession).
+
+**Skip** for trivial refactors, routine bug fixes, or version bumps with no architectural meaning.
+
+## Plans vs ADRs
+
+Exploration, spikes, and multi-step rollouts belong under **`docs/plans/`** (per-initiative folders). Use an **ADR** when the team **commits** to a durable choice; use **plans** while executing or investigating.
+
+## Authoring checklist
+
+1. Next `NNNN`.
+2. Title reflects the decision.
+3. Sections: **Context**, **Decision**, **Consequences**; **Alternatives considered** when useful.
+4. **Status** and **Date** at the top (table or front matter—match existing ADRs).
+5. Update **implementation-rules-index** only when adding a new **rule file**, not for every ADR.

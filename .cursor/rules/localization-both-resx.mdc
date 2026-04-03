@@ -1,0 +1,14 @@
+---
+description: When adding a validator error key – add it to every culture .resx file
+globs: backend/**/*.resx, backend/**/*Validation*.cs
+alwaysApply: false
+---
+
+# Localization: all `.resx` cultures
+
+When validators use **`WithErrorCode(nameof(Errors.SomeKey))`** (or equivalent):
+
+- Add the key to the **default** resource file (e.g. `Errors.resx`).
+- Add the same key to **each** localized file (e.g. `Errors.sr-Latn-RS.resx`, `Errors.hr-HR.resx`) that the app ships.
+
+Missing keys show raw names or wrong fallbacks. Update **every** culture file you maintain whenever you introduce a new error code.

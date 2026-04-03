@@ -1,0 +1,28 @@
+---
+description: Data access – scoped repositories; transactions and optional UoW-style façade
+globs: backend/MotoklubBezbednost.Data/Repositories/**/*.cs, backend/MotoklubBezbednost.API/Program.cs
+alwaysApply: false
+---
+
+# Repositories and data access
+
+## Current pattern (Motoklub)
+
+- **Repositories** live under `backend/MotoklubBezbednost.Data/Repositories/`.
+- Register scoped implementations in `Program.cs` (e.g. `IMemberRepository` → `MemberRepository`).
+- Handlers inject the repositories they need. Prefer **explicit methods** (`GetByIdWithDetailsAsync`) over leaking `IQueryable` across layers unless the team standardizes otherwise.
+
+## Transactions
+
+- For multi-step writes, use **`DbContext.Database.BeginTransactionAsync`** (or an application service that wraps the context) so commits are atomic.
+- Ensure **SaveChanges** (or equivalent) runs once per logical operation unless a pattern document says otherwise.
+
+## Optional consolidation (ResourceHub-style UoW)
+
+If the solution grows a **`IUnitOfWork`** façade:
+
+- Expose one property per aggregate repository.
+- Centralize **SaveChangesAsync**; repositories should not each call SaveChanges unless that is the explicit design.
+- Support **ExecuteInTransactionAsync** for multi-repository operations.
+
+When adding a new aggregate, add the interface, implementation, registration, and handler usage in one change set.

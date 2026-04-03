@@ -1,0 +1,10 @@
+---
+description: Enforce concise AI responses for this workspace
+alwaysApply: true
+---
+
+# Response style
+
+- Be concise and technical.
+- After completing work: a short **1–3 bullet** summary unless the user asked for more detail.
+- Avoid redundant explanations and filler.

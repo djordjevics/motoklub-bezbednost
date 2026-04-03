@@ -1,0 +1,31 @@
+---
+description: Monorepo layout; backend layer separation (API, Business, Data); frontend structure
+globs: backend/**/*.cs, frontend/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Layer and project structure
+
+## Backend (`backend/`)
+
+| Layer | Project | Responsibility |
+|-------|---------|------------------|
+| **API** | `MotoklubBezbednost.API` | Controllers, HTTP concerns, request DTOs / mappers, API composition (`Program.cs`), Swagger, auth |
+| **Business** | `MotoklubBezbednost.Business` | CQRS (MediatR): commands, queries, handlers, DTOs, business-side mapping |
+| **Data** | `MotoklubBezbednost.Data` | EF Core `ApplicationDbContext`, entities under `Models/`, `Migrations/`, repositories |
+
+**Strict separation:**
+
+- The API project must **not** reference EF entities or `DbContext` directly in controllers for domain operations—use MediatR and DTOs from Business.
+- Business may reference Data (repositories, entities) for persistence. Keep mapping at clear boundaries (handlers ↔ repositories, DTOs).
+
+## Frontend (`frontend/`)
+
+- **`src/components/`** — reusable UI (feature folders where helpful).
+- **`src/pages/`** — route-level screens.
+- **`src/services/`** — API access (prefer shared `apiClient` / auth helpers).
+- **`src/types/`** — TypeScript types aligned with API contracts.
+
+## Tests
+
+- **`backend/MotoklubBezbednost.API.Tests/`** — API-level tests (validators, integration smoke, etc.) as the suite grows.

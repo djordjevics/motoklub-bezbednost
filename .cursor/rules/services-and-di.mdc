@@ -1,0 +1,28 @@
+---
+description: Dependency injection and composition – backend MS.DI; frontend module boundaries
+globs: backend/**/*.cs, frontend/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Services and dependency injection
+
+## Backend (.NET)
+
+**Standard:** **`Microsoft.Extensions.DependencyInjection`** — register in **`Program.cs`** (or extension methods called from it). Use **constructor injection** in controllers, handlers, and services.
+
+- **Do not** scatter `new` for types that belong in the application graph (repositories, handlers’ collaborators, validators) unless there is a **clear, local reason** (DTOs, value objects, framework types).
+- **Interfaces:** Non-trivial services should expose **`IService`** + implementation registered in DI.
+- **MediatR:** Handlers are resolved from the container; register pipeline behaviors explicitly.
+- **Testing:** Build a **`ServiceCollection`** with fakes/mocks, or construct SUTs with explicit test doubles.
+
+**Composition root:** `backend/MotoklubBezbednost.API/Program.cs` (and `Add*`-style extension methods kept next to the feature they configure).
+
+## Frontend (React)
+
+There is no MS.DI container—use **clear boundaries** instead:
+
+- **`src/services/`** — HTTP and auth helpers; avoid duplicating `fetch` configuration.
+- **Components** receive data and callbacks via **props**; use **Context** sparingly for auth or theme—not as a global service locator.
+- **Direct `import` singletons** for config are acceptable when they are stateless; prefer hooks or context for session-like state.
+
+Skip over-abstracting one-line helpers; **do** inject boundaries that need **tests** or **alternate implementations**.

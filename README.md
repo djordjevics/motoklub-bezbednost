@@ -2,6 +2,34 @@
 
 Local-only stack: **ASP.NET Core** backend (SQLite + EF Core migrations), **React/Vite** frontend. Authentication is **local JWT** (no cloud providers).
 
+## Source layout
+
+- **[`backend/MotoklubBezbednost.API/`](backend/MotoklubBezbednost.API/)** — ASP.NET Core host: controllers, HTTP pipeline, `Program.cs`, `appsettings*.json`. See [`backend/MotoklubBezbednost.API/README.md`](backend/MotoklubBezbednost.API/README.md).
+- **[`backend/MotoklubBezbednost.Business/`](backend/MotoklubBezbednost.Business/)** — class library: MediatR CQRS (`Cqrs/`), DTOs, mappings.
+- **[`backend/MotoklubBezbednost.Data/`](backend/MotoklubBezbednost.Data/)** — class library: EF Core `ApplicationDbContext`, `Models/`, `Migrations/`, repositories.
+- **[`backend/MotoklubBezbednost.API.Tests/`](backend/MotoklubBezbednost.API.Tests/)** — API test project (extend as coverage grows).
+- **[`frontend/`](frontend/)** — React + Vite SPA (`src/pages`, `src/components`, `src/services`, `src/types`). See [`frontend/README.md`](frontend/README.md).
+
+## Plans (spikes, features, refactoring)
+
+Exploration and phased work lives under [`docs/plans/`](docs/plans/) (`features/`, `spikes/`, `refactoring/`, `archive/`). Each initiative is a folder with a `README.md` using YAML **status**, **phase**, and **updated** in the front matter (see [`docs/plans/README.md`](docs/plans/README.md)).
+
+## Architecture decision records
+
+Significant architectural choices are recorded as **ADRs** in [`docs/adr/`](docs/adr/), following [Architecture Decision Record (Martin Fowler)](https://martinfowler.com/bliki/ArchitectureDecisionRecord.html): one decision per numbered Markdown file. **Accepted** ADRs are not edited to change the decision—use **Superseded** and a new ADR.
+
+| ADR | Summary |
+|-----|---------|
+| [0001](docs/adr/0001-adopt-architecture-decision-records.md) | Adopt ADRs in this repo (process, status, supersession). |
+| [0002](docs/adr/0002-technology-stack-baseline.md) | Baseline stack: .NET 8, EF Core, React/Vite/TypeScript, MUI, tooling. |
+| [0003](docs/adr/0003-monorepo-and-backend-layering.md) | Monorepo layout and API → Business → Data dependency rules. |
+| [0004](docs/adr/0004-sqlite-embedded-database.md) | SQLite as embedded DB; migrations; `data/` files. |
+| [0005](docs/adr/0005-local-jwt-authentication.md) | Local JWT + configured credentials; no cloud IdP. |
+| [0006](docs/adr/0006-cqrs-mediatr-and-repositories.md) | MediatR CQRS and repository-based data access. |
+| [0007](docs/adr/0007-local-packaging-and-distribution.md) | Portable `dist/` packages, scripts, update vs data folder. |
+
+**Other topics that often deserve their own ADR** (when the choice is significant and lasting): public HTTP API versioning; OpenAPI/codegen; multi-tenant or DB-backed users; background jobs; file storage; audit logging and PII; integration with external systems; error handling and ProblemDetails standard; internationalization strategy; CI/CD and release channels. Use [`docs/plans/`](docs/plans/) for spikes and execution detail until the decision is settled.
+
 ## Quick start (development)
 
 1. **Backend** — from `backend/MotoklubBezbednost.API`: `dotnet run` (uses `data/motoklub_staging.db` with auto-migrate in Development). Change `Jwt`/`LocalAuth` in `appsettings.json` before real use.

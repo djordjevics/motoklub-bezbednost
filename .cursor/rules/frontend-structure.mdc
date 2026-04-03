@@ -1,0 +1,14 @@
+---
+description: React/Vite frontend – folder roles (quick reference)
+globs: frontend/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Frontend structure
+
+- **`frontend/src/pages/`** — route-level screens; keep them thin; delegate to components.
+- **`frontend/src/components/`** — reusable UI; group by feature (`Members/`, `Trainings/`, …) when it helps navigation.
+- **`frontend/src/services/`** — API calls via **`apiClient`** only; see `apiConfig.ts`.
+- **`frontend/src/types/`** — TypeScript models aligned with backend DTOs.
+
+For **maintenance workflow**, HTTP/React Query/MUI rules, and quality bar, see **frontend-maintenance**.

@@ -1,0 +1,67 @@
+---
+description: How to maintain and extend the SPA—HTTP layer, React Query, MUI, quality bar, coordination with API
+globs: frontend/**/*.{ts,tsx}, frontend/*.html, frontend/vite.config.ts
+alwaysApply: false
+---
+
+# Frontend maintenance guidelines
+
+Product owners may report **what works / what does not**; implementers (humans or AI) follow these rules so the UI stays consistent and cheap to change.
+
+## Roles
+
+- **Reports:** Prefer concrete repro steps: URL/route, action, expected vs actual, browser, and whether the browser **Network** tab shows failed or 4xx/5xx API calls.
+- **Implementers:** Change the **smallest surface** needed; keep API contracts and TypeScript types in sync with the backend when behavior changes.
+
+## Project layout (do not invent new top-level buckets without updating rules)
+
+| Area | Path | Responsibility |
+|------|------|----------------|
+| Routes / screens | `frontend/src/pages/` | Thin composition; local UI state only when page-specific |
+| UI | `frontend/src/components/` | Feature folders (`Members/`, …), shared `Layout/`, `Auth/` |
+| HTTP | `frontend/src/services/` | One `*Service` object (or module) per API area; uses `apiClient` |
+| Types | `frontend/src/types/` | Shapes aligned with API JSON; update when DTOs change |
+| Config | `frontend/src/config/` | e.g. `apiConfig.ts` — `import.meta.env` |
+
+## HTTP and auth
+
+- **Never** create ad-hoc `axios` instances or raw `fetch` for app API calls. Use **`apiClient`** (`frontend/src/services/apiClient.ts`) so **JWT** and **401 → login redirect** stay centralized.
+- Base URL: **`VITE_API_BASE_URL`** (default `/api`). Dev server proxies `/api` to the API (`vite.config.ts`).
+- Add new endpoints as **typed methods** on the right service (same style as `memberService.ts`).
+
+## TanStack Query (server state)
+
+- Use **`useQuery` / `useMutation`** for data that comes from the API. Do not duplicate long-lived server state in `useState` unless it is purely optimistic UI.
+- **`queryKey` convention:** hierarchical, stable strings/values — e.g. `['members']`, `['members', id]`, `['trainings', memberId]`. Lists and detail keys should be predictable so **`queryClient.invalidateQueries`** can target them after mutations.
+- **UI states:** For every new query-driven view, handle **loading**, **error**, and **empty** (see `MembersList.tsx`).
+- After a successful **mutation**, invalidate the relevant keys (and any parent list keys) so lists and detail panes refresh.
+
+## Forms and validation
+
+- Standard for interactive forms: **react-hook-form** + **yup** + **`@hookform/resolvers`** (already in dependencies). Use **MUI** inputs consistent with existing screens.
+- Map **API validation errors** to fields when the API returns structured errors; otherwise show a clear **snackbar** or alert with a short message.
+
+## Styling and UX
+
+- Use **MUI** (`@mui/material`, `@emotion/*`) for layout and components. Reuse **`Layout`**, **`theme`** in `App.tsx`, and existing spacing (`sx`) patterns.
+- Do not introduce another CSS framework or global styling system without an ADR and rule updates.
+
+## Routing and auth
+
+- **Protected** app shell: routes under `Layout` stay behind **`ProtectedRoute`**. Public routes (e.g. `/login`) stay outside.
+- New authenticated pages: add a **`Route`** under the existing `Layout` branch in `App.tsx` and a **sidebar/nav** link if users must discover the page.
+
+## Environment and build
+
+- Client-exposed config: only **`VITE_*`** variables via **`import.meta.env`**. Never put secrets in the frontend bundle.
+- Before merge: **`npm run lint`** and **`npm run build`** must pass.
+- **`npm run build`** runs **`prebuild`**: [Aikido Safe Chain](https://github.com/AikidoSec/safe-chain) must be on `PATH`, `npm safe-chain-verify` must succeed, and the CLI version must match **`@aikidosec/safe-chain`** on npm when the registry is reachable (see `frontend/README.md`). No env-based bypass.
+
+## Coordination with backend
+
+- If the API **route, payload, or response shape** changes: update **`services/`**, **`types/`**, and any **query/mutation** assumptions in the same change (or same PR series).
+- Prefer aligning TypeScript types with **actual JSON** property names (camelCase as serialized by the API).
+
+## When patterns change
+
+Update **`frontend-maintenance.mdc`**, **`frontend-structure.mdc`**, and **`frontend/README.md`** together, and add an **ADR** if the decision is architectural (e.g. replacing React Query).

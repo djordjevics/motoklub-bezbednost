@@ -1,0 +1,32 @@
+---
+description: Handler validation – referenced IDs, business rules, structured failures
+globs: backend/MotoklubBezbednost.Business/Cqrs/**/*.cs
+alwaysApply: false
+---
+
+# Handler validation (existence and business rules)
+
+Handlers must enforce rules that depend on **loaded data** or **database state**.
+
+## Referenced IDs
+
+When a command carries a foreign key or related id:
+
+- Load the parent row (or use `ExistsAsync`) before proceeding.
+- If missing: return **`null`** for queries (API returns 404) or throw a **not-found** exception type if the API uses centralized exception mapping.
+- If “bad id” should be a validation problem (400), use a validation result with **property name** + **error code** consistent with API contracts.
+
+## Business rules
+
+When a value is only valid in context (e.g. date ranges, mutually exclusive flags):
+
+- Validate after loading entities.
+- Prefer a small static helper for reusable rules.
+- Surface failures in the same shape the API documents (ProblemDetails, validation dictionary, etc.).
+
+| Situation | Typical HTTP |
+|-----------|----------------|
+| Aggregate not found | 404 |
+| Invalid field value / rule | 400 |
+
+Align with **exception-handling** once middleware or filters standardize exceptions.

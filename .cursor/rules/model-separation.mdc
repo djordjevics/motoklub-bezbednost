@@ -1,0 +1,21 @@
+---
+description: Entity / DTO / request / command separation and mapping locations
+globs: backend/MotoklubBezbednost.Data/Models/**/*.cs, backend/MotoklubBezbednost.Business/Dtos/**/*.cs, backend/MotoklubBezbednost.API/Requests/**/*.cs, backend/MotoklubBezbednost.API/Mappers/**/*.cs, backend/MotoklubBezbednost.Business/Mappings/**/*.cs, backend/MotoklubBezbednost.Business/Cqrs/**/*.cs
+alwaysApply: false
+---
+
+# Model separation and data flow
+
+Typical flow: **HTTP request** → (optional) **API request** + mapper → **MediatR command/query** → **handler** → **repository / entity** → **DTO** → JSON response.
+
+| Type | Location | Purpose |
+|------|----------|---------|
+| **Entity** | `backend/MotoklubBezbednost.Data/Models/*.cs` | EF Core persistence model |
+| **DTO** | `backend/MotoklubBezbednost.Business/Dtos/*.cs` | Shapes returned to the API / used between handlers |
+| **Command / Query** | `backend/MotoklubBezbednost.Business/Cqrs/**/Commands|Queries/*.cs` | MediatR messages |
+| **Handler** | `backend/MotoklubBezbednost.Business/Cqrs/**/Handlers/*.cs` | Orchestration, validation, mapping entity ↔ DTO |
+| **API request** | `backend/MotoklubBezbednost.API/Requests/*.cs` | Incoming payloads when not bound as primitives only |
+| **Mappers** | `backend/MotoklubBezbednost.API/Mappers/`, `backend/MotoklubBezbednost.Business/Mappings/` | Request ↔ command/query; entity ↔ DTO |
+
+- Keep **entities** out of API contracts; expose **DTOs** (or dedicated response types) from controllers.
+- When introducing **AutoMapper** or shared profiles, keep the same boundaries: API mapping vs Business mapping.

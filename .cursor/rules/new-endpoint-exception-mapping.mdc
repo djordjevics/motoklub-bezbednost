@@ -1,0 +1,14 @@
+---
+description: New controller actions – map handler exceptions to status codes when using centralized handling
+globs: backend/MotoklubBezbednost.API/Controllers/**/*.cs
+alwaysApply: false
+---
+
+# New endpoint: exception mapping
+
+When the API uses **attributes or middleware** to translate exceptions to HTTP status codes:
+
+- For each action, declare mappings for **every exception type** the MediatR handler can throw (not-found, validation, conflict, etc.).
+- Omitting a mapping risks an unhandled exception → **500** for cases that should be **400** or **404**.
+
+Follow the pattern used on sibling actions in the same controller once introduced.

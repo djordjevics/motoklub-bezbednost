@@ -1,0 +1,41 @@
+---
+description: Testing – unit and API tests; dotnet test; what deserves coverage
+globs: backend/**/*Tests/**/*.cs, backend/**/*.cs
+alwaysApply: false
+---
+
+# Testing
+
+## Principles (from services-and-DI-friendly design)
+
+Add **automated tests** where they are **feasible** and **meaningful**: validation, mapping, business rules in handlers, services with behavior, and non-trivial helpers. Defer or skip tests for pure UI layout glue, generated code, or trivial DTOs with no logic.
+
+**Prefer:**
+
+- **Handlers** — mock repositories; assert outcomes, **not-found** paths, and rule violations.
+- **Validators** — required/null/empty and boundary values; assert **property names** and **error codes** when used.
+- **Pure functions** — deterministic inputs/outputs.
+
+**Integration / E2E:** optional separate projects or Playwright/Cypress for the SPA; not a substitute for fast unit tests on rules.
+
+## Layout
+
+| Area | Project / folder |
+|------|------------------|
+| API tests | `backend/MotoklubBezbednost.API.Tests/` |
+| Business unit tests | Add e.g. `MotoklubBezbednost.Business.Tests` when handler coverage grows |
+
+Match **.NET 8** and the test SDK chosen by the solution (xUnit, NUnit, or MSTest).
+
+## Running
+
+```bash
+cd backend
+dotnet test
+```
+
+## Examples (when suites exist)
+
+- **Request validator:** required fields missing → invalid; parameterized by property name.
+- **Handler (unit):** referenced id absent → not found or validation failure per convention.
+- **Handler (integration):** in-memory or test SQLite database for full pipeline checks (optional).

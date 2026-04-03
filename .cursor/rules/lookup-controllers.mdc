@@ -1,0 +1,16 @@
+---
+description: Optional pattern – generic lookup controller + registration (if introduced)
+globs: backend/MotoklubBezbednost.API/**/*.cs, backend/MotoklubBezbednost.Business/**/*.cs
+alwaysApply: false
+---
+
+# Lookup endpoints (optional pattern)
+
+This codebase may expose simple reference data (types, levels, etc.) as standard CRUD or dedicated endpoints. If you introduce a **generic lookup** pattern (as in ResourceHub):
+
+- Provide a thin base controller that returns lists and `GET by id` for DTOs backed by small tables.
+- Register a shared lookup service per DTO/entity pair in DI.
+- Keep routes consistent (e.g. `api/[controller]`).
+- Reuse the same **NotFound** / validation conventions as other API actions.
+
+Until such a base exists, implement lookups as normal controllers + MediatR queries and keep behavior documented in the handler.

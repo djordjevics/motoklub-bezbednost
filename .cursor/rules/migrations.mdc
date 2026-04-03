@@ -1,0 +1,40 @@
+---
+description: EF Core migrations – SQLite; startup and Data project; phased schema changes
+globs: backend/MotoklubBezbednost.Data/**/*.cs
+alwaysApply: false
+---
+
+# Migrations (EF Core)
+
+- **DbContext:** `backend/MotoklubBezbednost.Data/ApplicationDbContext.cs`
+- **Migrations folder:** `backend/MotoklubBezbednost.Data/Migrations/`
+- **Startup project for tooling:** `backend/MotoklubBezbednost.API`
+
+## Commands
+
+From `backend/`:
+
+```bash
+dotnet ef migrations add <MigrationName> --project MotoklubBezbednost.Data --startup-project MotoklubBezbednost.API
+dotnet ef database update --project MotoklubBezbednost.Data --startup-project MotoklubBezbednost.API
+```
+
+In Development, **`Motoklub:AutoMigrate`** may apply migrations on startup—still add proper migration files for version control and production updates.
+
+## Adding a new table or column
+
+1. Add or change the entity under `backend/MotoklubBezbednost.Data/Models/`. Register in `ApplicationDbContext` (`DbSet`, `OnModelCreating` if needed).
+2. Add a migration with `dotnet ef migrations add …` and apply (or rely on auto-migrate only where appropriate).
+3. Update DTOs, handlers, API contracts, and validators as needed (see **model-separation** and **new-column-checklist**).
+
+## Phased schema changes (expand/contract)
+
+Destructive changes (rename/drop column, etc.) can break older app versions still deployed against the DB.
+
+1. **Expand** — add new column/table in a backward-compatible way; deploy code that tolerates old and new schema.
+2. **Backfill** — populate new fields idempotently where needed.
+3. **Switch** — move reads/writes to the new shape.
+4. **Contract** — remove old columns/tables after all instances use the new code.
+5. **Harden** — tighten constraints; delete transitional code.
+
+Prefer meaningful `Down()` when SQLite and team practice allow; document non-reversible migrations.

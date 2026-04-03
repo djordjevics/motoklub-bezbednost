@@ -1,0 +1,22 @@
+---
+description: Database seeding via EF Core migrations (SQLite)
+globs: backend/MotoklubBezbednost.Data/Migrations/*.cs
+alwaysApply: false
+---
+
+# Database seeding
+
+- Prefer seed data **inside EF Core migrations** (or idempotent SQL in `Up`/`Down`) rather than ad-hoc startup seeding in production.
+- Avoid one-off JSON imports in production paths unless explicitly part of the product design.
+
+## Adding seed data
+
+1. Add a migration (e.g. `SeedLookupValues`).
+2. In **`Up`:** use `migrationBuilder.Sql(...)` with INSERTs (or `InsertData` where appropriate for SQLite).
+3. In **`Down`:** reverse with DELETE or equivalent so environments can roll back cleanly when feasible.
+
+## SQLite notes
+
+- Use valid SQLite syntax and quoting for identifiers when raw SQL is used.
+- Keep inserts idempotent where multiple runs or partial failures matter (or guard with existence checks in SQL).
+- Align with entity keys and required columns (including audit fields if present on entities).

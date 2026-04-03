@@ -1,0 +1,16 @@
+---
+description: Checklist when adding a new table column – Data, DTO, mapping, API contract, validators
+globs: backend/MotoklubBezbednost.Data/Models/**/*.cs, backend/MotoklubBezbednost.Business/Dtos/**/*.cs, backend/MotoklubBezbednost.API/**/*.cs, backend/MotoklubBezbednost.Business/Cqrs/**/*.cs, backend/MotoklubBezbednost.Business/Mappings/**/*.cs
+alwaysApply: false
+---
+
+# Adding a new table column (checklist)
+
+When adding a **new column** to an existing table, update in a sensible order:
+
+1. **Data:** Add property on the entity in `backend/MotoklubBezbednost.Data/Models/`. Configure in `ApplicationDbContext` if needed. Add and apply a migration.
+2. **DTO:** Add property to the relevant `*Dto` in `backend/MotoklubBezbednost.Business/Dtos/`.
+3. **Mapping:** Update Business mappers / handler code so entity ↔ DTO stays correct.
+4. **Commands / queries / handlers:** Extend MediatR messages and handlers for create/update/read paths.
+5. **API:** Update requests, responses (if any), and controller actions.
+6. **Validators:** When FluentValidation is in use, update API and/or Business validators; use stable error codes and localization keys if `.resx` is used (see **localization-both-resx**).

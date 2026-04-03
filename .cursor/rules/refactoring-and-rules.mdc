@@ -1,0 +1,16 @@
+---
+description: When refactoring – update or add Cursor rules so guidelines stay aligned with code
+globs: .cursor/rules/*.mdc, backend/**/*.cs, frontend/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Refactoring and keeping rules in sync
+
+When you **refactor** or change **cross-cutting conventions** (layers, validation, migrations, testing, frontend structure):
+
+1. Open **implementation-rules-index.mdc** and find rules for the affected area.
+2. **Edit** those rules if behavior or paths change.
+3. **Add** a focused new `.mdc` file if a new pattern should be followed repo-wide.
+4. **Update the index** with a one-line description for any new rule.
+
+Goal: `.cursor/rules` stays a faithful description of how we want code written here—not only how an older snapshot worked.

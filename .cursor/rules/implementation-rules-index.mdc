@@ -1,0 +1,35 @@
+---
+description: Index of implementation rules – use when onboarding or when you need the right rule for a task
+globs: .cursor/rules/*.mdc
+alwaysApply: false
+---
+
+# Implementation rules index
+
+This repository is a **monorepo**: **backend** (`backend/`, .NET 8 + EF Core SQLite) and **frontend** (`frontend/`, React + Vite). Most rules below target **backend** patterns inherited from the ResourceHub API guidelines. Frontend implementers follow **frontend-maintenance** and **frontend-structure**.
+
+| Rule | Focus |
+|------|--------|
+| **layer-structure** | Backend layers (API, Business, Data), strict separation; frontend layout |
+| **services-and-di** | DI (backend `Program.cs`, MediatR); sensible composition on the frontend |
+| **migrations** | EF Core migrations – SQLite, `dotnet ef`, phased schema changes |
+| **seeding** | Seed data via migrations; SQLite conventions |
+| **model-separation** | Entity / DTO / request / command flow and mapping locations |
+| **new-column-checklist** | Order of updates when adding a table column |
+| **lookup-controllers** | Optional generic lookup pattern (if introduced) |
+| **repositories-and-unit-of-work** | Scoped repositories today; optional UoW-style consolidation |
+| **repository-includes** | `Include` / `ThenInclude` when entities gain navigations |
+| **validators** | FluentValidation (API + Business), registration, error codes |
+| **api-endpoints-and-validators** | Requests, validators, tests |
+| **handler-validation** | Handler existence checks and business rules |
+| **exception-handling** | NotFound / validation → HTTP status (when centralized) |
+| **new-endpoint-exception-mapping** | Map handler exceptions on actions (when using attributes/middleware) |
+| **testing** | What to test, `dotnet test`, API.Tests layout |
+| **concise-responses** | AI response style for this project |
+| **refactoring-and-rules** | Keep `.cursor/rules` in sync when patterns change |
+| **localization-both-resx** | When using `.resx`, update every culture file |
+| **architecture-decision-records** | When and how to add ADRs under `docs/adr/` |
+| **frontend-structure** | React folder roles (quick reference) |
+| **frontend-maintenance** | SPA maintenance: `apiClient`, React Query keys, MUI, forms, env, merge bar |
+
+For cross-cutting backend flow, combine **validators**, **handler-validation**, and **exception-handling** when implementing endpoints.

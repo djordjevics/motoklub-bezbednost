@@ -1,0 +1,16 @@
+---
+description: When entities gain navigations – extend repository queries with Include / ThenInclude
+globs: backend/MotoklubBezbednost.Data/Repositories/**/*.cs, backend/MotoklubBezbednost.Data/Models/**/*.cs
+alwaysApply: false
+---
+
+# Includes when adding navigations
+
+When you add **navigation properties** on an entity that handlers or DTO mapping need loaded:
+
+1. Configure relationships in **`ApplicationDbContext.OnModelCreating`** (`HasOne`, `WithMany`, etc.).
+2. Update the relevant **repository** methods (e.g. `GetByIdWithDetailsAsync`, `GetAllWithDetailsAsync`) to chain **`.Include()`** / **`.ThenInclude()`** as needed.
+
+If queries return entities without required includes, mapping and handlers may see **null** navigations and fail at runtime or return incomplete JSON.
+
+Follow existing patterns such as `MemberRepository` for consistency.

@@ -1,0 +1,17 @@
+---
+description: Map domain and validation failures to HTTP status codes (when centralized)
+globs: backend/MotoklubBezbednost.API/**/*.cs, backend/MotoklubBezbednost.Business/**/*.cs
+alwaysApply: false
+---
+
+# Exception handling and API behavior
+
+Controllers today may return **`NotFound()`** directly. When introducing **shared exception handling** (middleware or filters):
+
+- **Not found:** Subtype of a common **NotFound** exception (or per-entity types) → **404**.
+- **Validation / bad input:** **ValidationException** or **ProblemDetails** with field errors → **400**.
+- **Unauthorized / forbidden:** use auth result or dedicated types → **401** / **403**.
+
+Decorate actions with **`[MapExceptionToStatusCode(typeof(TException), StatusCodes.…)]`** (or equivalent) when using attribute-driven mapping so handler-thrown types do not become **500**.
+
+See **new-endpoint-exception-mapping** when adding endpoints.

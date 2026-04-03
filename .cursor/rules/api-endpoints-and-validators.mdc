@@ -1,0 +1,46 @@
+---
+description: API requests, FluentValidation, and validator tests
+globs: backend/MotoklubBezbednost.API/**/*.cs, backend/MotoklubBezbednost.API.Tests/**/*.cs
+alwaysApply: false
+---
+
+# API endpoints and request validators
+
+## Structure
+
+| Concern | Location |
+|---------|----------|
+| Request models | `backend/MotoklubBezbednost.API/Requests/` |
+| Validators | `backend/MotoklubBezbednost.API/Validation/` (when introduced) |
+| Controllers | `backend/MotoklubBezbednost.API/Controllers/` |
+| Tests | `backend/MotoklubBezbednost.API.Tests/` (e.g. `RequestValidators/`) |
+
+## Request models
+
+- **Avoid** `required` and `[Required]` on properties validated by FluentValidation; use nullable types so deserialization succeeds and validators report problems.
+
+```csharp
+// Prefer – validator enforces required
+public string? FirstName { get; set; }
+public int? LocationId { get; set; }
+
+// Avoid – can throw before validation runs
+public required string FirstName { get; set; }
+```
+
+## Validators
+
+- One validator per request type.
+- Use `NotEmpty()`, `NotNull()`, `GreaterThan(0)` with **`WithErrorCode`** when using shared error resources.
+- Add keys to **all** culture `.resx` files if localization is enabled (**localization-both-resx**).
+
+## Tests
+
+- For each required field, assert validation fails when null/empty.
+- Parameterize with `[TestCase(nameof(CreateXRequest.PropertyName))]` (NUnit) or equivalent.
+
+## Flow
+
+1. Request → FluentValidation (auto or manual).
+2. Invalid → **400** with structured errors.
+3. Valid → map to command/query → **MediatR** → handler.

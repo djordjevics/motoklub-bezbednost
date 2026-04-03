@@ -1,0 +1,31 @@
+---
+description: FluentValidation – API and Business validators, registration, error codes
+globs: backend/MotoklubBezbednost.API/**/*.cs, backend/MotoklubBezbednost.Business/**/*.cs
+alwaysApply: false
+---
+
+# Validators (FluentValidation)
+
+The API project references **FluentValidation.AspNetCore**—wire it when validating requests and (optionally) MediatR pipelines.
+
+## Placement
+
+- **API validators:** e.g. `backend/MotoklubBezbednost.API/Validation/` — one validator per request type (`CreateXRequestValidator`).
+- **Business validators:** e.g. `backend/MotoklubBezbednost.Business/Validation/` — one per command when command-level validation is needed.
+
+## Registration (`Program.cs`)
+
+Typical setup (adjust namespaces to match):
+
+- `SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true` so missing fields reach FluentValidation.
+- `AddFluentValidationAutoValidation()` for API models.
+- `AddValidatorsFromAssemblyContaining<…>()` for API and Business assemblies.
+- Optional: MediatR `ValidationBehavior` pipeline for commands.
+
+## Conventions
+
+- On request models used with FluentValidation: prefer **nullable** reference types (`string?`, `int?`) over `required` / `[Required]` so JSON binding does not fail before rules run.
+- Use **`WithErrorCode(nameof(Errors.SomeKey))`** (or a stable string contract) instead of ad-hoc English `WithMessage` when localization is used.
+- Shared rules (date ranges, cross-field checks) can live in static helpers or extension methods.
+
+See **api-endpoints-and-validators** for request-model examples.

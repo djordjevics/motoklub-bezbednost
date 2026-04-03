@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using FluentAssertions;
-using MotoklubBezbednost.API.Data;
-using MotoklubBezbednost.API.Models;
-using MotoklubBezbednost.API.Repositories;
+using MotoklubBezbednost.Data;
+using MotoklubBezbednost.Data.Models;
+using MotoklubBezbednost.Data.Repositories;
 
 namespace MotoklubBezbednost.API.Tests.Repositories;
 
@@ -26,11 +26,11 @@ public class MotorcycleRepositoryTests : IDisposable
     public async Task AddAsync_ShouldAddMotorcycleToDatabase()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var motorcycle = new Motorcycle
+        var motorcycle = new MotorcycleDb
         {
             Member = member,
             BrandName = "Honda",
@@ -53,11 +53,11 @@ public class MotorcycleRepositoryTests : IDisposable
     public async Task GetByIdAsync_WhenMotorcycleExists_ShouldReturnMotorcycleWithMember()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new MotorcycleDb { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         await _repository.AddAsync(motorcycle);
 
         // Act
@@ -84,12 +84,12 @@ public class MotorcycleRepositoryTests : IDisposable
     public async Task GetAllAsync_ShouldReturnAllMotorcycles()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" });
-        await _repository.AddAsync(new Motorcycle { Member = member, BrandName = "Yamaha", ModelName = "R1" });
+        await _repository.AddAsync(new MotorcycleDb { Member = member, BrandName = "Honda", ModelName = "CBR600" });
+        await _repository.AddAsync(new MotorcycleDb { Member = member, BrandName = "Yamaha", ModelName = "R1" });
 
         // Act
         var result = await _repository.GetAllAsync();
@@ -102,11 +102,11 @@ public class MotorcycleRepositoryTests : IDisposable
     public async Task GetAllWithMemberAsync_ShouldReturnMotorcyclesWithMembers()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" });
+        await _repository.AddAsync(new MotorcycleDb { Member = member, BrandName = "Honda", ModelName = "CBR600" });
 
         // Act
         var result = await _repository.GetAllWithMemberAsync();
@@ -121,14 +121,14 @@ public class MotorcycleRepositoryTests : IDisposable
     public async Task GetByMemberIdAsync_ShouldReturnMemberMotorcycles()
     {
         // Arrange
-        var member1 = new Member { Name = "John", Surname = "Doe" };
-        var member2 = new Member { Name = "Jane", Surname = "Smith" };
+        var member1 = new MemberDb { Name = "John", Surname = "Doe" };
+        var member2 = new MemberDb { Name = "Jane", Surname = "Smith" };
         _context.Members.AddRange(member1, member2);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Motorcycle { Member = member1, BrandName = "Honda", ModelName = "CBR600" });
-        await _repository.AddAsync(new Motorcycle { Member = member1, BrandName = "Yamaha", ModelName = "R1" });
-        await _repository.AddAsync(new Motorcycle { Member = member2, BrandName = "Kawasaki", ModelName = "Ninja" });
+        await _repository.AddAsync(new MotorcycleDb { Member = member1, BrandName = "Honda", ModelName = "CBR600" });
+        await _repository.AddAsync(new MotorcycleDb { Member = member1, BrandName = "Yamaha", ModelName = "R1" });
+        await _repository.AddAsync(new MotorcycleDb { Member = member2, BrandName = "Kawasaki", ModelName = "Ninja" });
 
         // Act
         var result = await _repository.GetByMemberIdAsync(member1.Id);
@@ -142,11 +142,11 @@ public class MotorcycleRepositoryTests : IDisposable
     public async Task UpdateAsync_ShouldUpdateMotorcycle()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new MotorcycleDb { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         await _repository.AddAsync(motorcycle);
         motorcycle.ModelName = "CBR600 Updated";
 
@@ -162,11 +162,11 @@ public class MotorcycleRepositoryTests : IDisposable
     public async Task DeleteAsync_ShouldRemoveMotorcycle()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
+        var motorcycle = new MotorcycleDb { Member = member, BrandName = "Honda", ModelName = "CBR600" };
         await _repository.AddAsync(motorcycle);
 
         // Act

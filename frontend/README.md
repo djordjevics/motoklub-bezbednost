@@ -1,40 +1,39 @@
 # Motoklub Bezbednost Frontend
 
-React + TypeScript frontend application for managing motorcycle club members, motorcycles, equipment, and training records.
+React + TypeScript + Vite. The UI talks to the API only over HTTP (no direct database access).
 
 ## Prerequisites
 
-- Node.js 18+ and npm/yarn
-- AWS Cognito User Pool configured
+- Node.js 24.14 and npm
 
 ## Setup
 
-1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Create `.env` file with your AWS Cognito configuration:
+Optional `.env` (defaults work for local dev with the Vite proxy):
+
 ```
-VITE_AWS_COGNITO_USER_POOL_ID=your-user-pool-id
-VITE_AWS_COGNITO_CLIENT_ID=your-client-id
-VITE_AWS_REGION=us-east-1
-VITE_API_BASE_URL=http://localhost:5000/api
+VITE_API_BASE_URL=/api
 ```
 
-## Running the Application
+For a production build served from the same host as the API (see `scripts/Package-Local.ps1`), use `VITE_API_BASE_URL=/api`.
+
+## Running
+
+Terminal 1 — API on port 5000. Terminal 2:
 
 ```bash
 npm run dev
 ```
 
-The app will be available at `http://localhost:3000`
+Open `http://localhost:3000`. API requests go to `/api` and are proxied to `http://localhost:5000`.
 
-## Building for Production
+## Build
 
 ```bash
 npm run build
 ```
 
-The built files will be in the `dist` directory, ready to be deployed to S3.
-
+Output: `frontend/dist`. For portable packaging, use the repo script `scripts/Package-Local.ps1`, which copies this build into the published API `wwwroot`.

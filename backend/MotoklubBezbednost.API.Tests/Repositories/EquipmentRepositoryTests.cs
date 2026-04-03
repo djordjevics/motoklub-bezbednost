@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using FluentAssertions;
-using MotoklubBezbednost.API.Data;
-using MotoklubBezbednost.API.Models;
-using MotoklubBezbednost.API.Repositories;
+using MotoklubBezbednost.Data;
+using MotoklubBezbednost.Data.Models;
+using MotoklubBezbednost.Data.Repositories;
 
 namespace MotoklubBezbednost.API.Tests.Repositories;
 
@@ -26,11 +26,11 @@ public class EquipmentRepositoryTests : IDisposable
     public async Task AddAsync_ShouldAddEquipmentToDatabase()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var equipment = new Equipment
+        var equipment = new EquipmentDb
         {
             Member = member,
             Pants = true,
@@ -56,11 +56,11 @@ public class EquipmentRepositoryTests : IDisposable
     public async Task GetByIdAsync_WhenEquipmentExists_ShouldReturnEquipmentWithMember()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var equipment = new Equipment { Member = member, Pants = true, Jacket = true };
+        var equipment = new EquipmentDb { Member = member, Pants = true, Jacket = true };
         await _repository.AddAsync(equipment);
 
         // Act
@@ -87,13 +87,13 @@ public class EquipmentRepositoryTests : IDisposable
     public async Task GetAllAsync_ShouldReturnAllEquipment()
     {
         // Arrange
-        var member1 = new Member { Name = "John", Surname = "Doe" };
-        var member2 = new Member { Name = "Jane", Surname = "Smith" };
+        var member1 = new MemberDb { Name = "John", Surname = "Doe" };
+        var member2 = new MemberDb { Name = "Jane", Surname = "Smith" };
         _context.Members.AddRange(member1, member2);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Equipment { Member = member1, Pants = true, Jacket = true });
-        await _repository.AddAsync(new Equipment { Member = member2, Pants = true, Jacket = false });
+        await _repository.AddAsync(new EquipmentDb { Member = member1, Pants = true, Jacket = true });
+        await _repository.AddAsync(new EquipmentDb { Member = member2, Pants = true, Jacket = false });
 
         // Act
         var result = await _repository.GetAllAsync();
@@ -106,11 +106,11 @@ public class EquipmentRepositoryTests : IDisposable
     public async Task GetAllWithMemberAsync_ShouldReturnEquipmentWithMembers()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        await _repository.AddAsync(new Equipment { Member = member, Pants = true, Jacket = true });
+        await _repository.AddAsync(new EquipmentDb { Member = member, Pants = true, Jacket = true });
 
         // Act
         var result = await _repository.GetAllWithMemberAsync();
@@ -125,11 +125,11 @@ public class EquipmentRepositoryTests : IDisposable
     public async Task GetByMemberIdAsync_ShouldReturnMemberEquipment()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var equipment = new Equipment { Member = member, Pants = true, Jacket = true };
+        var equipment = new EquipmentDb { Member = member, Pants = true, Jacket = true };
         await _repository.AddAsync(equipment);
 
         // Act
@@ -145,7 +145,7 @@ public class EquipmentRepositoryTests : IDisposable
     public async Task GetByMemberIdAsync_WhenEquipmentDoesNotExist_ShouldReturnNull()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
@@ -160,11 +160,11 @@ public class EquipmentRepositoryTests : IDisposable
     public async Task UpdateAsync_ShouldUpdateEquipment()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var equipment = new Equipment { Member = member, Pants = true, Jacket = true };
+        var equipment = new EquipmentDb { Member = member, Pants = true, Jacket = true };
         await _repository.AddAsync(equipment);
         equipment.Pants = false;
 
@@ -180,11 +180,11 @@ public class EquipmentRepositoryTests : IDisposable
     public async Task DeleteAsync_ShouldRemoveEquipment()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         _context.Members.Add(member);
         await _context.SaveChangesAsync();
 
-        var equipment = new Equipment { Member = member, Pants = true, Jacket = true };
+        var equipment = new EquipmentDb { Member = member, Pants = true, Jacket = true };
         await _repository.AddAsync(equipment);
 
         // Act

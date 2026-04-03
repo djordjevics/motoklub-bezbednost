@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using FluentAssertions;
-using MotoklubBezbednost.API.Data;
-using MotoklubBezbednost.API.Models;
-using MotoklubBezbednost.API.Repositories;
+using MotoklubBezbednost.Data;
+using MotoklubBezbednost.Data.Models;
+using MotoklubBezbednost.Data.Repositories;
 
 namespace MotoklubBezbednost.API.Tests.Repositories;
 
@@ -26,7 +26,7 @@ public class MemberRepositoryTests : IDisposable
     public async Task AddAsync_ShouldAddMemberToDatabase()
     {
         // Arrange
-        var member = new Member
+        var member = new MemberDb
         {
             Name = "John",
             Surname = "Doe",
@@ -48,7 +48,7 @@ public class MemberRepositoryTests : IDisposable
     public async Task GetByIdAsync_WhenMemberExists_ShouldReturnMember()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         await _repository.AddAsync(member);
 
         // Act
@@ -74,8 +74,8 @@ public class MemberRepositoryTests : IDisposable
     public async Task GetAllAsync_ShouldReturnAllMembers()
     {
         // Arrange
-        await _repository.AddAsync(new Member { Name = "John", Surname = "Doe" });
-        await _repository.AddAsync(new Member { Name = "Jane", Surname = "Smith" });
+        await _repository.AddAsync(new MemberDb { Name = "John", Surname = "Doe" });
+        await _repository.AddAsync(new MemberDb { Name = "Jane", Surname = "Smith" });
 
         // Act
         var result = await _repository.GetAllAsync();
@@ -88,7 +88,7 @@ public class MemberRepositoryTests : IDisposable
     public async Task UpdateAsync_ShouldUpdateMember()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         await _repository.AddAsync(member);
         member.Surname = "Doe Updated";
 
@@ -104,7 +104,7 @@ public class MemberRepositoryTests : IDisposable
     public async Task DeleteAsync_ShouldRemoveMember()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
         await _repository.AddAsync(member);
 
         // Act
@@ -119,8 +119,8 @@ public class MemberRepositoryTests : IDisposable
     public async Task SearchAsync_ShouldReturnMatchingMembers()
     {
         // Arrange
-        await _repository.AddAsync(new Member { Name = "John", Surname = "Doe", Email = "john@example.com" });
-        await _repository.AddAsync(new Member { Name = "Jane", Surname = "Smith", Email = "jane@example.com" });
+        await _repository.AddAsync(new MemberDb { Name = "John", Surname = "Doe", Email = "john@example.com" });
+        await _repository.AddAsync(new MemberDb { Name = "Jane", Surname = "Smith", Email = "jane@example.com" });
 
         // Act
         var result = await _repository.SearchAsync("John");
@@ -134,8 +134,8 @@ public class MemberRepositoryTests : IDisposable
     public async Task SearchAsync_ShouldSearchByEmail()
     {
         // Arrange
-        await _repository.AddAsync(new Member { Name = "John", Surname = "Doe", Email = "john@example.com" });
-        await _repository.AddAsync(new Member { Name = "Jane", Surname = "Smith", Email = "jane@example.com" });
+        await _repository.AddAsync(new MemberDb { Name = "John", Surname = "Doe", Email = "john@example.com" });
+        await _repository.AddAsync(new MemberDb { Name = "Jane", Surname = "Smith", Email = "jane@example.com" });
 
         // Act
         var result = await _repository.SearchAsync("john@example.com");

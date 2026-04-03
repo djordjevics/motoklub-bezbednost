@@ -1,3 +1,5 @@
+import type { Member, Motorcycle } from './Member'
+
 export interface TrainingSession {
   id: number
   theoryDate?: string
@@ -18,10 +20,12 @@ export interface Training {
   trainingSessionId: number
   isCertificateIssued: boolean
   note?: string
-  member?: any
-  motorcycle?: any
+  member?: Member
+  motorcycle?: Motorcycle
   trainingSession?: TrainingSession
 }
+
+export type TrainingRecord = Training
 
 export interface Level {
   id: number

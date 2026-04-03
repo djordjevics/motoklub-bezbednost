@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using FluentAssertions;
-using MotoklubBezbednost.API.Data;
-using MotoklubBezbednost.API.Models;
-using MotoklubBezbednost.API.Repositories;
+using MotoklubBezbednost.Data;
+using MotoklubBezbednost.Data.Models;
+using MotoklubBezbednost.Data.Repositories;
 
 namespace MotoklubBezbednost.API.Tests.Repositories;
 
@@ -26,11 +26,11 @@ public class TrainingSessionRepositoryTests : IDisposable
     public async Task AddAsync_ShouldAddTrainingSessionToDatabase()
     {
         // Arrange
-        var level = new Level { Name = "Beginner" };
+        var level = new LevelDb { Name = "Beginner" };
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session = new TrainingSession
+        var session = new TrainingSessionDb
         {
             Level = level,
             City = "Belgrade",
@@ -53,11 +53,11 @@ public class TrainingSessionRepositoryTests : IDisposable
     public async Task GetByIdAsync_WhenSessionExists_ShouldReturnSession()
     {
         // Arrange
-        var level = new Level { Name = "Beginner" };
+        var level = new LevelDb { Name = "Beginner" };
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSessionDb { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
         await _repository.AddAsync(session);
 
         // Act
@@ -72,10 +72,10 @@ public class TrainingSessionRepositoryTests : IDisposable
     public async Task GetByIdWithDetailsAsync_ShouldReturnSessionWithDetails()
     {
         // Arrange
-        var member = new Member { Name = "John", Surname = "Doe" };
-        var motorcycle = new Motorcycle { Member = member, BrandName = "Honda", ModelName = "CBR600" };
-        var level = new Level { Name = "Beginner" };
-        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
+        var member = new MemberDb { Name = "John", Surname = "Doe" };
+        var motorcycle = new MotorcycleDb { Member = member, BrandName = "Honda", ModelName = "CBR600" };
+        var level = new LevelDb { Name = "Beginner" };
+        var session = new TrainingSessionDb { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
 
         _context.Members.Add(member);
         _context.Motorcycles.Add(motorcycle);
@@ -83,7 +83,7 @@ public class TrainingSessionRepositoryTests : IDisposable
         _context.TrainingSessions.Add(session);
         await _context.SaveChangesAsync();
 
-        var training = new Training { Member = member, Motorcycle = motorcycle, TrainingSession = session };
+        var training = new TrainingDb { Member = member, Motorcycle = motorcycle, TrainingSession = session };
         _context.Trainings.Add(training);
         await _context.SaveChangesAsync();
 
@@ -102,12 +102,12 @@ public class TrainingSessionRepositoryTests : IDisposable
     public async Task GetAllWithDetailsAsync_ShouldReturnSessionsWithDetails()
     {
         // Arrange
-        var level = new Level { Name = "Beginner" };
+        var level = new LevelDb { Name = "Beginner" };
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session1 = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
-        var session2 = new TrainingSession { Level = level, City = "Novi Sad", TheoryDate = DateTime.Now.AddDays(1) };
+        var session1 = new TrainingSessionDb { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session2 = new TrainingSessionDb { Level = level, City = "Novi Sad", TheoryDate = DateTime.Now.AddDays(1) };
         await _repository.AddAsync(session1);
         await _repository.AddAsync(session2);
 
@@ -123,12 +123,12 @@ public class TrainingSessionRepositoryTests : IDisposable
     public async Task GetAllWithDetailsAsync_ShouldOrderByDateDescending()
     {
         // Arrange
-        var level = new Level { Name = "Beginner" };
+        var level = new LevelDb { Name = "Beginner" };
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session1 = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
-        var session2 = new TrainingSession { Level = level, City = "Novi Sad", TheoryDate = DateTime.Now.AddDays(1) };
+        var session1 = new TrainingSessionDb { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session2 = new TrainingSessionDb { Level = level, City = "Novi Sad", TheoryDate = DateTime.Now.AddDays(1) };
         await _repository.AddAsync(session1);
         await _repository.AddAsync(session2);
 
@@ -144,11 +144,11 @@ public class TrainingSessionRepositoryTests : IDisposable
     public async Task UpdateAsync_ShouldUpdateTrainingSession()
     {
         // Arrange
-        var level = new Level { Name = "Beginner" };
+        var level = new LevelDb { Name = "Beginner" };
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSessionDb { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
         await _repository.AddAsync(session);
         session.City = "Novi Sad";
 
@@ -164,11 +164,11 @@ public class TrainingSessionRepositoryTests : IDisposable
     public async Task DeleteAsync_ShouldRemoveTrainingSession()
     {
         // Arrange
-        var level = new Level { Name = "Beginner" };
+        var level = new LevelDb { Name = "Beginner" };
         _context.Levels.Add(level);
         await _context.SaveChangesAsync();
 
-        var session = new TrainingSession { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
+        var session = new TrainingSessionDb { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
         await _repository.AddAsync(session);
 
         // Act

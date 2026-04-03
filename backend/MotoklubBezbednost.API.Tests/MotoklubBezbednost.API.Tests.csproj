@@ -26,6 +26,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MotoklubBezbednost.API\MotoklubBezbednost.API.csproj" />
+    <ProjectReference Include="..\MotoklubBezbednost.Data\MotoklubBezbednost.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\**\*.cs" />
+    <Compile Remove="Services\**\*.cs" />
   </ItemGroup>
 
 </Project>

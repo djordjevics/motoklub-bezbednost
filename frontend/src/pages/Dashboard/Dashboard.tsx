@@ -24,7 +24,10 @@ const Dashboard = () => {
     { title: 'Total Members', value: members?.length || 0 },
     { title: 'Total Motorcycles', value: motorcycles?.length || 0 },
     { title: 'Training Sessions', value: trainingSessions?.length || 0 },
-    { title: 'Active Members', value: members?.filter((m) => m.isActive).length || 0 },
+    {
+      title: 'Members with training',
+      value: members?.filter((m) => (m.trainings?.length ?? 0) > 0).length || 0,
+    },
   ]
 
   return (

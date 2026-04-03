@@ -1,83 +1,112 @@
+using System.Text;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using MotoklubBezbednost.API.Extensions;
+using MotoklubBezbednost.API.Options;
+using MotoklubBezbednost.Business.Cqrs.Members.Queries;
 using MotoklubBezbednost.Data;
 using MotoklubBezbednost.Data.Repositories;
-using MotoklubBezbednost.API.Extensions;
-using MotoklubBezbednost.Business.Cqrs.Members.Queries;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
-builder.Services.AddControllers();
+builder.Services.Configure<MotoklubAppOptions>(builder.Configuration.GetSection(MotoklubAppOptions.SectionName));
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
+builder.Services.Configure<LocalAuthOptions>(builder.Configuration.GetSection(LocalAuthOptions.SectionName));
+
+var motoklub = builder.Configuration.GetSection(MotoklubAppOptions.SectionName).Get<MotoklubAppOptions>() ?? new MotoklubAppOptions();
+var dataDir = Path.Combine(builder.Environment.ContentRootPath, motoklub.DataDirectory);
+Directory.CreateDirectory(dataDir);
+var dbPath = Path.Combine(dataDir, motoklub.SqliteFileName);
+var sqliteConnection = $"Data Source={dbPath}";
+
+var jwt = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
+
+builder.Services.AddControllers(options =>
+{
+    if (motoklub.RequireAuthenticatedApi)
+    {
+        options.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
+    }
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(sqliteConnection, sqlite =>
+        sqlite.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name)));
 
-// MediatR (CQRS) - register handlers from Business assembly
 builder.Services.AddMediatR(typeof(GetAllMembersQuery).Assembly);
 
-// CORS
+var allowedOrigins = builder.Configuration["AllowedOrigins"]?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+    ?? new[] { "http://localhost:3000" };
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins(builder.Configuration["AllowedOrigins"] ?? "http://localhost:3000")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
     });
 });
 
-// Authentication - AWS Cognito
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["AWS:Cognito:Authority"];
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidAudience = builder.Configuration["AWS:Cognito:ClientId"]
+            ValidIssuer = jwt.Issuer,
+            ValidAudience = jwt.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.SigningKey))
         };
     });
 
 builder.Services.AddAuthorization();
 
-// Register repositories
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IMotorcycleRepository, MotorcycleRepository>();
 builder.Services.AddScoped<ITrainingRepository, TrainingRepository>();
 builder.Services.AddScoped<ITrainingSessionRepository, TrainingSessionRepository>();
 builder.Services.AddScoped<IEquipmentRepository, EquipmentRepository>();
 
-// Register mappers
 builder.Services.AddMappers();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+if (motoklub.AutoMigrate)
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Only use HTTPS redirection in production
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run();
+var spaEntry = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "index.html");
+if (File.Exists(spaEntry))
+{
+    app.MapFallbackToFile("index.html");
+}
 
+app.Run();

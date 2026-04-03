@@ -1,10 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace MotoklubBezbednost.API.Models.Requests;
 
 public class UpdateEquipmentRequest
 {
-    [Required]
     public int Id { get; set; }
     public bool Pants { get; set; }
     public bool Jacket { get; set; }

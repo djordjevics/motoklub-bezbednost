@@ -1,10 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace MotoklubBezbednost.API.Models.Requests;
 
 public class UpdateMotorcycleRequest
 {
-    [Required]
     public int Id { get; set; }
     public string? BrandName { get; set; }
     public string? CommercialName { get; set; }

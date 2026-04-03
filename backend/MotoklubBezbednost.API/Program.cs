@@ -36,7 +36,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMotoklubPersistence(sqliteConnection);
 
-builder.Services.AddAutoMapper(typeof(BusinessMappingProfile), typeof(ApiMappingProfile));
+builder.Services.AddAutoMapper(cfg => { }, typeof(BusinessMappingProfile), typeof(ApiMappingProfile));
 
 builder.Services.AddMediatR(typeof(GetAllMembersQuery).Assembly);
 

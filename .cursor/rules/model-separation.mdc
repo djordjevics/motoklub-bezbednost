@@ -19,4 +19,5 @@ Typical flow: **HTTP request** → (optional) **API request** + **AutoMapper** �
 | **AutoMapper profiles** | `backend/MotoklubBezbednost.API/Mappings/ApiMappingProfile.cs`, `backend/MotoklubBezbednost.Business/Mappings/BusinessMappingProfile.cs` | API: request ↔ CQRS, DTO ↔ response; Business: entity ↔ DTO, create/update commands ↔ entity |
 
 - Keep **entities** out of API contracts; expose **response models** (or DTOs only inside Business).
-- Keep **API mapping vs Business mapping** in separate profiles/assemblies; register both from `Program.cs`.
+- Keep **API mapping vs Business mapping** in separate profiles/assemblies; register both from `Program.cs` via **`AddAutoMapper(cfg => { }, typeof(BusinessMappingProfile), typeof(ApiMappingProfile))`** (AutoMapper **15+** includes DI; do not use the obsolete `AutoMapper.Extensions.Microsoft.DependencyInjection` package).
+- Prefer **`string?`** (and avoid `[Required]`) on API request models when **FluentValidation** will enforce rules after model binding.

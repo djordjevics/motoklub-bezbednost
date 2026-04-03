@@ -1,10 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace MotoklubBezbednost.API.Models.Requests;
 
 public class UpdateMemberRequest
 {
-    [Required]
     public int Id { get; set; }
     public string? Name { get; set; }
     public string? Surname { get; set; }

@@ -1,10 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace MotoklubBezbednost.API.Models.Requests;
 
 public class UpdateTrainingSessionRequest
 {
-    [Required]
     public int Id { get; set; }
     public DateTime? TheoryDate { get; set; }
     public DateTime? PolygonDate { get; set; }

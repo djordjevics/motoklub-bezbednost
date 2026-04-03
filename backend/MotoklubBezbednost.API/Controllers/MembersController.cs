@@ -68,7 +68,7 @@ public class MembersController : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<IEnumerable<MemberResponse>>> SearchMembers([FromQuery] string query)
+    public async Task<ActionResult<IEnumerable<MemberResponse>>> SearchMembers([FromQuery] string? query)
     {
         var searchQuery = _mapper.Map<SearchMembersQuery>(new SearchMembersRequest { Query = query });
         var members = await _mediator.Send(searchQuery);

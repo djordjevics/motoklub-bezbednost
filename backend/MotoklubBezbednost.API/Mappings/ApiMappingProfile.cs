@@ -20,7 +20,8 @@ public sealed class ApiMappingProfile : Profile
         CreateMap<CreateMemberRequest, CreateMemberCommand>();
         CreateMap<UpdateMemberRequest, UpdateMemberCommand>();
         CreateMap<GetMemberByIdRequest, GetMemberByIdQuery>();
-        CreateMap<SearchMembersRequest, SearchMembersQuery>();
+        CreateMap<SearchMembersRequest, SearchMembersQuery>()
+            .ForMember(d => d.Query, o => o.MapFrom(s => s.Query ?? string.Empty));
 
         CreateMap<CreateEquipmentRequest, CreateEquipmentCommand>();
         CreateMap<UpdateEquipmentRequest, UpdateEquipmentCommand>();

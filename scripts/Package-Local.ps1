@@ -2,12 +2,14 @@
 # Usage (from repo root):  pwsh ./scripts/Package-Local.ps1
 # Optional: -SelfContained -Runtime win-x64   (no .NET runtime needed on target machine; larger output)
 # Optional: -SkipDataLayout   (omit data/ - used by Package-Update.ps1 for copy-over upgrades)
+# Optional: -Fast   skip npm ci (reuse node_modules); faster local iteration. CI / lockfile changes: omit -Fast.
 
 param(
     [string]$OutputRelative = "dist/motoklub-local",
     [switch]$SelfContained,
     [string]$Runtime = "win-x64",
-    [switch]$SkipDataLayout
+    [switch]$SkipDataLayout,
+    [switch]$Fast
 )
 
 $ErrorActionPreference = "Stop"
@@ -35,9 +37,19 @@ Push-Location $Frontend
 try {
     $prev = $env:VITE_API_BASE_URL
     $env:VITE_API_BASE_URL = "/api"
-    if (Test-Path "package-lock.json") {
+    if ($Fast) {
+        if (Test-Path "node_modules") {
+            Write-Host "Fast: skipping npm ci/install (existing node_modules)."
+        }
+        else {
+            Write-Host "Fast: node_modules missing; running npm install once."
+            npm install
+        }
+    }
+    elseif (Test-Path "package-lock.json") {
         npm ci
-    } else {
+    }
+    else {
         npm install
     }
     npm run build

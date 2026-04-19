@@ -3,7 +3,8 @@
 
 param(
     [switch]$SelfContained,
-    [string]$Runtime = "win-x64"
+    [string]$Runtime = "win-x64",
+    [switch]$Fast
 )
 
 $ErrorActionPreference = "Stop"

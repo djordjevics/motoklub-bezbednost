@@ -59,6 +59,8 @@ Or:
 make package
 ```
 
+For faster repeat builds on your machine, add **`-Fast`** (skips `npm ci` and reuses `frontend/node_modules`): e.g. `pwsh ./scripts/Package-Local.ps1 -Fast`, `pwsh ./scripts/Package-Local.ps1 -SelfContained -Runtime win-x64 -Fast`, or `make package-fast` / `make package-self-contained-fast`. Use a full pack (no `-Fast`) after lockfile or dependency changes, and in CI.
+
 **Target machine:** Install [.NET 8 runtime](https://dotnet.microsoft.com/download/dotnet/8.0), or build with `make package-self-contained` / `pwsh ./scripts/Package-Local.ps1 -SelfContained -Runtime win-x64` so the output includes the runtime (larger, no separate .NET install).
 
 On first run, SQLite is created under `data/` and EF migrations apply automatically (`Motoklub__AutoMigrate` is set by the start script). No separate migration tool is required.

@@ -7,7 +7,7 @@ const AppBar = () => {
 
   const handleLogout = () => {
     clearAccessToken()
-    navigate('/login', { replace: true })
+    navigate('/', { replace: true })
   }
 
   return (

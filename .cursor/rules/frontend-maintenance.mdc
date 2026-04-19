@@ -18,14 +18,14 @@ Product owners may report **what works / what does not**; implementers (humans o
 | Area | Path | Responsibility |
 |------|------|----------------|
 | Routes / screens | `frontend/src/pages/` | Thin composition; local UI state only when page-specific |
-| UI | `frontend/src/components/` | Feature folders (`Members/`, …), shared `Layout/`, `Auth/` |
+| UI | `frontend/src/components/` | Feature folders (`Members/`, …), shared `Layout/` |
 | HTTP | `frontend/src/services/` | One `*Service` object (or module) per API area; uses `apiClient` |
 | Types | `frontend/src/types/` | Shapes aligned with API JSON; update when DTOs change |
 | Config | `frontend/src/config/` | e.g. `apiConfig.ts` — `import.meta.env` |
 
 ## HTTP and auth
 
-- **Never** create ad-hoc `axios` instances or raw `fetch` for app API calls. Use **`apiClient`** (`frontend/src/services/apiClient.ts`) so **JWT** and **401 → login redirect** stay centralized.
+- **Never** create ad-hoc `axios` instances or raw `fetch` for app API calls. Use **`apiClient`** (`frontend/src/services/apiClient.ts`) so **JWT** (when present) and **401 → clear stored token** stay centralized.
 - Base URL: **`VITE_API_BASE_URL`** (default `/api`). Dev server proxies `/api` to the API (`vite.config.ts`).
 - Add new endpoints as **typed methods** on the right service (same style as `memberService.ts`).
 
@@ -48,8 +48,8 @@ Product owners may report **what works / what does not**; implementers (humans o
 
 ## Routing and auth
 
-- **Protected** app shell: routes under `Layout` stay behind **`ProtectedRoute`**. Public routes (e.g. `/login`) stay outside.
-- New authenticated pages: add a **`Route`** under the existing `Layout` branch in `App.tsx` and a **sidebar/nav** link if users must discover the page.
+- **App shell:** routes that use **`Layout`** live under the **`/`** branch in `App.tsx` (no separate login route; default index is **Dashboard**).
+- New pages: add a **`Route`** under the existing `Layout` branch in `App.tsx` and a **sidebar/nav** link if users must discover the page.
 
 ## Environment and build
 

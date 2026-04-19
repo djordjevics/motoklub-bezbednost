@@ -28,7 +28,7 @@ Login: `POST /api/auth/login` with `{ "username", "password" }`.
 
 ```bash
 cd backend
-dotnet ef database update --project MotoklubBezbednost.Data --startup-project MotoklubBezbednost.API
+dotnet ef database update --project MotoklubBezbednost.Data --startup-project MotoklubBezbednost.Data
 ```
 
 Or enable `Motoklub:AutoMigrate` so the API applies migrations on startup.

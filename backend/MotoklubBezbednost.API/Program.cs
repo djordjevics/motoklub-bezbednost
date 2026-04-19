@@ -3,13 +3,12 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using MotoklubBezbednost.API.Extensions;
+using MotoklubBezbednost.API.Mappings;
 using MotoklubBezbednost.API.Options;
 using MotoklubBezbednost.Business.Cqrs.Members.Queries;
-using MotoklubBezbednost.Data;
-using MotoklubBezbednost.Data.Repositories;
+using MotoklubBezbednost.Business.DependencyInjection;
+using MotoklubBezbednost.Business.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,9 +34,9 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(sqliteConnection, sqlite =>
-        sqlite.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name)));
+builder.Services.AddMotoklubPersistence(sqliteConnection);
+
+builder.Services.AddAutoMapper(cfg => { }, typeof(BusinessMappingProfile), typeof(ApiMappingProfile));
 
 builder.Services.AddMediatR(typeof(GetAllMembersQuery).Assembly);
 
@@ -72,21 +71,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<IMemberRepository, MemberRepository>();
-builder.Services.AddScoped<IMotorcycleRepository, MotorcycleRepository>();
-builder.Services.AddScoped<ITrainingRepository, TrainingRepository>();
-builder.Services.AddScoped<ITrainingSessionRepository, TrainingSessionRepository>();
-builder.Services.AddScoped<IEquipmentRepository, EquipmentRepository>();
-
-builder.Services.AddMappers();
-
 var app = builder.Build();
 
 if (motoklub.AutoMigrate)
 {
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    app.Services.ApplyMotoklubMigrations();
 }
 
 if (app.Environment.IsDevelopment())

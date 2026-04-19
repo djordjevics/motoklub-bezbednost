@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 using MediatR;
-using MotoklubBezbednost.Business.Dtos;
+using Microsoft.AspNetCore.Mvc;
+using MotoklubBezbednost.API.Models.Requests;
+using MotoklubBezbednost.API.Models.Responses;
 using MotoklubBezbednost.Business.Cqrs.Trainings.Commands;
 using MotoklubBezbednost.Business.Cqrs.Trainings.Queries;
-using MotoklubBezbednost.API.Requests;
-using MotoklubBezbednost.API.Mappers;
 
 namespace MotoklubBezbednost.API.Controllers;
 
@@ -14,71 +13,70 @@ namespace MotoklubBezbednost.API.Controllers;
 public class TrainingsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public TrainingsController(IMediator mediator)
+    public TrainingsController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TrainingSessionDto>>> GetTrainingSessions()
+    public async Task<ActionResult<IEnumerable<TrainingSessionResponse>>> GetTrainingSessions()
     {
         var sessions = await _mediator.Send(new GetAllTrainingSessionsQuery());
-        return Ok(sessions);
+        return Ok(_mapper.Map<IEnumerable<TrainingSessionResponse>>(sessions));
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<TrainingSessionDto>> GetTrainingSession(int id)
+    public async Task<ActionResult<TrainingSessionResponse>> GetTrainingSession(int id)
     {
-        var request = new GetTrainingSessionByIdRequest { Id = id };
-        var query = request.ToQuery();
+        var query = _mapper.Map<GetTrainingSessionByIdQuery>(new GetTrainingSessionByIdRequest { Id = id });
         var session = await _mediator.Send(query);
         if (session == null)
             return NotFound();
-        return Ok(session);
+        return Ok(_mapper.Map<TrainingSessionResponse>(session));
     }
 
     [HttpGet("member/{memberId}")]
-    public async Task<ActionResult<IEnumerable<TrainingDto>>> GetTrainingsByMember(int memberId)
+    public async Task<ActionResult<IEnumerable<TrainingResponse>>> GetTrainingsByMember(int memberId)
     {
-        var request = new GetTrainingsByMemberRequest { MemberId = memberId };
-        var query = request.ToQuery();
+        var query = _mapper.Map<GetTrainingsByMemberQuery>(new GetTrainingsByMemberRequest { MemberId = memberId });
         var trainings = await _mediator.Send(query);
-        return Ok(trainings);
+        return Ok(_mapper.Map<IEnumerable<TrainingResponse>>(trainings));
     }
 
     [HttpPost("sessions")]
-    public async Task<ActionResult<TrainingSessionDto>> CreateTrainingSession([FromBody] CreateTrainingSessionRequest request)
+    public async Task<ActionResult<TrainingSessionResponse>> CreateTrainingSession([FromBody] CreateTrainingSessionRequest request)
     {
-        var command = request.ToCommand();
+        var command = _mapper.Map<CreateTrainingSessionCommand>(request);
         var createdSession = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetTrainingSession), new { id = createdSession.Id }, createdSession);
+        return CreatedAtAction(nameof(GetTrainingSession), new { id = createdSession.Id }, _mapper.Map<TrainingSessionResponse>(createdSession));
     }
 
     [HttpPost("trainings")]
-    public async Task<ActionResult<TrainingDto>> CreateTraining([FromBody] CreateTrainingRequest request)
+    public async Task<ActionResult<TrainingResponse>> CreateTraining([FromBody] CreateTrainingRequest request)
     {
-        var command = request.ToCommand();
+        var command = _mapper.Map<CreateTrainingCommand>(request);
         var createdTraining = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetTraining), new { id = createdTraining.Id }, createdTraining);
+        return CreatedAtAction(nameof(GetTraining), new { id = createdTraining.Id }, _mapper.Map<TrainingResponse>(createdTraining));
     }
 
     [HttpGet("trainings/{id}")]
-    public async Task<ActionResult<TrainingDto>> GetTraining(int id)
+    public async Task<ActionResult<TrainingResponse>> GetTraining(int id)
     {
-        var request = new GetTrainingByIdRequest { Id = id };
-        var query = request.ToQuery();
+        var query = _mapper.Map<GetTrainingByIdQuery>(new GetTrainingByIdRequest { Id = id });
         var training = await _mediator.Send(query);
         if (training == null)
             return NotFound();
-        return Ok(training);
+        return Ok(_mapper.Map<TrainingResponse>(training));
     }
 
     [HttpPut("sessions/{id}")]
     public async Task<IActionResult> UpdateTrainingSession(int id, [FromBody] UpdateTrainingSessionRequest request)
     {
         request.Id = id;
-        var command = request.ToCommand();
+        var command = _mapper.Map<UpdateTrainingSessionCommand>(request);
         var updated = await _mediator.Send(command);
         if (updated is null)
             return NotFound();

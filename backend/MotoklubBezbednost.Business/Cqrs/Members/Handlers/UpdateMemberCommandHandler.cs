@@ -1,7 +1,7 @@
+using AutoMapper;
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Members.Commands;
 using MotoklubBezbednost.Business.Dtos;
-using MotoklubBezbednost.Business.Mappings;
 using MotoklubBezbednost.Data.Repositories;
 
 namespace MotoklubBezbednost.Business.Cqrs.Members.Handlers;
@@ -25,9 +25,9 @@ public sealed class UpdateMemberCommandHandler : IRequestHandler<UpdateMemberCom
             return null;
         }
 
-        request.ApplyTo(existing);
+        _mapper.Map(request, existing);
         await _memberRepository.UpdateAsync(existing);
-        return _mapper.Map<Data.Models.MemberDb, MemberDto>(existing);
+        return _mapper.Map<MemberDto>(existing);
     }
 }
 

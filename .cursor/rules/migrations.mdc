@@ -8,15 +8,15 @@ alwaysApply: false
 
 - **DbContext:** `backend/MotoklubBezbednost.Data/ApplicationDbContext.cs`
 - **Migrations folder:** `backend/MotoklubBezbednost.Data/Migrations/`
-- **Startup project for tooling:** `backend/MotoklubBezbednost.API`
+- **Startup project for tooling:** `backend/MotoklubBezbednost.Data` (design-time factory lives there; API no longer references Data)
 
 ## Commands
 
 From `backend/`:
 
 ```bash
-dotnet ef migrations add <MigrationName> --project MotoklubBezbednost.Data --startup-project MotoklubBezbednost.API
-dotnet ef database update --project MotoklubBezbednost.Data --startup-project MotoklubBezbednost.API
+dotnet ef migrations add <MigrationName> --project MotoklubBezbednost.Data --startup-project MotoklubBezbednost.Data
+dotnet ef database update --project MotoklubBezbednost.Data --startup-project MotoklubBezbednost.Data
 ```
 
 In Development, **`Motoklub:AutoMigrate`** may apply migrations on startup—still add proper migration files for version control and production updates.

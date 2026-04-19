@@ -1,12 +1,12 @@
 ---
 description: Entity / DTO / request / command separation and mapping locations
-globs: backend/MotoklubBezbednost.Data/Models/**/*.cs, backend/MotoklubBezbednost.Business/Dtos/**/*.cs, backend/MotoklubBezbednost.API/Requests/**/*.cs, backend/MotoklubBezbednost.API/Mappers/**/*.cs, backend/MotoklubBezbednost.Business/Mappings/**/*.cs, backend/MotoklubBezbednost.Business/Cqrs/**/*.cs
+globs: backend/MotoklubBezbednost.Data/Models/**/*.cs, backend/MotoklubBezbednost.Business/Dtos/**/*.cs, backend/MotoklubBezbednost.API/Models/**/*.cs, backend/MotoklubBezbednost.API/Mappings/**/*.cs, backend/MotoklubBezbednost.Business/Mappings/**/*.cs, backend/MotoklubBezbednost.Business/Cqrs/**/*.cs
 alwaysApply: false
 ---
 
 # Model separation and data flow
 
-Typical flow: **HTTP request** → (optional) **API request** + mapper → **MediatR command/query** → **handler** → **repository / entity** → **DTO** → JSON response.
+Typical flow: **HTTP request** → (optional) **API request** + **AutoMapper** → **MediatR command/query** → **handler** → **repository / entity** → **DTO** → **AutoMapper** → **API response** → JSON.
 
 | Type | Location | Purpose |
 |------|----------|---------|
@@ -14,8 +14,10 @@ Typical flow: **HTTP request** → (optional) **API request** + mapper → **Med
 | **DTO** | `backend/MotoklubBezbednost.Business/Dtos/*.cs` | Shapes returned to the API / used between handlers |
 | **Command / Query** | `backend/MotoklubBezbednost.Business/Cqrs/**/Commands|Queries/*.cs` | MediatR messages |
 | **Handler** | `backend/MotoklubBezbednost.Business/Cqrs/**/Handlers/*.cs` | Orchestration, validation, mapping entity ↔ DTO |
-| **API request** | `backend/MotoklubBezbednost.API/Requests/*.cs` | Incoming payloads when not bound as primitives only |
-| **Mappers** | `backend/MotoklubBezbednost.API/Mappers/`, `backend/MotoklubBezbednost.Business/Mappings/` | Request ↔ command/query; entity ↔ DTO |
+| **API request** | `backend/MotoklubBezbednost.API/Models/Requests/**/*.cs` | Incoming payloads when not bound as primitives only |
+| **API response** | `backend/MotoklubBezbednost.API/Models/Responses/*.cs` | HTTP response shapes (map from Business DTOs at the controller) |
+| **AutoMapper profiles** | `backend/MotoklubBezbednost.API/Mappings/ApiMappingProfile.cs`, `backend/MotoklubBezbednost.Business/Mappings/BusinessMappingProfile.cs` | API: request ↔ CQRS, DTO ↔ response; Business: entity ↔ DTO, create/update commands ↔ entity |
 
-- Keep **entities** out of API contracts; expose **DTOs** (or dedicated response types) from controllers.
-- When introducing **AutoMapper** or shared profiles, keep the same boundaries: API mapping vs Business mapping.
+- Keep **entities** out of API contracts; expose **response models** (or DTOs only inside Business).
+- Keep **API mapping vs Business mapping** in separate profiles/assemblies; register both from `Program.cs` via **`AddAutoMapper(cfg => { }, typeof(BusinessMappingProfile), typeof(ApiMappingProfile))`** (AutoMapper **15+** includes DI; do not use the obsolete `AutoMapper.Extensions.Microsoft.DependencyInjection` package).
+- Prefer **`string?`** (and avoid `[Required]`) on API request models when **FluentValidation** will enforce rules after model binding.

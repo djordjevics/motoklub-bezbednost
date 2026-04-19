@@ -1,7 +1,7 @@
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Motorcycles.Queries;
 using MotoklubBezbednost.Business.Dtos;
-using MotoklubBezbednost.Business.Mappings;
+using AutoMapper;
 using MotoklubBezbednost.Data.Models;
 using MotoklubBezbednost.Data.Repositories;
 
@@ -21,7 +21,7 @@ public sealed class GetAllMotorcyclesQueryHandler : IRequestHandler<GetAllMotorc
     public async Task<IEnumerable<MotorcycleDto>> Handle(GetAllMotorcyclesQuery request, CancellationToken cancellationToken)
     {
         var entities = await _motorcycleRepository.GetAllWithMemberAsync();
-        return entities.Select(e => _mapper.Map<MotorcycleDb, MotorcycleDto>(e));
+        return entities.Select(e => _mapper.Map<MotorcycleDto>(e));
     }
 }
 

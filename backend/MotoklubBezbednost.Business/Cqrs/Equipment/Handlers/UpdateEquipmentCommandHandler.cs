@@ -1,7 +1,7 @@
+using AutoMapper;
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Equipment.Commands;
 using MotoklubBezbednost.Business.Dtos;
-using MotoklubBezbednost.Business.Mappings;
 using MotoklubBezbednost.Data.Repositories;
 
 namespace MotoklubBezbednost.Business.Cqrs.Equipment.Handlers;
@@ -25,9 +25,9 @@ public sealed class UpdateEquipmentCommandHandler : IRequestHandler<UpdateEquipm
             return null;
         }
 
-        request.ApplyTo(existing);
+        _mapper.Map(request, existing);
         await _equipmentRepository.UpdateAsync(existing);
-        return _mapper.Map<Data.Models.EquipmentDb, EquipmentDto>(existing);
+        return _mapper.Map<EquipmentDto>(existing);
     }
 }
 

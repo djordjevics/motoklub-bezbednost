@@ -1,7 +1,7 @@
+using AutoMapper;
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Equipment.Queries;
 using MotoklubBezbednost.Business.Dtos;
-using MotoklubBezbednost.Business.Mappings;
 using MotoklubBezbednost.Data.Models;
 using MotoklubBezbednost.Data.Repositories;
 
@@ -21,8 +21,6 @@ public sealed class GetAllEquipmentQueryHandler : IRequestHandler<GetAllEquipmen
     public async Task<IEnumerable<EquipmentDto>> Handle(GetAllEquipmentQuery request, CancellationToken cancellationToken)
     {
         var entities = await _equipmentRepository.GetAllWithMemberAsync();
-        return entities.Select(e => _mapper.Map<EquipmentDb, EquipmentDto>(e));
+        return entities.Select(e => _mapper.Map<EquipmentDto>(e));
     }
 }
-
-

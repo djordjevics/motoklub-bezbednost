@@ -1,7 +1,7 @@
+using AutoMapper;
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Trainings.Commands;
 using MotoklubBezbednost.Business.Dtos;
-using MotoklubBezbednost.Business.Mappings;
 using MotoklubBezbednost.Data.Repositories;
 
 namespace MotoklubBezbednost.Business.Cqrs.Trainings.Handlers;
@@ -25,9 +25,9 @@ public sealed class UpdateTrainingSessionCommandHandler : IRequestHandler<Update
             return null;
         }
 
-        request.ApplyTo(existing);
+        _mapper.Map(request, existing);
         await _trainingSessionRepository.UpdateAsync(existing);
-        return _mapper.Map<Data.Models.TrainingSessionDb, TrainingSessionDto>(existing);
+        return _mapper.Map<TrainingSessionDto>(existing);
     }
 }
 

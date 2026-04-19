@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 using MediatR;
-using MotoklubBezbednost.Business.Dtos;
+using Microsoft.AspNetCore.Mvc;
+using MotoklubBezbednost.API.Models.Requests;
+using MotoklubBezbednost.API.Models.Responses;
 using MotoklubBezbednost.Business.Cqrs.Members.Commands;
 using MotoklubBezbednost.Business.Cqrs.Members.Queries;
-using MotoklubBezbednost.API.Requests;
-using MotoklubBezbednost.API.Mappers;
 
 namespace MotoklubBezbednost.API.Controllers;
 
@@ -14,43 +13,44 @@ namespace MotoklubBezbednost.API.Controllers;
 public class MembersController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public MembersController(IMediator mediator)
+    public MembersController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetMembers()
+    public async Task<ActionResult<IEnumerable<MemberResponse>>> GetMembers()
     {
         var members = await _mediator.Send(new GetAllMembersQuery());
-        return Ok(members);
+        return Ok(_mapper.Map<IEnumerable<MemberResponse>>(members));
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<MemberDto>> GetMember(int id)
+    public async Task<ActionResult<MemberResponse>> GetMember(int id)
     {
-        var request = new GetMemberByIdRequest { Id = id };
-        var query = request.ToQuery();
+        var query = _mapper.Map<GetMemberByIdQuery>(new GetMemberByIdRequest { Id = id });
         var member = await _mediator.Send(query);
         if (member == null)
             return NotFound();
-        return Ok(member);
+        return Ok(_mapper.Map<MemberResponse>(member));
     }
 
     [HttpPost]
-    public async Task<ActionResult<MemberDto>> CreateMember([FromBody] CreateMemberRequest request)
+    public async Task<ActionResult<MemberResponse>> CreateMember([FromBody] CreateMemberRequest request)
     {
-        var command = request.ToCommand();
+        var command = _mapper.Map<CreateMemberCommand>(request);
         var createdMember = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetMember), new { id = createdMember.Id }, createdMember);
+        return CreatedAtAction(nameof(GetMember), new { id = createdMember.Id }, _mapper.Map<MemberResponse>(createdMember));
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateMember(int id, [FromBody] UpdateMemberRequest request)
     {
         request.Id = id;
-        var command = request.ToCommand();
+        var command = _mapper.Map<UpdateMemberCommand>(request);
         var updated = await _mediator.Send(command);
         if (updated is null)
         {
@@ -68,12 +68,10 @@ public class MembersController : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> SearchMembers([FromQuery] string query)
+    public async Task<ActionResult<IEnumerable<MemberResponse>>> SearchMembers([FromQuery] string? query)
     {
-        var request = new SearchMembersRequest { Query = query };
-        var searchQuery = request.ToQuery();
+        var searchQuery = _mapper.Map<SearchMembersQuery>(new SearchMembersRequest { Query = query });
         var members = await _mediator.Send(searchQuery);
-        return Ok(members);
+        return Ok(_mapper.Map<IEnumerable<MemberResponse>>(members));
     }
 }
-

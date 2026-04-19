@@ -10,14 +10,14 @@ alwaysApply: false
 
 | Layer | Project | Responsibility |
 |-------|---------|------------------|
-| **API** | `MotoklubBezbednost.API` | Controllers, HTTP concerns, request DTOs / mappers, API composition (`Program.cs`), Swagger, auth |
-| **Business** | `MotoklubBezbednost.Business` | CQRS (MediatR): commands, queries, handlers, DTOs, business-side mapping |
+| **API** | `MotoklubBezbednost.API` | Controllers, `Models/Requests` and `Models/Responses`, AutoMapper API profile, API composition (`Program.cs`), Swagger, auth |
+| **Business** | `MotoklubBezbednost.Business` | CQRS (MediatR): commands, queries, handlers, DTOs, AutoMapper business profile, EF persistence registration (`AddMotoklubPersistence`) |
 | **Data** | `MotoklubBezbednost.Data` | EF Core `ApplicationDbContext`, entities under `Models/`, `Migrations/`, repositories |
 
 **Strict separation:**
 
-- The API project must **not** reference EF entities or `DbContext` directly in controllers for domain operations—use MediatR and DTOs from Business.
-- Business may reference Data (repositories, entities) for persistence. Keep mapping at clear boundaries (handlers ↔ repositories, DTOs).
+- The API project references **Business only** (not **Data**). It must **not** reference EF entities or `DbContext`; use MediatR and DTOs from Business.
+- Business references Data (repositories, entities) and registers `DbContext` + repositories for the host. Keep mapping at clear boundaries (handlers ↔ repositories, DTOs).
 
 ## Frontend (`frontend/`)
 

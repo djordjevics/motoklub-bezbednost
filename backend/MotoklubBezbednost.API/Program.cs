@@ -1,6 +1,7 @@
 using System.Text;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
@@ -84,8 +85,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+var spaStaticFileOptions = new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        if (string.Equals(ctx.File.Name, "index.html", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Context.Response.Headers.CacheControl = "no-cache, no-store, must-revalidate";
+        }
+    },
+};
+
 app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(spaStaticFileOptions);
 
 app.UseCors("AllowReactApp");
 app.UseAuthentication();
@@ -95,7 +107,7 @@ app.MapControllers();
 var spaEntry = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "index.html");
 if (File.Exists(spaEntry))
 {
-    app.MapFallbackToFile("index.html");
+    app.MapFallbackToFile("index.html", spaStaticFileOptions);
 }
 
 app.Run();

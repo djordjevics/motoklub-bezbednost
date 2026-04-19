@@ -72,7 +72,7 @@ Include when possible:
 3. **Server state:** Use **TanStack Query** (`useQuery` / `useMutation`). Use stable **`queryKey`** hierarchies (e.g. `['members']`, `['members', id]`). Handle **loading**, **error**, and **empty** states. Invalidate queries after mutations that affect lists or detail.
 4. **Forms:** Prefer **react-hook-form** + **yup** + **MUI** for new or expanded forms.
 5. **UI:** Stay on **MUI** and existing **Layout** / **theme** patterns unless the team decides otherwise (document in an ADR).
-6. **Routes:** New authenticated pages go under the **`Layout`** + **`ProtectedRoute`** branch in `App.tsx`; add navigation when users must find the page.
+6. **Routes:** New pages go under the **`Layout`** branch in `App.tsx`; add navigation when users must find the page.
 7. **Secrets:** Never put secrets in the frontend. Only **`VITE_*`** environment variables are exposed to the client.
 8. **Before merge:** `npm run lint` and `npm run build` must succeed (build always runs Safe Chain preflight; see **Aikido Safe Chain** above).
 

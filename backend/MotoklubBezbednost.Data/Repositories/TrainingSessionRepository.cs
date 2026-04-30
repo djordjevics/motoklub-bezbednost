@@ -12,8 +12,8 @@ public class TrainingSessionRepository : Repository<TrainingSessionDb>, ITrainin
     public async Task<IEnumerable<TrainingSessionDb>> GetAllWithDetailsAsync()
     {
         return await _dbSet
+            .AsNoTracking()
             .Include(ts => ts.Trainings)
-                .ThenInclude(t => t.Member)
             .Include(ts => ts.Level)
             .OrderByDescending(ts => ts.TheoryDate ?? ts.PolygonDate ?? DateTime.MinValue)
             .ToListAsync();
@@ -23,7 +23,6 @@ public class TrainingSessionRepository : Repository<TrainingSessionDb>, ITrainin
     {
         return await _dbSet
             .Include(ts => ts.Trainings)
-                .ThenInclude(t => t.Member)
             .Include(ts => ts.Trainings)
                 .ThenInclude(t => t.Motorcycle)
             .Include(ts => ts.Level)

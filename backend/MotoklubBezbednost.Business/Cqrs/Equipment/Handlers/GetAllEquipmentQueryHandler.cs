@@ -20,7 +20,7 @@ public sealed class GetAllEquipmentQueryHandler : IRequestHandler<GetAllEquipmen
 
     public async Task<IEnumerable<EquipmentDto>> Handle(GetAllEquipmentQuery request, CancellationToken cancellationToken)
     {
-        var entities = await _equipmentRepository.GetAllWithMemberAsync();
+        var entities = await _equipmentRepository.GetAllAsync();
         return entities.Select(e => _mapper.Map<EquipmentDto>(e));
     }
 }

@@ -26,6 +26,7 @@ public class MemberRepository : Repository<MemberDb>, IMemberRepository
     public async Task<IEnumerable<MemberDb>> GetAllWithDetailsAsync()
     {
         return await _dbSet
+            .AsNoTracking()
             .Include(m => m.Motorcycles)
             .Include(m => m.Equipment)
             .Include(m => m.Trainings)
@@ -37,6 +38,7 @@ public class MemberRepository : Repository<MemberDb>, IMemberRepository
     {
         var searchTerm = query.ToLower();
         return await _dbSet
+            .AsNoTracking()
             .Where(m => m.Name.ToLower().Contains(searchTerm) ||
                        m.Surname.ToLower().Contains(searchTerm) ||
                        (m.Email != null && m.Email.ToLower().Contains(searchTerm)))

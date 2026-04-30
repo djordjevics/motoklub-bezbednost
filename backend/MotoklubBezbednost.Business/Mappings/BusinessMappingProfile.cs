@@ -52,20 +52,20 @@ public sealed class BusinessMappingProfile : Profile
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.CreationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow))
             .ForMember(d => d.LastModificationTimestamp, o => o.Ignore())
-            .ForMember(d => d.Member, o => o.Ignore());
+            .ForMember(d => d.MemberId, o => o.Ignore());
 
         CreateMap<CreateMotorcycleCommand, MotorcycleDb>()
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.CreationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow))
             .ForMember(d => d.LastModificationTimestamp, o => o.Ignore())
-            .ForMember(d => d.Member, o => o.Ignore())
+            .ForMember(d => d.MemberId, o => o.Ignore())
             .ForMember(d => d.Trainings, o => o.Ignore());
 
         CreateMap<CreateTrainingCommand, TrainingDb>()
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.CreationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow))
             .ForMember(d => d.LastModificationTimestamp, o => o.Ignore())
-            .ForMember(d => d.Member, o => o.Ignore())
+            .ForMember(d => d.MemberId, o => o.Ignore())
             .ForMember(d => d.Motorcycle, o => o.Ignore())
             .ForMember(d => d.TrainingSession, o => o.Ignore());
 
@@ -105,7 +105,6 @@ public sealed class BusinessMappingProfile : Profile
         CreateMap<UpdateEquipmentCommand, EquipmentDb>()
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.MemberId, o => o.Ignore())
-            .ForMember(d => d.Member, o => o.Ignore())
             .ForMember(d => d.CreationTimestamp, o => o.Ignore())
             .ForMember(d => d.Note, o => { o.Condition(src => src.Note != null); o.MapFrom(s => s.Note); })
             .ForMember(d => d.LastModificationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow));
@@ -113,7 +112,6 @@ public sealed class BusinessMappingProfile : Profile
         CreateMap<UpdateMotorcycleCommand, MotorcycleDb>()
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.MemberId, o => o.Ignore())
-            .ForMember(d => d.Member, o => o.Ignore())
             .ForMember(d => d.Trainings, o => o.Ignore())
             .ForMember(d => d.CreationTimestamp, o => o.Ignore())
             .ForMember(d => d.BrandName, o => { o.Condition((src, _, __) => src.BrandName != null); o.MapFrom(s => s.BrandName); })

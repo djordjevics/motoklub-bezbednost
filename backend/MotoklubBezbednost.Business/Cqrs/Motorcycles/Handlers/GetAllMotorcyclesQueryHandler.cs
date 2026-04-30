@@ -20,7 +20,7 @@ public sealed class GetAllMotorcyclesQueryHandler : IRequestHandler<GetAllMotorc
 
     public async Task<IEnumerable<MotorcycleDto>> Handle(GetAllMotorcyclesQuery request, CancellationToken cancellationToken)
     {
-        var entities = await _motorcycleRepository.GetAllWithMemberAsync();
+        var entities = await _motorcycleRepository.GetAllAsync();
         return entities.Select(e => _mapper.Map<MotorcycleDto>(e));
     }
 }

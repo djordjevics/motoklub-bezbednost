@@ -1,5 +1,3 @@
-using System;
-
 namespace MotoklubBezbednost.Data.Models;
 
 public abstract class DbModel

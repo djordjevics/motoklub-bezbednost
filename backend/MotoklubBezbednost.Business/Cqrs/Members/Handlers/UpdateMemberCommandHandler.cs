@@ -3,17 +3,20 @@ using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Members.Commands;
 using MotoklubBezbednost.Business.Dtos;
 using MotoklubBezbednost.Data.Repositories;
+using MotoklubBezbednost.Data.UnitOfWork;
 
 namespace MotoklubBezbednost.Business.Cqrs.Members.Handlers;
 
 public sealed class UpdateMemberCommandHandler : IRequestHandler<UpdateMemberCommand, MemberDto?>
 {
     private readonly IMemberRepository _memberRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public UpdateMemberCommandHandler(IMemberRepository memberRepository, IMapper mapper)
+    public UpdateMemberCommandHandler(IMemberRepository memberRepository, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _memberRepository = memberRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -27,6 +30,7 @@ public sealed class UpdateMemberCommandHandler : IRequestHandler<UpdateMemberCom
 
         _mapper.Map(request, existing);
         await _memberRepository.UpdateAsync(existing);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<MemberDto>(existing);
     }
 }

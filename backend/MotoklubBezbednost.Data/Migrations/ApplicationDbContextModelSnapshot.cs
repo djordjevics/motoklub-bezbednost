@@ -453,24 +453,20 @@ namespace MotoklubBezbednost.Data.Migrations
 
             modelBuilder.Entity("MotoklubBezbednost.Data.Models.CommentDb", b =>
                 {
-                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", "Member")
+                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", null)
                         .WithMany("Comments")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("MotoklubBezbednost.Data.Models.EquipmentDb", b =>
                 {
-                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", "Member")
+                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", null)
                         .WithOne("Equipment")
                         .HasForeignKey("MotoklubBezbednost.Data.Models.EquipmentDb", "MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("MotoklubBezbednost.Data.Models.MemberDb", b =>
@@ -485,7 +481,7 @@ namespace MotoklubBezbednost.Data.Migrations
 
             modelBuilder.Entity("MotoklubBezbednost.Data.Models.MembershipPaymentDb", b =>
                 {
-                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", "Member")
+                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", null)
                         .WithMany("MembershipPayments")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -496,36 +492,30 @@ namespace MotoklubBezbednost.Data.Migrations
                         .HasForeignKey("PaymentTypeId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("Member");
-
                     b.Navigation("PaymentType");
                 });
 
             modelBuilder.Entity("MotoklubBezbednost.Data.Models.MotorcycleDb", b =>
                 {
-                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", "Member")
+                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", null)
                         .WithMany("Motorcycles")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("MotoklubBezbednost.Data.Models.TagDb", b =>
                 {
-                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", "Member")
+                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", null)
                         .WithMany("Tags")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("MotoklubBezbednost.Data.Models.TrainingDb", b =>
                 {
-                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", "Member")
+                    b.HasOne("MotoklubBezbednost.Data.Models.MemberDb", null)
                         .WithMany("Trainings")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -542,8 +532,6 @@ namespace MotoklubBezbednost.Data.Migrations
                         .HasForeignKey("TrainingSessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Member");
 
                     b.Navigation("Motorcycle");
 

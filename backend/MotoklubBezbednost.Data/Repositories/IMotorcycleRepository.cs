@@ -5,7 +5,6 @@ namespace MotoklubBezbednost.Data.Repositories;
 public interface IMotorcycleRepository : IRepository<MotorcycleDb>
 {
     Task<IEnumerable<MotorcycleDb>> GetByMemberIdAsync(int memberId);
-    Task<IEnumerable<MotorcycleDb>> GetAllWithMemberAsync();
 }
 
 

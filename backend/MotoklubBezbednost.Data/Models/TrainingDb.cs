@@ -21,8 +21,6 @@ public class TrainingDb : DbModel
     public int TrainingSessionId { get; set; }
 
     // Navigation properties
-    public virtual MemberDb Member { get; set; } = null!;
-
     public virtual MotorcycleDb Motorcycle { get; set; } = null!;
 
     public virtual TrainingSessionDb TrainingSession { get; set; } = null!;

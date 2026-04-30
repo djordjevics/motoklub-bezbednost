@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 using Xunit;
 using FluentAssertions;
 using MotoklubBezbednost.Data;
@@ -9,16 +10,22 @@ namespace MotoklubBezbednost.API.Tests.Repositories;
 
 public class TrainingSessionRepositoryTests : IDisposable
 {
+    private readonly SqliteConnection _connection;
     private readonly ApplicationDbContext _context;
     private readonly TrainingSessionRepository _repository;
 
     public TrainingSessionRepositoryTests()
     {
+        _connection = new SqliteConnection("DataSource=:memory:");
+        _connection.Open();
+
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .UseSqlite(_connection, sqlite =>
+                sqlite.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name))
             .Options;
 
         _context = new ApplicationDbContext(options);
+        _context.Database.Migrate();
         _repository = new TrainingSessionRepository(_context);
     }
 
@@ -40,6 +47,7 @@ public class TrainingSessionRepositoryTests : IDisposable
 
         // Act
         var result = await _repository.AddAsync(session);
+        await _context.SaveChangesAsync();
 
         // Assert
         result.Should().NotBeNull();
@@ -59,6 +67,7 @@ public class TrainingSessionRepositoryTests : IDisposable
 
         var session = new TrainingSessionDb { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
         await _repository.AddAsync(session);
+        await _context.SaveChangesAsync();
 
         // Act
         var result = await _repository.GetByIdAsync(session.Id);
@@ -73,17 +82,19 @@ public class TrainingSessionRepositoryTests : IDisposable
     {
         // Arrange
         var member = new MemberDb { Name = "John", Surname = "Doe" };
-        var motorcycle = new MotorcycleDb { Member = member, BrandName = "Honda", ModelName = "CBR600" };
+        _context.Members.Add(member);
+        await _context.SaveChangesAsync();
+
+        var motorcycle = new MotorcycleDb { MemberId = member.Id, BrandName = "Honda", ModelName = "CBR600" };
         var level = new LevelDb { Name = "Beginner" };
         var session = new TrainingSessionDb { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
 
-        _context.Members.Add(member);
         _context.Motorcycles.Add(motorcycle);
         _context.Levels.Add(level);
         _context.TrainingSessions.Add(session);
         await _context.SaveChangesAsync();
 
-        var training = new TrainingDb { Member = member, Motorcycle = motorcycle, TrainingSession = session };
+        var training = new TrainingDb { MemberId = member.Id, Motorcycle = motorcycle, TrainingSession = session };
         _context.Trainings.Add(training);
         await _context.SaveChangesAsync();
 
@@ -94,7 +105,6 @@ public class TrainingSessionRepositoryTests : IDisposable
         result.Should().NotBeNull();
         result!.Level.Should().NotBeNull();
         result.Trainings.Should().NotBeEmpty();
-        result.Trainings.First().Member.Should().NotBeNull();
         result.Trainings.First().Motorcycle.Should().NotBeNull();
     }
 
@@ -110,6 +120,7 @@ public class TrainingSessionRepositoryTests : IDisposable
         var session2 = new TrainingSessionDb { Level = level, City = "Novi Sad", TheoryDate = DateTime.Now.AddDays(1) };
         await _repository.AddAsync(session1);
         await _repository.AddAsync(session2);
+        await _context.SaveChangesAsync();
 
         // Act
         var result = await _repository.GetAllWithDetailsAsync();
@@ -131,6 +142,7 @@ public class TrainingSessionRepositoryTests : IDisposable
         var session2 = new TrainingSessionDb { Level = level, City = "Novi Sad", TheoryDate = DateTime.Now.AddDays(1) };
         await _repository.AddAsync(session1);
         await _repository.AddAsync(session2);
+        await _context.SaveChangesAsync();
 
         // Act
         var result = await _repository.GetAllWithDetailsAsync();
@@ -150,10 +162,12 @@ public class TrainingSessionRepositoryTests : IDisposable
 
         var session = new TrainingSessionDb { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
         await _repository.AddAsync(session);
+        await _context.SaveChangesAsync();
         session.City = "Novi Sad";
 
         // Act
         await _repository.UpdateAsync(session);
+        await _context.SaveChangesAsync();
 
         // Assert
         var updatedSession = await _repository.GetByIdAsync(session.Id);
@@ -170,9 +184,11 @@ public class TrainingSessionRepositoryTests : IDisposable
 
         var session = new TrainingSessionDb { Level = level, City = "Belgrade", TheoryDate = DateTime.Now };
         await _repository.AddAsync(session);
+        await _context.SaveChangesAsync();
 
         // Act
         await _repository.DeleteAsync(session.Id);
+        await _context.SaveChangesAsync();
 
         // Assert
         var deletedSession = await _repository.GetByIdAsync(session.Id);
@@ -182,6 +198,7 @@ public class TrainingSessionRepositoryTests : IDisposable
     public void Dispose()
     {
         _context.Dispose();
+        _connection.Dispose();
     }
 }
 

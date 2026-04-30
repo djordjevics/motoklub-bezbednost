@@ -4,17 +4,20 @@ using MotoklubBezbednost.Business.Cqrs.Motorcycles.Commands;
 using MotoklubBezbednost.Business.Dtos;
 using MotoklubBezbednost.Data.Models;
 using MotoklubBezbednost.Data.Repositories;
+using MotoklubBezbednost.Data.UnitOfWork;
 
 namespace MotoklubBezbednost.Business.Cqrs.Motorcycles.Handlers;
 
 public sealed class CreateMotorcycleCommandHandler : IRequestHandler<CreateMotorcycleCommand, MotorcycleDto>
 {
     private readonly IMotorcycleRepository _motorcycleRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public CreateMotorcycleCommandHandler(IMotorcycleRepository motorcycleRepository, IMapper mapper)
+    public CreateMotorcycleCommandHandler(IMotorcycleRepository motorcycleRepository, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _motorcycleRepository = motorcycleRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -22,6 +25,7 @@ public sealed class CreateMotorcycleCommandHandler : IRequestHandler<CreateMotor
     {
         var entity = _mapper.Map<MotorcycleDb>(request);
         var created = await _motorcycleRepository.AddAsync(entity);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<MotorcycleDto>(created);
     }
 }

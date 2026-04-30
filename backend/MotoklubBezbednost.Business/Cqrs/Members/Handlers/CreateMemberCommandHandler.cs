@@ -4,17 +4,20 @@ using MotoklubBezbednost.Business.Cqrs.Members.Commands;
 using MotoklubBezbednost.Business.Dtos;
 using MotoklubBezbednost.Data.Models;
 using MotoklubBezbednost.Data.Repositories;
+using MotoklubBezbednost.Data.UnitOfWork;
 
 namespace MotoklubBezbednost.Business.Cqrs.Members.Handlers;
 
 public sealed class CreateMemberCommandHandler : IRequestHandler<CreateMemberCommand, MemberDto>
 {
     private readonly IMemberRepository _memberRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public CreateMemberCommandHandler(IMemberRepository memberRepository, IMapper mapper)
+    public CreateMemberCommandHandler(IMemberRepository memberRepository, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _memberRepository = memberRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -22,6 +25,7 @@ public sealed class CreateMemberCommandHandler : IRequestHandler<CreateMemberCom
     {
         var entity = _mapper.Map<MemberDb>(request);
         var created = await _memberRepository.AddAsync(entity);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<MemberDto>(created);
     }
 }

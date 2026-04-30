@@ -18,7 +18,6 @@ public class TagDb : DbModel
     public int MemberId { get; set; }
 
     // Navigation properties
-    public virtual MemberDb Member { get; set; } = null!;
 }
 
 

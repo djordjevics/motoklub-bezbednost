@@ -5,7 +5,6 @@ namespace MotoklubBezbednost.Data.Repositories;
 public interface IEquipmentRepository : IRepository<EquipmentDb>
 {
     Task<EquipmentDb?> GetByMemberIdAsync(int memberId);
-    Task<IEnumerable<EquipmentDb>> GetAllWithMemberAsync();
 }
 
 

@@ -29,8 +29,6 @@ public class MotorcycleDb : DbModel
     public int MemberId { get; set; }
 
     // Navigation properties
-    public virtual MemberDb Member { get; set; } = null!;
-
     public virtual ICollection<TrainingDb> Trainings { get; set; } = new List<TrainingDb>();
 }
 

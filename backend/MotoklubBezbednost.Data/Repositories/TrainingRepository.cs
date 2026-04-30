@@ -12,6 +12,7 @@ public class TrainingRepository : Repository<TrainingDb>, ITrainingRepository
     public async Task<IEnumerable<TrainingDb>> GetByMemberIdAsync(int memberId)
     {
         return await _dbSet
+            .AsNoTracking()
             .Include(t => t.TrainingSession)
                 .ThenInclude(ts => ts.Level)
             .Include(t => t.Motorcycle)
@@ -23,7 +24,6 @@ public class TrainingRepository : Repository<TrainingDb>, ITrainingRepository
     public async Task<TrainingDb?> GetByIdWithDetailsAsync(int id)
     {
         return await _dbSet
-            .Include(t => t.Member)
             .Include(t => t.Motorcycle)
             .Include(t => t.TrainingSession)
                 .ThenInclude(ts => ts.Level)

@@ -21,8 +21,6 @@ public class MembershipPaymentDb : DbModel
     public int? PaymentTypeId { get; set; }
 
     // Navigation properties
-    public virtual MemberDb Member { get; set; } = null!;
-
     public virtual PaymentTypeDb? PaymentType { get; set; }
 }
 

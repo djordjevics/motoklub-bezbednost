@@ -47,6 +47,20 @@ public class MemberDto
     [StringLength(1000)]
     public string? Note { get; set; }
 
+    public int? MemberTypeId { get; set; }
+
+    /// <summary>Stored: not an active member; record kept.</summary>
+    public bool MembershipExemptManual { get; set; }
+
+    /// <summary>Derived: payment waiver when Aktiv and aged out of paying as of <c>today</c>.</summary>
+    public bool IsMembershipPaymentExemptDueToAge { get; set; }
+
+    /// <summary>
+    /// Derived: membership payment is required (based on MemberType group rules + Aktiv 65+ override),
+    /// and also false when <see cref="MembershipExemptManual"/> (inactive/archived member).
+    /// </summary>
+    public bool IsMembershipPaymentRequired { get; set; }
+
     // Navigation properties (DTO graph)
     public MemberTypeDto? MemberType { get; set; }
 

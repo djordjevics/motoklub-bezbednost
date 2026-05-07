@@ -1,12 +1,18 @@
 using AutoMapper;
 using MotoklubBezbednost.API.Models.Requests;
 using MotoklubBezbednost.API.Models.Responses;
+using MotoklubBezbednost.Business.Cqrs.Comments.Commands;
+using MotoklubBezbednost.Business.Cqrs.Comments.Queries;
 using MotoklubBezbednost.Business.Cqrs.Equipment.Commands;
 using MotoklubBezbednost.Business.Cqrs.Equipment.Queries;
 using MotoklubBezbednost.Business.Cqrs.Members.Commands;
 using MotoklubBezbednost.Business.Cqrs.Members.Queries;
+using MotoklubBezbednost.Business.Cqrs.MembershipPayments.Commands;
+using MotoklubBezbednost.Business.Cqrs.MembershipPayments.Queries;
 using MotoklubBezbednost.Business.Cqrs.Motorcycles.Commands;
 using MotoklubBezbednost.Business.Cqrs.Motorcycles.Queries;
+using MotoklubBezbednost.Business.Cqrs.Tags.Commands;
+using MotoklubBezbednost.Business.Cqrs.Tags.Queries;
 using MotoklubBezbednost.Business.Cqrs.Trainings.Commands;
 using MotoklubBezbednost.Business.Cqrs.Trainings.Queries;
 using MotoklubBezbednost.Business.Dtos;
@@ -17,6 +23,7 @@ public sealed class ApiMappingProfile : Profile
 {
     public ApiMappingProfile()
     {
+        // --- Request -> CQRS messages ---
         CreateMap<CreateMemberRequest, CreateMemberCommand>();
         CreateMap<UpdateMemberRequest, UpdateMemberCommand>();
         CreateMap<GetMemberByIdRequest, GetMemberByIdQuery>();
@@ -34,12 +41,27 @@ public sealed class ApiMappingProfile : Profile
         CreateMap<GetMotorcyclesByMemberRequest, GetMotorcyclesByMemberQuery>();
 
         CreateMap<CreateTrainingRequest, CreateTrainingCommand>();
+        CreateMap<UpdateTrainingRequest, UpdateTrainingCommand>();
         CreateMap<CreateTrainingSessionRequest, CreateTrainingSessionCommand>();
         CreateMap<UpdateTrainingSessionRequest, UpdateTrainingSessionCommand>();
         CreateMap<GetTrainingByIdRequest, GetTrainingByIdQuery>();
         CreateMap<GetTrainingSessionByIdRequest, GetTrainingSessionByIdQuery>();
         CreateMap<GetTrainingsByMemberRequest, GetTrainingsByMemberQuery>();
+        CreateMap<GetTrainingsBySessionRequest, GetTrainingsBySessionQuery>();
 
+        CreateMap<CreateTagRequest, CreateTagCommand>();
+        CreateMap<UpdateTagRequest, UpdateTagCommand>();
+        CreateMap<GetTagsByMemberRequest, GetTagsByMemberQuery>();
+
+        CreateMap<CreateCommentRequest, CreateCommentCommand>();
+        CreateMap<UpdateCommentRequest, UpdateCommentCommand>();
+        CreateMap<GetCommentsByMemberRequest, GetCommentsByMemberQuery>();
+
+        CreateMap<CreateMembershipPaymentRequest, CreateMembershipPaymentCommand>();
+        CreateMap<UpdateMembershipPaymentRequest, UpdateMembershipPaymentCommand>();
+        CreateMap<GetMembershipPaymentsByMemberRequest, GetMembershipPaymentsByMemberQuery>();
+
+        // --- DTO -> Response ---
         CreateMap<PaymentTypeDto, PaymentTypeResponse>();
         CreateMap<MembershipPaymentDto, MembershipPaymentResponse>();
         CreateMap<CommentDto, CommentResponse>();

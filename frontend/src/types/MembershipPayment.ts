@@ -14,4 +14,3 @@ export interface PaymentType {
   type?: string
   description?: string
 }
-

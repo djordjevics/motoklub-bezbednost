@@ -17,6 +17,9 @@ public sealed class UpdateMemberCommand : IRequest<MemberDto?>
     public string? Email { get; init; }
     public string? Address { get; init; }
     public string? Note { get; init; }
+    public int? MemberTypeId { get; init; }
+
+    public bool? MembershipExemptManual { get; init; }
 }
 
 

@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Members.Commands;
 using MotoklubBezbednost.Business.Dtos;
+using MotoklubBezbednost.Business.Rules;
 using MotoklubBezbednost.Data.Repositories;
 using MotoklubBezbednost.Data.UnitOfWork;
 
@@ -28,10 +29,28 @@ public sealed class UpdateMemberCommandHandler : IRequestHandler<UpdateMemberCom
             return null;
         }
 
-        _mapper.Map(request, existing);
+        var wasInactiveRecord = existing.MembershipExemptManual;
+
+        // Inactive (archival) rows: allow only flipping MembershipExemptManual back to active.
+        if (wasInactiveRecord)
+        {
+            if (request.MembershipExemptManual.HasValue)
+            {
+                existing.MembershipExemptManual = request.MembershipExemptManual.Value;
+            }
+
+            existing.LastModificationTimestamp = DateTime.UtcNow;
+        }
+        else
+        {
+            _mapper.Map(request, existing);
+        }
+
         await _memberRepository.UpdateAsync(existing);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return _mapper.Map<MemberDto>(existing);
+        var dto = _mapper.Map<MemberDto>(existing);
+        MembershipRules.EnrichMembershipExempt(existing, dto, DateTime.Today);
+        return dto;
     }
 }
 

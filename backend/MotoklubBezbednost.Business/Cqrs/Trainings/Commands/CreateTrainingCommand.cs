@@ -5,6 +5,7 @@ namespace MotoklubBezbednost.Business.Cqrs.Trainings.Commands;
 
 public sealed class CreateTrainingCommand : IRequest<TrainingDto>
 {
+    public bool RepeatingAttendance { get; init; }
     public bool IsCertificateIssued { get; init; }
     public string? Note { get; init; }
     public int MemberId { get; init; }

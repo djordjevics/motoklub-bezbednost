@@ -22,6 +22,8 @@ public class EquipmentDto
     public DateTime CreationTimestamp { get; set; }
 
     public DateTime? LastModificationTimestamp { get; set; }
+
+    public int MemberId { get; set; }
 }
 
 

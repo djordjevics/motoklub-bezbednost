@@ -1,3 +1,4 @@
+import type { Level } from './Level'
 import type { Member, Motorcycle } from './Member'
 
 export interface TrainingSession {
@@ -10,7 +11,6 @@ export interface TrainingSession {
   instructors?: string
   note?: string
   level?: Level
-  trainings?: Training[]
 }
 
 export interface Training {
@@ -18,18 +18,10 @@ export interface Training {
   memberId: number
   motorcycleId: number
   trainingSessionId: number
+  repeatingAttendance: boolean
   isCertificateIssued: boolean
   note?: string
   member?: Member
   motorcycle?: Motorcycle
   trainingSession?: TrainingSession
 }
-
-export type TrainingRecord = Training
-
-export interface Level {
-  id: number
-  name?: string
-  note?: string
-}
-

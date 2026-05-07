@@ -1,7 +1,10 @@
 using AutoMapper;
+using MotoklubBezbednost.Business.Cqrs.Comments.Commands;
 using MotoklubBezbednost.Business.Cqrs.Equipment.Commands;
 using MotoklubBezbednost.Business.Cqrs.Members.Commands;
+using MotoklubBezbednost.Business.Cqrs.MembershipPayments.Commands;
 using MotoklubBezbednost.Business.Cqrs.Motorcycles.Commands;
+using MotoklubBezbednost.Business.Cqrs.Tags.Commands;
 using MotoklubBezbednost.Business.Cqrs.Trainings.Commands;
 using MotoklubBezbednost.Business.Dtos;
 using MotoklubBezbednost.Data.Models;
@@ -25,8 +28,8 @@ public sealed class BusinessMappingProfile : Profile
 
         CreateMap<TrainingDb, TrainingDto>()
             .ForMember(d => d.Member, o => o.Ignore())
-            .ForMember(d => d.Motorcycle, o => o.Ignore())
-            .ForMember(d => d.TrainingSession, o => o.Ignore());
+            .ForMember(d => d.Motorcycle, o => o.MapFrom(s => s.Motorcycle))
+            .ForMember(d => d.TrainingSession, o => o.MapFrom(s => s.TrainingSession));
 
         CreateMap<TrainingSessionDb, TrainingSessionDto>();
 
@@ -39,7 +42,6 @@ public sealed class BusinessMappingProfile : Profile
             .ForMember(d => d.RegisteredOn, o => o.MapFrom(_ => DateTime.UtcNow))
             .ForMember(d => d.CreationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow))
             .ForMember(d => d.LastModificationTimestamp, o => o.Ignore())
-            .ForMember(d => d.MemberTypeId, o => o.Ignore())
             .ForMember(d => d.MemberType, o => o.Ignore())
             .ForMember(d => d.Motorcycles, o => o.Ignore())
             .ForMember(d => d.Equipment, o => o.Ignore())
@@ -51,21 +53,18 @@ public sealed class BusinessMappingProfile : Profile
         CreateMap<CreateEquipmentCommand, EquipmentDb>()
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.CreationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow))
-            .ForMember(d => d.LastModificationTimestamp, o => o.Ignore())
-            .ForMember(d => d.MemberId, o => o.Ignore());
+            .ForMember(d => d.LastModificationTimestamp, o => o.Ignore());
 
         CreateMap<CreateMotorcycleCommand, MotorcycleDb>()
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.CreationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow))
             .ForMember(d => d.LastModificationTimestamp, o => o.Ignore())
-            .ForMember(d => d.MemberId, o => o.Ignore())
             .ForMember(d => d.Trainings, o => o.Ignore());
 
         CreateMap<CreateTrainingCommand, TrainingDb>()
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.CreationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow))
             .ForMember(d => d.LastModificationTimestamp, o => o.Ignore())
-            .ForMember(d => d.MemberId, o => o.Ignore())
             .ForMember(d => d.Motorcycle, o => o.Ignore())
             .ForMember(d => d.TrainingSession, o => o.Ignore());
 
@@ -81,7 +80,7 @@ public sealed class BusinessMappingProfile : Profile
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.RegisteredOn, o => o.Ignore())
             .ForMember(d => d.CreationTimestamp, o => o.Ignore())
-            .ForMember(d => d.MemberTypeId, o => o.Ignore())
+            .ForMember(d => d.MemberTypeId, o => { o.Condition((src, _, __) => src.MemberTypeId != null); o.MapFrom(s => s.MemberTypeId); })
             .ForMember(d => d.MemberType, o => o.Ignore())
             .ForMember(d => d.Motorcycles, o => o.Ignore())
             .ForMember(d => d.Equipment, o => o.Ignore())
@@ -100,6 +99,11 @@ public sealed class BusinessMappingProfile : Profile
             .ForMember(d => d.Email, o => { o.Condition((src, _, __) => src.Email != null); o.MapFrom(s => s.Email); })
             .ForMember(d => d.Address, o => { o.Condition((src, _, __) => src.Address != null); o.MapFrom(s => s.Address); })
             .ForMember(d => d.Note, o => { o.Condition((src, _, __) => src.Note != null); o.MapFrom(s => s.Note); })
+            .ForMember(d => d.MembershipExemptManual, o =>
+            {
+                o.Condition((src, _, __) => src.MembershipExemptManual != null);
+                o.MapFrom(s => s.MembershipExemptManual!.Value);
+            })
             .ForMember(d => d.LastModificationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow));
 
         CreateMap<UpdateEquipmentCommand, EquipmentDb>()
@@ -135,6 +139,68 @@ public sealed class BusinessMappingProfile : Profile
             .ForMember(d => d.Instructors, o => { o.Condition((src, _, __) => src.Instructors != null); o.MapFrom(s => s.Instructors); })
             .ForMember(d => d.Note, o => { o.Condition((src, _, __) => src.Note != null); o.MapFrom(s => s.Note); })
             .ForMember(d => d.LevelId, o => { o.Condition((src, _, __) => src.LevelId != null); o.MapFrom(s => s.LevelId); })
+            .ForMember(d => d.LastModificationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow));
+
+        CreateMap<UpdateTrainingCommand, TrainingDb>()
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.MemberId, o => o.Ignore())
+            .ForMember(d => d.TrainingSessionId, o => o.Ignore())
+            .ForMember(d => d.Motorcycle, o => o.Ignore())
+            .ForMember(d => d.TrainingSession, o => o.Ignore())
+            .ForMember(d => d.CreationTimestamp, o => o.Ignore())
+            .ForMember(d => d.RepeatingAttendance, o => { o.Condition((src, _, __) => src.RepeatingAttendance != null); o.MapFrom(s => s.RepeatingAttendance!.Value); })
+            .ForMember(d => d.IsCertificateIssued, o => { o.Condition((src, _, __) => src.IsCertificateIssued != null); o.MapFrom(s => s.IsCertificateIssued!.Value); })
+            .ForMember(d => d.Note, o => { o.Condition((src, _, __) => src.Note != null); o.MapFrom(s => s.Note); })
+            .ForMember(d => d.MotorcycleId, o => { o.Condition((src, _, __) => src.MotorcycleId != null); o.MapFrom(s => s.MotorcycleId!.Value); })
+            .ForMember(d => d.LastModificationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow));
+
+        CreateMap<CreateTagCommand, TagDb>()
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.CreationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(d => d.LastModificationTimestamp, o => o.Ignore());
+
+        CreateMap<UpdateTagCommand, TagDb>()
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.MemberId, o => o.Ignore())
+            .ForMember(d => d.CreationTimestamp, o => o.Ignore())
+            .ForMember(d => d.TagNumber, o => { o.Condition((src, _, __) => src.TagNumber != null); o.MapFrom(s => s.TagNumber); })
+            .ForMember(d => d.AssignedDate, o => { o.Condition((src, _, __) => src.AssignedDate != null); o.MapFrom(s => s.AssignedDate); })
+            .ForMember(d => d.ValidFrom, o => { o.Condition((src, _, __) => src.ValidFrom != null); o.MapFrom(s => s.ValidFrom); })
+            .ForMember(d => d.ValidTo, o => { o.Condition((src, _, __) => src.ValidTo != null); o.MapFrom(s => s.ValidTo); })
+            .ForMember(d => d.LastModificationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow));
+
+        CreateMap<CreateCommentCommand, CommentDb>()
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.CreationTime, o => o.Ignore())
+            .ForMember(d => d.EditTime, o => o.Ignore())
+            .ForMember(d => d.CreationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(d => d.LastModificationTimestamp, o => o.Ignore());
+
+        CreateMap<UpdateCommentCommand, CommentDb>()
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.MemberId, o => o.Ignore())
+            .ForMember(d => d.CreationTime, o => o.Ignore())
+            .ForMember(d => d.EditTime, o => o.Ignore())
+            .ForMember(d => d.CreationTimestamp, o => o.Ignore())
+            .ForMember(d => d.CommentText, o => { o.Condition((src, _, __) => src.CommentText != null); o.MapFrom(s => s.CommentText); })
+            .ForMember(d => d.LastModificationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow));
+
+        CreateMap<CreateMembershipPaymentCommand, MembershipPaymentDb>()
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.PaymentType, o => o.Ignore())
+            .ForMember(d => d.CreationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(d => d.LastModificationTimestamp, o => o.Ignore());
+
+        CreateMap<UpdateMembershipPaymentCommand, MembershipPaymentDb>()
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.MemberId, o => o.Ignore())
+            .ForMember(d => d.PaymentType, o => o.Ignore())
+            .ForMember(d => d.CreationTimestamp, o => o.Ignore())
+            .ForMember(d => d.Amount, o => { o.Condition((src, _, __) => src.Amount != null); o.MapFrom(s => s.Amount); })
+            .ForMember(d => d.PaymentDate, o => { o.Condition((src, _, __) => src.PaymentDate != null); o.MapFrom(s => s.PaymentDate); })
+            .ForMember(d => d.PaymentForYear, o => { o.Condition((src, _, __) => src.PaymentForYear != null); o.MapFrom(s => s.PaymentForYear); })
+            .ForMember(d => d.PaymentTypeId, o => { o.Condition((src, _, __) => src.PaymentTypeId != null); o.MapFrom(s => s.PaymentTypeId); })
+            .ForMember(d => d.Note, o => { o.Condition((src, _, __) => src.Note != null); o.MapFrom(s => s.Note); })
             .ForMember(d => d.LastModificationTimestamp, o => o.MapFrom(_ => DateTime.UtcNow));
     }
 }

@@ -1,0 +1,217 @@
+{
+  "app": {
+    "title": "Motoklub Bezbednost"
+  },
+  "language": {
+    "label": "Jezik",
+    "sr": "Srpski",
+    "en": "English"
+  },
+  "nav": {
+    "dashboard": "Početna",
+    "members": "Članovi",
+    "motorcycles": "Motori po modelu",
+    "trainingSessions": "Termini obuke"
+  },
+  "common": {
+    "save": "Sačuvaj",
+    "cancel": "Otkaži",
+    "delete": "Obriši",
+    "edit": "Izmeni",
+    "add": "Dodaj",
+    "addNew": "Dodaj novi",
+    "back": "Nazad",
+    "close": "Zatvori",
+    "search": "Pretraga",
+    "loading": "Učitavanje…",
+    "noData": "Nema podataka",
+    "error": "Greška. Pokušajte ponovo.",
+    "confirm": "Potvrdi",
+    "yes": "Da",
+    "no": "Ne",
+    "all": "Sve",
+    "actions": "Radnje",
+    "details": "Detalji",
+    "active": "Aktivno",
+    "select": "Izaberite…"
+  },
+  "dashboard": {
+    "title": "Početna",
+    "totalMembers": "Ukupno članova",
+    "totalMotorcycles": "Ukupno motora",
+    "totalSessions": "Termini obuke",
+    "membersWithTraining": "Članovi sa obukom"
+  },
+  "members": {
+    "title": "Članovi",
+    "addNew": "Novi član",
+    "count": "{{count}} član(ova)",
+    "activeTagColumn": "Aktivna oznaka",
+    "search": {
+      "placeholder": "Pretraga po imenu, prezimenu ili email-u"
+    },
+    "filters": {
+      "type": "Tip člana",
+      "allTypes": "Svi tipovi",
+      "training": "Obuka",
+      "trainingAll": "Svi članovi",
+      "trainingWith": "Sa obukom",
+      "trainingWithout": "Bez obuke",
+      "includeInactive": "Neaktivni kartoni"
+    },
+    "fields": {
+      "name": "Ime",
+      "surname": "Prezime",
+      "jmbg": "JMBG",
+      "dateOfBirth": "Datum rođenja",
+      "workplace": "Radno mesto",
+      "mobilePhone": "Mobilni telefon",
+      "email": "Email",
+      "address": "Adresa",
+      "emergencyContact": "Kontakt za hitne slučajeve",
+      "emergencyContactPhone": "Telefon za hitne slučajeve",
+      "registeredOn": "Registrovan",
+      "memberType": "Tip člana",
+      "note": "Napomena",
+      "phone": "Telefon"
+    },
+    "exempt": "Neaktivan / bivši član (čuvanje podataka)",
+    "exemptInactiveBanner": "Neaktivan karton: podaci ostaju kao istorija. Druge stavke nije moguće menjati dok ne isključite „Neaktivan / bivši član” na kartonu. Ostale kartice su samo za čitanje.",
+    "paymentExemptAgeBanner": "Oslobođen članarine: Aktiv član od 65+ godina života.",
+    "exemptHelperAgePayment": "Važi i pravilo oslobođenja članarine (Aktiv, 65+). Ovaj prekidač je samo za status neaktivnog člana (čuvanje podataka na kartonu).",
+    "chipInactiveRecord": "Neaktivan",
+    "delete": {
+      "title": "Brisanje člana",
+      "message": "Da li ste sigurni da želite da obrišete člana {{name}}? Sve povezane stavke (motori, oprema, obuke, članarine, oznake, komentari) će takođe biti obrisane.",
+      "confirm": "Obriši"
+    },
+    "form": {
+      "createTitle": "Novi član",
+      "editTitle": "Izmena člana"
+    },
+    "memberFormInactiveReadonly": "Član je označen kao neaktivan. Izmena je moguća samo na stranici kartona: na kartonu „Profil“ isključite „Neaktivan / bivši član“ da biste otključali podatke."
+  },
+  "memberDetail": {
+    "tabs": {
+      "profile": "Profil",
+      "motorcycles": "Motori",
+      "equipment": "Oprema",
+      "trainings": "Obuke",
+      "payments": "Članarine",
+      "tags": "Oznake",
+      "comments": "Komentari"
+    }
+  },
+  "motorcycles": {
+    "title": "Motori",
+    "addNew": "Dodaj motor",
+    "fields": {
+      "brandName": "Marka",
+      "commercialName": "Komercijalni naziv",
+      "modelName": "Model",
+      "engineDisplacment": "Zapremina motora (ccm)",
+      "enginePower": "Snaga (kW)",
+      "color": "Boja",
+      "registerPlate": "Registarska tablica"
+    },
+    "delete": {
+      "title": "Brisanje motora",
+      "message": "Obrisati motor {{name}}?"
+    }
+  },
+  "motorcyclesOverview": {
+    "title": "Motori po marki i modelu",
+    "subtitle": "Grupisano za sve članove. Ista marka i model pokazuju koliko članova ima taj tip motora.",
+    "membersWithModel": "Članova",
+    "specHeading": "Tipični podaci (prvi unešeni motor)",
+    "specNote": "Zapremina, tablice i boja se mogu razlikovati po vlasniku u tabeli ispod.",
+    "ownersHeading": "Članovi i njihovi motori"
+  },
+  "equipment": {
+    "title": "Oprema",
+    "fields": {
+      "pants": "Pantalone",
+      "jacket": "Jakna",
+      "vest": "Prsluk",
+      "workShirt": "Radna majica",
+      "formalShirt": "Svečana majica",
+      "note": "Napomena"
+    }
+  },
+  "trainings": {
+    "memberTitle": "Obuke člana",
+    "addNew": "Dodaj obuku",
+    "fields": {
+      "session": "Termin",
+      "motorcycle": "Motor",
+      "repeatingAttendance": "Ponovljeno prisustvo",
+      "isCertificateIssued": "Sertifikat izdat",
+      "note": "Napomena",
+      "certificate": "Sertifikat"
+    }
+  },
+  "trainingSessions": {
+    "title": "Termini obuke",
+    "addNew": "Novi termin",
+    "fields": {
+      "theoryDate": "Datum teorije",
+      "polygonDate": "Datum poligona",
+      "city": "Grad",
+      "level": "Nivo",
+      "price": "Cena",
+      "instructors": "Instruktori",
+      "note": "Napomena"
+    },
+    "delete": {
+      "title": "Brisanje termina",
+      "message": "Obrisati termin obuke?"
+    },
+    "attendees": "Učesnici",
+    "addAttendee": "Dodaj učesnika",
+    "attendeeSearch": {
+      "memberHint": "Kucanje za pretragu po imenu, email-u ili telefonu.",
+      "motorcycleHint": "Kucanje za pretragu po marki, modelu ili tablicama."
+    }
+  },
+  "payments": {
+    "title": "Članarine",
+    "addNew": "Dodaj uplatu",
+    "exemptInactiveNotice": "Nije aktivni član (čuva se istorija). Uplate su opcione ili za evidenciju.",
+    "exemptAgeNotice": "Članarina nije obavezna (Aktiv, 65+). Uplate i dalje možete dodati po potrebi.",
+    "nonPayerTypeNotice": "Ovaj tip članstva obično ne plaća članarinu. Ipak možete uneti evidenciju uplate ako je potrebno.",
+    "fields": {
+      "amount": "Iznos",
+      "paymentDate": "Datum uplate",
+      "paymentForYear": "Za godinu",
+      "paymentType": "Vrsta uplate",
+      "note": "Napomena"
+    },
+    "currency": "RSD"
+  },
+  "tags": {
+    "title": "Oznake",
+    "addNew": "Dodaj oznaku",
+    "fields": {
+      "tagNumber": "Broj oznake",
+      "assignedDate": "Dodeljeno",
+      "validFrom": "Važi od",
+      "validTo": "Važi do"
+    },
+    "active": "Aktivna"
+  },
+  "comments": {
+    "title": "Komentari",
+    "addNew": "Dodaj komentar",
+    "fields": {
+      "commentText": "Tekst",
+      "createdAt": "Kreirano",
+      "editedAt": "Izmenjeno"
+    },
+    "placeholder": "Napišite komentar…"
+  },
+  "validation": {
+    "required": "Obavezno polje",
+    "email": "Pogrešan format email-a",
+    "maxLength": "Maksimalno {{count}} karaktera"
+  }
+}

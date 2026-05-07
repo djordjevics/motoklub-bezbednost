@@ -13,6 +13,8 @@ public class TagDto
     public DateTime? ValidFrom { get; set; }
 
     public DateTime? ValidTo { get; set; }
+
+    public int MemberId { get; set; }
 }
 
 

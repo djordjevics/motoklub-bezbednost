@@ -15,6 +15,10 @@ public class MembershipPaymentDto
     [StringLength(1000)]
     public string? Note { get; set; }
 
+    public int MemberId { get; set; }
+
+    public int? PaymentTypeId { get; set; }
+
     public PaymentTypeDto? PaymentType { get; set; }
 }
 

@@ -154,6 +154,9 @@ namespace MotoklubBezbednost.Data.Migrations
                     b.Property<int?>("MemberTypeId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("MembershipExemptManual")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("MobilePhone")
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
@@ -393,6 +396,9 @@ namespace MotoklubBezbednost.Data.Migrations
                     b.Property<string>("Note")
                         .HasMaxLength(1000)
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("RepeatingAttendance")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TrainingSessionId")
                         .HasColumnType("INTEGER");

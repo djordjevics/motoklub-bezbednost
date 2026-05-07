@@ -12,6 +12,8 @@ public class CommentDto
 
     [StringLength(2000)]
     public string? CommentText { get; set; }
+
+    public int MemberId { get; set; }
 }
 
 

@@ -7,7 +7,8 @@
 #   pwsh ./scripts/Start-Motoklub.ps1 -Dev
 
 param(
-    [switch]$Dev
+    [switch]$Dev,
+    [int]$MaxBackups = 10
 )
 
 $ErrorActionPreference = "Stop"
@@ -53,6 +54,21 @@ if (Test-Path $dbPath) {
     $stamp = Get-Date -Format "yyyyMMdd_HHmmss"
     Copy-Item $dbPath (Join-Path $backups "motoklub_${stamp}.db")
     Write-Host "Backed up database to backups folder."
+
+    if ($MaxBackups -gt 0) {
+        $toDelete = Get-ChildItem -LiteralPath $backups -Filter "motoklub_*.db" -File -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -Skip $MaxBackups
+
+        foreach ($file in $toDelete) {
+            try {
+                Remove-Item -LiteralPath $file.FullName -Force -ErrorAction Stop
+            }
+            catch {
+                Write-Warning "Could not delete old backup '$($file.Name)': $($_.Exception.Message)"
+            }
+        }
+    }
 }
 
 $commonEnv = "`$env:ASPNETCORE_ENVIRONMENT='LocalProd'; `$env:Motoklub__AutoMigrate='true'; `$env:Motoklub__SqliteFileName='motoklub.db'"

@@ -8,4 +8,3 @@ export interface Equipment {
   formalShirt: boolean
   note?: string
 }
-

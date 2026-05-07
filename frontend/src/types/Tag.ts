@@ -6,4 +6,3 @@ export interface Tag {
   validFrom?: string
   validTo?: string
 }
-

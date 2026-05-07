@@ -7,5 +7,7 @@ public class MembershipPaymentResponse
     public DateTime? PaymentDate { get; set; }
     public int? PaymentForYear { get; set; }
     public string? Note { get; set; }
+    public int MemberId { get; set; }
+    public int? PaymentTypeId { get; set; }
     public PaymentTypeResponse? PaymentType { get; set; }
 }

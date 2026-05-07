@@ -1,33 +1,36 @@
 import { useState } from 'react'
 import { Box, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import MembersList from '../../components/Members/MembersList'
 import MemberForm from '../../components/Members/MemberForm'
 
 const MembersPage = () => {
-  const [selectedMember, setSelectedMember] = useState<number | null>(null)
-  const [isFormOpen, setIsFormOpen] = useState(false)
+  const { t } = useTranslation()
+  const [editingMemberId, setEditingMemberId] = useState<number | null>(null)
+  const [formOpen, setFormOpen] = useState(false)
 
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        Members
+        {t('members.title')}
       </Typography>
       <MembersList
-        onSelectMember={setSelectedMember}
+        onEdit={(id) => {
+          setEditingMemberId(id)
+          setFormOpen(true)
+        }}
         onAddNew={() => {
-          setSelectedMember(null)
-          setIsFormOpen(true)
+          setEditingMemberId(null)
+          setFormOpen(true)
         }}
       />
-      {isFormOpen && (
-        <MemberForm
-          memberId={selectedMember}
-          onClose={() => setIsFormOpen(false)}
-        />
-      )}
+      <MemberForm
+        open={formOpen}
+        memberId={editingMemberId}
+        onClose={() => setFormOpen(false)}
+      />
     </Box>
   )
 }
 
 export default MembersPage
-

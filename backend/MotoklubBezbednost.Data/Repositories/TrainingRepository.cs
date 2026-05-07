@@ -21,6 +21,16 @@ public class TrainingRepository : Repository<TrainingDb>, ITrainingRepository
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<TrainingDb>> GetBySessionIdAsync(int trainingSessionId)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Include(t => t.Motorcycle)
+            .Where(t => t.TrainingSessionId == trainingSessionId)
+            .OrderBy(t => t.Id)
+            .ToListAsync();
+    }
+
     public async Task<TrainingDb?> GetByIdWithDetailsAsync(int id)
     {
         return await _dbSet

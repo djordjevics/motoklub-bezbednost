@@ -161,6 +161,89 @@ public class MemberRepositoryTests : IDisposable
         result.First().Email.Should().Be("john@example.com");
     }
 
+    [Fact]
+    public async Task SearchAsync_ShouldFindByMemberTypeIdAndActiveTag_WithFlexibleHyphenSpacing()
+    {
+        var today = DateTime.Today;
+        var member = new MemberDb { Name = "Z", Surname = "Test", MemberTypeId = 2 };
+        await _repository.AddAsync(member);
+        await _context.SaveChangesAsync();
+
+        _context.Tags.Add(new TagDb
+        {
+            MemberId = member.Id,
+            TagNumber = 42,
+            ValidFrom = today.AddDays(-1),
+            ValidTo = today.AddDays(1),
+            CreationTimestamp = today,
+        });
+        await _context.SaveChangesAsync();
+
+        var spaced = await _repository.SearchAsync(" 2 - 42 ");
+        var nospace = await _repository.SearchAsync("2-42");
+
+        spaced.Should().ContainSingle(r => r.Id == member.Id);
+        nospace.Should().ContainSingle(r => r.Id == member.Id);
+    }
+
+    [Fact]
+    public async Task SearchAsync_ShouldFindByMemberTypeNameAndActiveTag()
+    {
+        var today = DateTime.Today;
+        var member = new MemberDb { Name = "Z", Surname = "Tagged", MemberTypeId = 2 };
+        await _repository.AddAsync(member);
+        await _context.SaveChangesAsync();
+
+        _context.Tags.Add(new TagDb
+        {
+            MemberId = member.Id,
+            TagNumber = 10,
+            ValidFrom = today,
+            ValidTo = today.AddDays(7),
+            CreationTimestamp = today,
+        });
+        await _context.SaveChangesAsync();
+
+        var result = await _repository.SearchAsync("aktiv - 10");
+
+        result.Should().ContainSingle(r => r.Id == member.Id);
+    }
+
+    [Fact]
+    public async Task SearchAsync_ByHyphen_ShouldExcludeInactiveOrUndatedTagValidity()
+    {
+        var today = DateTime.Today;
+        var withExpiredTag = new MemberDb { Name = "Exp", Surname = "Old", MemberTypeId = 2 };
+        var withUndatedTag = new MemberDb { Name = "Nil", Surname = "Dates", MemberTypeId = 2 };
+        await _repository.AddAsync(withExpiredTag);
+        await _repository.AddAsync(withUndatedTag);
+        await _context.SaveChangesAsync();
+
+        _context.Tags.Add(new TagDb
+        {
+            MemberId = withExpiredTag.Id,
+            TagNumber = 7,
+            ValidFrom = today.AddYears(-2),
+            ValidTo = today.AddDays(-1),
+            CreationTimestamp = today,
+        });
+        _context.Tags.Add(new TagDb
+        {
+            MemberId = withUndatedTag.Id,
+            TagNumber = 8,
+            ValidFrom = null,
+            ValidTo = null,
+            CreationTimestamp = today,
+        });
+        await _context.SaveChangesAsync();
+
+        var expiredResults = await _repository.SearchAsync("2-7");
+        var undatedResults = await _repository.SearchAsync("2-8");
+
+        expiredResults.Should().BeEmpty();
+        undatedResults.Should().BeEmpty();
+    }
+
     public void Dispose()
     {
         _context.Dispose();

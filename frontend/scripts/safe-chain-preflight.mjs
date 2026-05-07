@@ -154,8 +154,12 @@ try {
   process.exit(1)
 }
 
-const semverMatch = localRaw.match(/(\d+\.\d+\.\d+(?:-[.\w]+)?)/)
-const localVersion = semverMatch ? semverMatch[1] : localRaw
+const semverRegex = /(\d+\.\d+\.\d+(?:-[.\w]+)?)/
+const extractSemver = (raw) => {
+  const m = String(raw).match(semverRegex)
+  return m ? m[1] : String(raw).trim()
+}
+const localVersion = extractSemver(localRaw)
 
 try {
   runNpm(['safe-chain-verify'], 'npm safe-chain-verify')
@@ -166,9 +170,9 @@ try {
   process.exit(1)
 }
 
-let latest
+let latestRaw
 try {
-  latest = runNpm(['view', '@aikidosec/safe-chain', 'version'], 'npm view')
+  latestRaw = runNpm(['view', '@aikidosec/safe-chain', 'version'], 'npm view')
 } catch {
   console.warn(
     '[safe-chain-preflight] Could not read latest @aikidosec/safe-chain from registry; skipping version match.',
@@ -176,6 +180,7 @@ try {
   console.log(`[safe-chain-preflight] OK: safe-chain CLI reports ${localVersion}`)
   process.exit(0)
 }
+const latest = extractSemver(latestRaw)
 
 const normalize = (v) => v.replace(/^v/i, '').split('-')[0]
 const localBase = normalize(localVersion)

@@ -42,6 +42,12 @@ public class MemberDb : DbModel
     [StringLength(1000)]
     public string? Note { get; set; }
 
+    /// <summary>
+    /// When true, this person is not treated as an active member (their record is kept for history only).
+    /// Distinct from the age-based payment waiver for Aktiv members; see membership business rules at read-time.
+    /// </summary>
+    public bool MembershipExemptManual { get; set; }
+
     // Foreign keys
     public int? MemberTypeId { get; set; }
 

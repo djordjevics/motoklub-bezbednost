@@ -1,0 +1,217 @@
+{
+  "app": {
+    "title": "Motoklub Bezbednost"
+  },
+  "language": {
+    "label": "Language",
+    "sr": "Serbian",
+    "en": "English"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "members": "Members",
+    "motorcycles": "Motorcycles by model",
+    "trainingSessions": "Training sessions"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "addNew": "Add new",
+    "back": "Back",
+    "close": "Close",
+    "search": "Search",
+    "loading": "Loading…",
+    "noData": "No data",
+    "error": "Something went wrong. Please try again.",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "actions": "Actions",
+    "details": "Details",
+    "active": "Active",
+    "select": "Select…"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalMembers": "Total members",
+    "totalMotorcycles": "Total motorcycles",
+    "totalSessions": "Training sessions",
+    "membersWithTraining": "Members with training"
+  },
+  "members": {
+    "title": "Members",
+    "addNew": "Add new member",
+    "count": "{{count}} member(s)",
+    "activeTagColumn": "Active tag",
+    "search": {
+      "placeholder": "Search by name, surname or email"
+    },
+    "filters": {
+      "type": "Member type",
+      "allTypes": "All types",
+      "training": "Training",
+      "trainingAll": "All members",
+      "trainingWith": "Has training",
+      "trainingWithout": "No training",
+      "includeInactive": "Inactive records"
+    },
+    "fields": {
+      "name": "Name",
+      "surname": "Surname",
+      "jmbg": "JMBG",
+      "dateOfBirth": "Date of birth",
+      "workplace": "Workplace",
+      "mobilePhone": "Mobile phone",
+      "email": "Email",
+      "address": "Address",
+      "emergencyContact": "Emergency contact",
+      "emergencyContactPhone": "Emergency phone",
+      "registeredOn": "Registered on",
+      "memberType": "Member type",
+      "note": "Note",
+      "phone": "Phone"
+    },
+    "exempt": "Inactive / former member (keep record)",
+    "exemptInactiveBanner": "Inactive record: kept for reference only. You cannot edit other data until you turn off “Inactive / former member” on the Profile tab. Other tabs are read-only.",
+    "paymentExemptAgeBanner": "Membership fee waived: Aktiv member aged 65 or over.",
+    "exemptHelperAgePayment": "This member also qualifies for waived fees (Aktiv, 65+). Use the toggle only for inactive / archival status—not an active member.",
+    "chipInactiveRecord": "Inactive",
+    "delete": {
+      "title": "Delete member",
+      "message": "Are you sure you want to delete {{name}}? All linked records (motorcycles, equipment, trainings, payments, tags, comments) will also be deleted.",
+      "confirm": "Delete"
+    },
+    "form": {
+      "createTitle": "New member",
+      "editTitle": "Edit member"
+    },
+    "memberFormInactiveReadonly": "This member is marked inactive. Editing is only available on the member detail page: turn off “Inactive / former member” on the Profile tab to unlock."
+  },
+  "memberDetail": {
+    "tabs": {
+      "profile": "Profile",
+      "motorcycles": "Motorcycles",
+      "equipment": "Equipment",
+      "trainings": "Trainings",
+      "payments": "Membership payments",
+      "tags": "Tags",
+      "comments": "Comments"
+    }
+  },
+  "motorcycles": {
+    "title": "Motorcycles",
+    "addNew": "Add motorcycle",
+    "fields": {
+      "brandName": "Brand",
+      "commercialName": "Commercial name",
+      "modelName": "Model",
+      "engineDisplacment": "Engine displacement (ccm)",
+      "enginePower": "Power (kW)",
+      "color": "Color",
+      "registerPlate": "Register plate"
+    },
+    "delete": {
+      "title": "Delete motorcycle",
+      "message": "Delete motorcycle {{name}}?"
+    }
+  },
+  "motorcyclesOverview": {
+    "title": "Motorcycles by brand and model",
+    "subtitle": "Grouped across all members. Same brand and model counts how many distinct members own that bike.",
+    "membersWithModel": "Members",
+    "specHeading": "Typical specs (first registered bike)",
+    "specNote": "Displacements, plates, and colors may vary per owner below.",
+    "ownersHeading": "Members and their bikes"
+  },
+  "equipment": {
+    "title": "Equipment",
+    "fields": {
+      "pants": "Pants",
+      "jacket": "Jacket",
+      "vest": "Vest",
+      "workShirt": "Work shirt",
+      "formalShirt": "Formal shirt",
+      "note": "Note"
+    }
+  },
+  "trainings": {
+    "memberTitle": "Member trainings",
+    "addNew": "Add training",
+    "fields": {
+      "session": "Session",
+      "motorcycle": "Motorcycle",
+      "repeatingAttendance": "Repeating attendance",
+      "isCertificateIssued": "Certificate issued",
+      "note": "Note",
+      "certificate": "Certificate"
+    }
+  },
+  "trainingSessions": {
+    "title": "Training sessions",
+    "addNew": "New session",
+    "fields": {
+      "theoryDate": "Theory date",
+      "polygonDate": "Polygon date",
+      "city": "City",
+      "level": "Level",
+      "price": "Price",
+      "instructors": "Instructors",
+      "note": "Note"
+    },
+    "delete": {
+      "title": "Delete session",
+      "message": "Delete this training session?"
+    },
+    "attendees": "Attendees",
+    "addAttendee": "Add attendee",
+    "attendeeSearch": {
+      "memberHint": "Type to search by name, email, or phone.",
+      "motorcycleHint": "Type to search by brand, model, or plate."
+    }
+  },
+  "payments": {
+    "title": "Membership payments",
+    "addNew": "Add payment",
+    "exemptInactiveNotice": "Not an active member (record kept). Payments are optional or for history only.",
+    "exemptAgeNotice": "No membership fee is required for this Aktiv member (65+). You can still add payments if useful.",
+    "nonPayerTypeNotice": "This member type is not required to pay membership fees. You can still add payment records if needed.",
+    "fields": {
+      "amount": "Amount",
+      "paymentDate": "Payment date",
+      "paymentForYear": "For year",
+      "paymentType": "Payment type",
+      "note": "Note"
+    },
+    "currency": "RSD"
+  },
+  "tags": {
+    "title": "Tags",
+    "addNew": "Add tag",
+    "fields": {
+      "tagNumber": "Tag number",
+      "assignedDate": "Assigned",
+      "validFrom": "Valid from",
+      "validTo": "Valid to"
+    },
+    "active": "Active"
+  },
+  "comments": {
+    "title": "Comments",
+    "addNew": "Add comment",
+    "fields": {
+      "commentText": "Text",
+      "createdAt": "Created",
+      "editedAt": "Edited"
+    },
+    "placeholder": "Write a comment…"
+  },
+  "validation": {
+    "required": "Required",
+    "email": "Invalid email format",
+    "maxLength": "Maximum {{count}} characters"
+  }
+}

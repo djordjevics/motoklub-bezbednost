@@ -13,4 +13,7 @@ public class CreateMemberRequest
     public string? Email { get; set; }
     public string? Address { get; set; }
     public string? Note { get; set; }
+    public int? MemberTypeId { get; set; }
+
+    public bool MembershipExemptManual { get; set; }
 }

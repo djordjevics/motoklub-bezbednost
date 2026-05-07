@@ -89,4 +89,32 @@ public class TrainingsController : ControllerBase
         await _mediator.Send(new DeleteTrainingSessionCommand { Id = id });
         return NoContent();
     }
+
+    [HttpGet("sessions/{sessionId}/trainings")]
+    public async Task<ActionResult<IEnumerable<TrainingResponse>>> GetTrainingsBySession(int sessionId)
+    {
+        var query = _mapper.Map<GetTrainingsBySessionQuery>(new GetTrainingsBySessionRequest { TrainingSessionId = sessionId });
+        var trainings = await _mediator.Send(query);
+        return Ok(_mapper.Map<IEnumerable<TrainingResponse>>(trainings));
+    }
+
+    [HttpPut("trainings/{id}")]
+    public async Task<IActionResult> UpdateTraining(int id, [FromBody] UpdateTrainingRequest request)
+    {
+        request.Id = id;
+        var command = _mapper.Map<UpdateTrainingCommand>(request);
+        var updated = await _mediator.Send(command);
+        if (updated is null)
+        {
+            return NotFound();
+        }
+        return NoContent();
+    }
+
+    [HttpDelete("trainings/{id}")]
+    public async Task<IActionResult> DeleteTraining(int id)
+    {
+        await _mediator.Send(new DeleteTrainingCommand { Id = id });
+        return NoContent();
+    }
 }

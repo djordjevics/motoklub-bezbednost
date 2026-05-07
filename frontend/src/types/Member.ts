@@ -18,6 +18,14 @@ export interface Member {
   address?: string
   registeredOn?: string
   memberTypeId?: number
+  membershipExemptManual?: boolean
+  /** Aktiv + 65+: no membership fee obligation; person may still be an active member roster-wise. */
+  isMembershipPaymentExemptDueToAge?: boolean
+  /**
+   * Derived by API: membership payment is required (group + age rules),
+   * and always false for inactive/archived members.
+   */
+  isMembershipPaymentRequired?: boolean
   note?: string
   motorcycles?: Motorcycle[]
   equipment?: Equipment
@@ -37,6 +45,7 @@ export interface Motorcycle {
   engineDisplacment?: number
   enginePower?: number
   color?: string
+  registerPlate?: string
 }
 
 export interface Equipment {
@@ -49,4 +58,3 @@ export interface Equipment {
   formalShirt: boolean
   note?: string
 }
-

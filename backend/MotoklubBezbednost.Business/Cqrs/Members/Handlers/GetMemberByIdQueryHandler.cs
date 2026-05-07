@@ -2,6 +2,7 @@ using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Members.Queries;
 using MotoklubBezbednost.Business.Dtos;
 using AutoMapper;
+using MotoklubBezbednost.Business.Rules;
 using MotoklubBezbednost.Data.Models;
 using MotoklubBezbednost.Data.Repositories;
 
@@ -21,8 +22,10 @@ public sealed class GetMemberByIdQueryHandler : IRequestHandler<GetMemberByIdQue
     public async Task<MemberDto?> Handle(GetMemberByIdQuery request, CancellationToken cancellationToken)
     {
         var entity = await _memberRepository.GetByIdWithDetailsAsync(request.Id);
-        return entity is null ? null : _mapper.Map<MemberDto>(entity);
+        if (entity is null) return null;
+
+        var dto = _mapper.Map<MemberDto>(entity);
+        MembershipRules.EnrichMembershipExempt(entity, dto, DateTime.Today);
+        return dto;
     }
 }
-
-

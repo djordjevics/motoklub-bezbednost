@@ -17,6 +17,10 @@ public class MemberResponse
     public DateTime CreationTimestamp { get; set; }
     public DateTime? LastModificationTimestamp { get; set; }
     public string? Note { get; set; }
+    public int? MemberTypeId { get; set; }
+    public bool MembershipExemptManual { get; set; }
+    public bool IsMembershipPaymentExemptDueToAge { get; set; }
+    public bool IsMembershipPaymentRequired { get; set; }
     public MemberTypeResponse? MemberType { get; set; }
     public ICollection<MotorcycleResponse> Motorcycles { get; set; } = new List<MotorcycleResponse>();
     public EquipmentResponse? Equipment { get; set; }

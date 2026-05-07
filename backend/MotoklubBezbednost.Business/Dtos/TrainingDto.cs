@@ -6,6 +6,8 @@ public class TrainingDto
 {
     public int Id { get; set; }
 
+    public bool RepeatingAttendance { get; set; }
+
     public bool IsCertificateIssued { get; set; }
 
     [StringLength(1000)]
@@ -14,6 +16,12 @@ public class TrainingDto
     public DateTime CreationTimestamp { get; set; }
 
     public DateTime? LastModificationTimestamp { get; set; }
+
+    public int MemberId { get; set; }
+
+    public int MotorcycleId { get; set; }
+
+    public int TrainingSessionId { get; set; }
 
     public MemberDto? Member { get; set; }
 

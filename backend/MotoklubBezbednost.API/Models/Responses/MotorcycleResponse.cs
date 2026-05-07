@@ -12,4 +12,5 @@ public class MotorcycleResponse
     public string? RegisterPlate { get; set; }
     public DateTime CreationTimestamp { get; set; }
     public DateTime? LastModificationTimestamp { get; set; }
+    public int MemberId { get; set; }
 }

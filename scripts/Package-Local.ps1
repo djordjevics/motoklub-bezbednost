@@ -21,6 +21,13 @@ $Frontend = Join-Path $RepoRoot "frontend"
 if (-not (Test-Path $BackendApi)) { throw "Backend project not found: $BackendApi" }
 if (-not (Test-Path $Frontend)) { throw "Frontend folder not found: $Frontend" }
 
+function Assert-LastExitCode {
+    param([string] $Step)
+    if ($LASTEXITCODE -ne 0) {
+        throw "$Step failed (exit code $LASTEXITCODE)."
+    }
+}
+
 $publishArgs = @(
     "publish", $BackendApi,
     "-c", "Release",
@@ -32,6 +39,7 @@ if ($SelfContained) {
 
 Write-Host "Publishing API to $Output ..."
 & dotnet @publishArgs
+Assert-LastExitCode "dotnet publish"
 
 Push-Location $Frontend
 try {
@@ -44,24 +52,34 @@ try {
         else {
             Write-Host "Fast: node_modules missing; running npm install once."
             npm install
+            Assert-LastExitCode "npm install"
         }
     }
     elseif (Test-Path "package-lock.json") {
         npm ci
+        Assert-LastExitCode "npm ci"
     }
     else {
         npm install
+        Assert-LastExitCode "npm install"
     }
-    npm run build
+    # Same as `npm run build` but without `prebuild` (safe-chain-preflight). Use `npm run build` locally when you want safe-chain checks.
+    npm run build:pack
+    Assert-LastExitCode "npm run build:pack"
     if ($null -ne $prev) { $env:VITE_API_BASE_URL = $prev } else { Remove-Item Env:VITE_API_BASE_URL -ErrorAction SilentlyContinue }
 }
 finally {
     Pop-Location
 }
 
+$dist = Join-Path $Frontend "dist"
+if (-not (Test-Path $dist)) {
+    throw "Frontend build output missing: $dist. npm run build did not produce dist/. Often prebuild (safe-chain-preflight) failed - see console output above."
+}
+
 $wwwroot = Join-Path $Output "wwwroot"
 New-Item -ItemType Directory -Force -Path $wwwroot | Out-Null
-Copy-Item -Path (Join-Path $Frontend "dist\*") -Destination $wwwroot -Recurse -Force
+Copy-Item -Path (Join-Path $dist "*") -Destination $wwwroot -Recurse -Force
 
 if (-not $SkipDataLayout) {
     $data = Join-Path $Output "data"

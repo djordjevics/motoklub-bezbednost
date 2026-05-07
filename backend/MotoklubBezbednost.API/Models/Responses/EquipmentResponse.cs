@@ -11,4 +11,5 @@ public class EquipmentResponse
     public string? Note { get; set; }
     public DateTime CreationTimestamp { get; set; }
     public DateTime? LastModificationTimestamp { get; set; }
+    public int MemberId { get; set; }
 }

@@ -5,6 +5,9 @@ namespace MotoklubBezbednost.Data.Models;
 
 public class TrainingDb : DbModel
 {
+    /// <summary>True when this attendee participates again (renewal / repeating presence).</summary>
+    public bool RepeatingAttendance { get; set; }
+
     public bool IsCertificateIssued { get; set; }
 
     [StringLength(1000)]

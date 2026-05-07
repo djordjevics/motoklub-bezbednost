@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using MotoklubBezbednost.Business.Cqrs.Members.Commands;
 using MotoklubBezbednost.Business.Dtos;
+using MotoklubBezbednost.Business.Rules;
 using MotoklubBezbednost.Data.Models;
 using MotoklubBezbednost.Data.Repositories;
 using MotoklubBezbednost.Data.UnitOfWork;
@@ -26,7 +27,9 @@ public sealed class CreateMemberCommandHandler : IRequestHandler<CreateMemberCom
         var entity = _mapper.Map<MemberDb>(request);
         var created = await _memberRepository.AddAsync(entity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return _mapper.Map<MemberDto>(created);
+        var dto = _mapper.Map<MemberDto>(created);
+        MembershipRules.EnrichMembershipExempt(created, dto, DateTime.Today);
+        return dto;
     }
 }
 

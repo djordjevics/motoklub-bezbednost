@@ -5,4 +5,3 @@ export interface Comment {
   editTime?: string
   commentText?: string
 }
-
